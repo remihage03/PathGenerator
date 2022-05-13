@@ -7,7 +7,7 @@
 
 bool checkPos(Map* map, Vec2 pos)
 {
-	return (pos.x >= 0 && pos.x < map->size.x && pos.y >= 0 && pos.y < map->size.y);
+	return (pos.x >= 1 && pos.x < map->size.x - 1 && pos.y >= 1 && pos.y < map->size.y - 1);
 }
 
 int countNeighbors(Map* map, Vec2 pos) // Compte les voisins aux 4 points cardinaux de pos
@@ -86,9 +86,20 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 		return NULL;
 	}
 
+	// Cr�ation des bordures
+	for (int y = 0; y < map->size.x; y++)
+	{
+		for (int x = 0; x < map->size.x; x++)
+		{
+			if (x == 0 || y == 0 || x == map->size.x - 1 || y == map->size.y - 1)
+				map->data[x][y] = 3;
+		}
+	}
+
+	print_shard(map, &printMapData);
+
 	// Entree / Sortie
-	map->entry.x = 0, map->entry.y = 1;
-	map->exit.x = map->size.x - 1, map->exit.y = map->size.y - 2;
+	map->entry.x = 1, map->entry.y = 1;
 
 	Vec2 newPos = map->entry;
 	Vec2 lastPos = newPos;
@@ -110,9 +121,14 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 		lastDir = newDir;
 		map->data[newPos.x][newPos.y] = 1;
 
-		if (newPos.x == map->size.x - 1 || newPos.y == map->size.y - 1)
+		if (newPos.x == map->size.x - 2 || newPos.y == map->size.y - 2)
 		{
+			//if (newPos.x == map->size.x - 2) 
+			//	map->exit = (Vec2){ newPos.x + 1, newPos.y };
+			//else
+			//	map->exit = (Vec2){ newPos.x, newPos.y + 1 };
 			map->exit = newPos;
+			//map->data[map->exit.x][map->exit.y] = 1;
 			break;
 		}
 	}
@@ -128,13 +144,14 @@ void printMapData(Map* map, int x, int y) {
 void printPath(Map* map,int x,int y) {
 	char chr = 'a';
 	if (map->data[x][y] == 0) chr = ' ';
-	if (map->data[x][y] == 1) chr = '@';
-	if(map->data[x][y] == 3) chr = 'X';
+	else if (map->data[x][y] == 1) chr = '@';
+	else chr = 'X';
 
 	printf("%c ", chr);
 }
 
 void print_shard(Map* map,void (*fct)(Map*,int,int)) {
+	printf("\n");
 	for (int y = 0; y < map->size.y; y++)
 	{
 		for (int x = 0; x < map->size.x; x++)
@@ -145,12 +162,65 @@ void print_shard(Map* map,void (*fct)(Map*,int,int)) {
 	}
 }
 
-int exportMap(Map* map, char* fichier);
+int exportMap(Map* map, char* fichier)
+{
+	if (!map || !fichier) return ERROR;
+
+	FILE* fichier_data;
+	errno_t err = fopen_s(&fichier_data, fichier, "w+");
+
+	if (err)
+	{
+		perror("fopen");
+		return(ERROR);
+	}
+
+	const char* json = "{\n\t\"header\": {\n\t\"width\": %d,\n\t\"height\" : %d,\n\t \"diff\" : %d\n\t},\n\t\"data\": [\n\t\t";
+	int newsize = 4 + 4 + strlen(json); //4 = strlen('1000') <=> strlen(maxsizeX/Y) 
+	char* buffer = (char*)calloc(newsize, sizeof(char));
+
+	sprintf_s(buffer, newsize, json, map->size.x, map->size.y, map->level);
+	fprintf(fichier_data, "%s", buffer);
+
+	int last_mazeblock_index = map->size.y * map->size.x;
+	int check_last_block = 1;
+	char* default_parsing_string = "%d, ";
+	char* _default_parsing_string;
+
+	for (int i = 0; i < map->size.y; i++)
+	{
+		for (int j = 0; j < map->size.x; j++)
+		{
+			char c_buffer[5];
+			_default_parsing_string = default_parsing_string;
+
+			if (check_last_block == last_mazeblock_index) {
+				_default_parsing_string = "%d";
+			}
+
+			sprintf_s(c_buffer, 4, _default_parsing_string, map->data[j][i]);
+			fprintf(fichier_data, "%s", c_buffer);
+			check_last_block++;
+		}
+
+		fprintf(fichier_data, "%s", "\n\t\t");
+	}
+
+	char* nextOpt = "],\n\t\"start\": { \"x\":%d, \"y\":%d }, \n\t\"end\": { \"x\":%d, \"y\":%d }\n}";
+	Vec2 in = map->entry, out = map->exit;
+	
+	sprintf_s(buffer, strlen(nextOpt), nextOpt, in.x, in.y, out.x, out.y);
+	fprintf(fichier_data, "%s", buffer);
+	
+	printf("Done Writing in %s !\n", fichier);
+	fclose(fichier_data);
+	return SUCCESS;
+}
 
 
 Vec2 cornerPos(Vec2 pivot,Dir from){
 	int x = 0,y=0 ;
-	printf("\n pivot : %d %d",pivot.x,pivot.y);
+	//printf("\n pivot : %d %d",pivot.x,pivot.y);
 	if(from == DIR_DOWN){
 		x = pivot.x, y = pivot.y+1;
 	}
@@ -160,7 +230,7 @@ Vec2 cornerPos(Vec2 pivot,Dir from){
 	else if(from == DIR_RIGHT){
 		x = pivot.x+1, y = pivot.y;
 	}
-	printf("\n x,y : %d %d",x,y);
+	//printf("\n x,y : %d %d",x,y);
 	Vec2 corner = {x,y};
 	return corner;
 	

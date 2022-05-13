@@ -19,13 +19,14 @@ typedef enum DIFFICULTY
 
 typedef enum DIR
 {
-	DIR_UP,
 	DIR_DOWN,
 	DIR_LEFT,
 	DIR_RIGHT
 }Dir;
 
-typedef struct vec2 { int x, y; }Vec2;
+typedef struct vec2 {
+	int x, y;
+}Vec2;
 
 typedef struct map {
 	Vec2 entry, exit, size;

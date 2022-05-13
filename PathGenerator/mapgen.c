@@ -35,6 +35,30 @@ int countNeighbors(Map* map, Vec2 pos) // Compte les voisins aux 4 points cardin
 	return nbNeighbors;
 }
 
+void checkDir(Map* map, Vec2* pos, Vec2 lastPos, Dir dir)
+{
+	if (rand() % 2 == 0)
+	{
+		Vec2 _pos = *pos;
+		switch (dir)
+		{
+		case DIR_DOWN:
+			_pos.y++;
+			break;
+		case DIR_LEFT:
+			_pos.x--;
+			break;
+		case DIR_RIGHT:
+			_pos.x++;
+			break;
+		default:
+			break;
+		}
+		if ((_pos.x != lastPos.x || _pos.y != lastPos.y) && checkPos(map, _pos) && countNeighbors(map, *pos) == 1)
+			*pos = _pos;
+	}
+}
+
 Map* genMap(Map* map, Vec2 size, Difficulty diff)
 {
 	if (size.x < 5 || size.y < 5 || size.x > X_MAX || size.y > Y_MAX) return NULL;
@@ -79,33 +103,39 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 		{
 		case DIR_DOWN:
 		{
+			//checkDir(map, &newPos, lastPos, dir);
+			//currDir = DIR_DOWN;
 			if (rand() % 2 == 0)
 			{
 				temp = newPos;
 				temp.y++;
-				if (temp.y != lastPos.y && temp.y < map->size.y && countNeighbors(map, temp) == 1)
+				if (temp.y != lastPos.y && checkPos(map, temp)/*temp.y < map->size.y*/ && countNeighbors(map, temp) == 1)
 					newPos.y++, currDir = DIR_DOWN;
 			}
 			break;
 		}
 		case DIR_LEFT:
 		{
+			//checkDir(map, &newPos, lastPos, dir);
+			//currDir = DIR_LEFT;
 			if (rand() % 2 == 0)
 			{
 				temp = newPos;
 				temp.x--;
-				if (temp.x != lastPos.x && temp.x >= 0 && countNeighbors(map, temp) == 1)
+				if (temp.x != lastPos.x && /*temp.x >= 0*/ checkPos(map, temp) && countNeighbors(map, temp) == 1)
 					newPos.x--, currDir = DIR_LEFT;
 			}
 			break;
 		}
 		case DIR_RIGHT:
 		{
+			//checkDir(map, &newPos, lastPos, dir);
+			//currDir = DIR_RIGHT;
 			if (rand() % 2 == 0)
 			{
 				temp = newPos;
 				temp.x++;
-				if (temp.x != lastPos.x && temp.x < map->size.x && countNeighbors(map, temp) == 1)
+				if (temp.x != lastPos.x && checkPos(map, temp)/*temp.x < map->size.x*/ && countNeighbors(map, temp) == 1)
 					newPos.x++, currDir = DIR_RIGHT;
 			}
 			break;

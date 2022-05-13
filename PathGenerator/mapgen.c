@@ -7,7 +7,7 @@
 
 bool checkPos(Map* map, Vec2 pos)
 {
-	return (pos.x >= 0 && pos.x < map->size.x && pos.y >= 0 && pos.y < map->size.y);
+	return (pos.x >= 1 && pos.x < map->size.x - 1 && pos.y >= 1 && pos.y < map->size.y - 1);
 }
 
 int countNeighbors(Map* map, Vec2 pos) // Compte les voisins aux 4 points cardinaux de pos
@@ -86,11 +86,23 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 		return NULL;
 	}
 
+	// Création des bordures
+	for (int y = 0; y < map->size.x; y++)
+	{
+		for (int x = 0; x < map->size.x; x++)
+		{
+			if (x == 0 || y == 0 || x == map->size.x - 1 || y == map->size.y - 1)
+				map->data[x][y] = 1;
+		}
+	}
+
+	print_shard(map, &printMapData);
+
 	// Entree / Sortie
 	map->entry.x = 0, map->entry.y = 1;
 	map->exit.x = map->size.x - 1, map->exit.y = map->size.y - 2;
 
-	Vec2 newPos = map->entry;
+	Vec2 newPos = { map->entry.x + 1, map->entry.y };
 	Vec2 lastPos = newPos;
 	Vec2 temp;
 	Dir newDir = DIR_RIGHT, lastDir = newDir;
@@ -110,7 +122,7 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 		lastDir = newDir;
 		map->data[newPos.x][newPos.y] = 1;
 
-		if (newPos.x == map->size.x - 1 || newPos.y == map->size.y - 1)
+		if (newPos.x == map->size.x - 2 || newPos.y == map->size.y - 2)
 		{
 			map->exit = newPos;
 			break;
@@ -204,7 +216,7 @@ int exportMap(Map* map, char* fichier)
 
 Vec2 cornerPos(Vec2 pivot,Dir from){
 	int x = 0,y=0 ;
-	printf("\n pivot : %d %d",pivot.x,pivot.y);
+	//printf("\n pivot : %d %d",pivot.x,pivot.y);
 	if(from == DIR_DOWN){
 		x = pivot.x, y = pivot.y+1;
 	}
@@ -214,7 +226,7 @@ Vec2 cornerPos(Vec2 pivot,Dir from){
 	else if(from == DIR_RIGHT){
 		x = pivot.x+1, y = pivot.y;
 	}
-	printf("\n x,y : %d %d",x,y);
+	//printf("\n x,y : %d %d",x,y);
 	Vec2 corner = {x,y};
 	return corner;
 	

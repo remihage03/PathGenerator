@@ -151,24 +151,21 @@ int exportMap(Map* map, char* fichier);
 
 
 
-int cornerPos(Vec2 entry,Vec2 exit,Dir entry_dir,Dir exit_dir){
-	int dx = exit.x - entry.x;
-	int dy = exit.y - entry.y;
-	if (!dx){
-		if(dy>0){
-			return DIR_DOWN;
-		}
-		return DIR_UP;
+Vec2 cornerPos(Vec2 entry,Dir from){
+	Vec2 corner;
+	if(from == DIR_DOWN){
+		corner = {entry.x,entry.y+1};
 	}
-	else if(!dy){
-		if(dx>0){
-			return DIR
-		}
-
+	else if(from == DIR_LEFT){
+		corner = {entry.x-1,entry.y};		
 	}
-
+	else if(from == DIR_RIGHT){
+		corner = {entry.x+1,entry.y};
+	}
+	return corner;
 }
 
-int addCorner(Map* map,Vec2 entry_pos,Vec2 exit_pos){
-	
+int addCorner(Map* map,Vec2 corner){
+	map[corner.x][corner.y] == "X";
+	return SUCCESS;
 }

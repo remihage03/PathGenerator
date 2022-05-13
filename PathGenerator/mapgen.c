@@ -54,7 +54,7 @@ void checkDir(Map* map, Vec2* pos, Vec2 lastPos, Dir dir)
 		default:
 			break;
 		}
-		if ((_pos.x != lastPos.x || _pos.y != lastPos.y) && checkPos(map, _pos) && countNeighbors(map, *pos) == 1)
+		if ((_pos.x != lastPos.x || _pos.y != lastPos.y) && checkPos(map, _pos) && countNeighbors(map, _pos) == 1)
 			*pos = _pos;
 	}
 }
@@ -93,7 +93,7 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 	Vec2 newPos = map->entry;
 	Vec2 lastPos = newPos;
 	Vec2 temp;
-	Dir currDir = DIR_RIGHT, lastDir = currDir;
+	Dir newDir = DIR_RIGHT, lastDir = newDir;
 
 	for (int i = 0; i < map->size.x * map->size.y; i++)//while (newPos.x != map->size.x - 1 || newPos.y != map->size.y - 1) // Tant qu'on a pas atteint un bord
 	{
@@ -103,41 +103,42 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 		{
 		case DIR_DOWN:
 		{
-			//checkDir(map, &newPos, lastPos, dir);
-			//currDir = DIR_DOWN;
-			if (rand() % 2 == 0)
+			checkDir(map, &newPos, lastPos, dir);
+			newDir = dir;
+			/*if (rand() % 2 == 0)
 			{
 				temp = newPos;
 				temp.y++;
-				if (temp.y != lastPos.y && checkPos(map, temp)/*temp.y < map->size.y*/ && countNeighbors(map, temp) == 1)
-					newPos.y++, currDir = DIR_DOWN;
+				if (temp.y != lastPos.y && checkPos(map, temp) && countNeighbors(map, temp) == 1)
+					newPos.y++, newDir = DIR_DOWN;
 			}
+			*/
 			break;
 		}
 		case DIR_LEFT:
 		{
-			//checkDir(map, &newPos, lastPos, dir);
-			//currDir = DIR_LEFT;
-			if (rand() % 2 == 0)
+			checkDir(map, &newPos, lastPos, dir);
+			newDir = dir;
+			/*if (rand() % 2 == 0)
 			{
 				temp = newPos;
 				temp.x--;
-				if (temp.x != lastPos.x && /*temp.x >= 0*/ checkPos(map, temp) && countNeighbors(map, temp) == 1)
-					newPos.x--, currDir = DIR_LEFT;
-			}
+				if (temp.x != lastPos.x && checkPos(map, temp) && countNeighbors(map, temp) == 1)
+					newPos.x--, newDir = DIR_LEFT;
+			}*/
 			break;
 		}
 		case DIR_RIGHT:
 		{
-			//checkDir(map, &newPos, lastPos, dir);
-			//currDir = DIR_RIGHT;
-			if (rand() % 2 == 0)
+			checkDir(map, &newPos, lastPos, dir);
+			newDir = dir;
+			/*if (rand() % 2 == 0)
 			{
 				temp = newPos;
 				temp.x++;
-				if (temp.x != lastPos.x && checkPos(map, temp)/*temp.x < map->size.x*/ && countNeighbors(map, temp) == 1)
-					newPos.x++, currDir = DIR_RIGHT;
-			}
+				if (temp.x != lastPos.x && checkPos(map, temp) && countNeighbors(map, temp) == 1)
+					newPos.x++, newDir = DIR_RIGHT;
+			}*/
 			break;
 		}
 		default:
@@ -148,7 +149,7 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 		}
 
 		lastPos = newPos;
-		lastDir = currDir;
+		lastDir = newDir;
 		map->data[newPos.x][newPos.y] = 1;
 
 		if (newPos.x == map->size.x - 1 || newPos.y == map->size.y - 1)

@@ -197,6 +197,6 @@ Vec2 cornerPos(Vec2 entry,Dir from){
 }
 
 int addCorner(Map* map,Vec2 corner){
-	map[corner.x][corner.y] == "X";
+	map->data[corner.x][corner.y] == "X";
 	return SUCCESS;
 }

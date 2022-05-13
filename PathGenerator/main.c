@@ -4,29 +4,23 @@
 #include "mapgen.h"
 //#include "mapgen.c"
 
-int main()
+int main(int argc, char* argv[])
 {
-	srand(time(NULL));
-	printf("test");
-	Map* map = NULL;
-	Vec2 size = { 21, 21 };
+	if (argc != 5)
+	{
+		printf("\n[+] Usage: {height} {width} {difficulty} {filename}\n");
+		printf("[+] Difficulty: 1 = easy, 2 = medium, 3 = hard");
+		return EXIT_FAILURE;
+	}
 
-	map = genMap(map, size, DIFF_EASY);
+	srand(time(NULL));
+	Map* map = NULL;
+	Vec2 size = { atoi(argv[1]), atoi(argv[2]) };
+
+	map = genMap(map, size, (Difficulty)atoi(argv[3]));
 	print_shard(map,&printPath);
 	print_shard(map,&printMapData);
-	exportMap(map, "level.ice");
+	exportMap(map, argv[4]);
 
-	/*printf("\n");
-	for (int y = map->size.y / 2 - 1; y <= map->size.y / 2 + 1; y++)
-	{
-		for (int x = map->size.x / 2 - 1; x <= map->size.x / 2 + 1; x++)
-		{
-			Vec2 currPos = { x, y };
-			if (checkPos(map, currPos))
-				if ((currPos.x == map->size.x / 2 || currPos.y == map->size.y / 2))
-					printf("%d ", map->data[currPos.x][currPos.y]);
-		}
-		printf("\n");
-	}*/
-
+	return EXIT_SUCCESS;
 }

@@ -69,31 +69,47 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 	Vec2 newPos = map->entry;
 	Vec2 lastPos = newPos;
 	Vec2 temp;
+	Dir currDir;
 
 	for (int i = 0; i < map->size.x * map->size.y; i++)//while (newPos.x != map->size.x - 1 || newPos.y != map->size.y - 1) // Tant qu'on a pas atteint un bord
 	{
-		int dir = rand() % 4;
+		int dir = rand() % 3;
 
 		switch (dir)
 		{
 		case DIR_DOWN:
-			temp = newPos;
-			temp.y++;
-			if (temp.y != lastPos.y && temp.y < map->size.y && countNeighbors(map, temp) == 1)
-				newPos.y++;
+		{
+			if (rand() % 2 == 0)
+			{
+				temp = newPos;
+				temp.y++;
+				if (temp.y != lastPos.y && temp.y < map->size.y && countNeighbors(map, temp) == 1)
+					newPos.y++, currDir = DIR_DOWN;
+			}
 			break;
+		}
 		case DIR_LEFT:
-			temp = newPos;
-			temp.x--;
-			if (temp.x != lastPos.x && temp.x >= 0 && countNeighbors(map, temp) == 1)
-				newPos.x--;
+		{
+			if (rand() % 2 == 0)
+			{
+				temp = newPos;
+				temp.x--;
+				if (temp.x != lastPos.x && temp.x >= 0 && countNeighbors(map, temp) == 1)
+					newPos.x--, currDir = DIR_LEFT;
+			}
 			break;
+		}
 		case DIR_RIGHT:
-			temp = newPos;
-			temp.x++;
-			if (temp.x != lastPos.x && temp.x < map->size.x && countNeighbors(map, temp) == 1)
-				newPos.x++;
+		{
+			if (rand() % 2 == 0)
+			{
+				temp = newPos;
+				temp.x++;
+				if (temp.x != lastPos.x && temp.x < map->size.x && countNeighbors(map, temp) == 1)
+					newPos.x++, currDir = DIR_RIGHT;
+			}
 			break;
+		}
 		default:
 			break;
 		}

@@ -78,7 +78,7 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 	map->size = size;
 	map->level = diff;
 
-	map->data = (int*)calloc(size.x, sizeof(int*)); // Malloc des x
+	map->data = (int**)calloc(size.x, sizeof(int*)); // Malloc des x
 	for (int i = 0; i < size.x; i++)
 		map->data[i] = (int*)calloc(size.y, sizeof(int)); // Malloc des y
 
@@ -88,7 +88,7 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 		return NULL;
 	}
 
-	// Map initialisée, on rempli de 0;
+	// Map initialisï¿½e, on rempli de 0;
 	for (int y = 0; y < map->size.y; y++)
 	{
 		for (int x = 0; x < map->size.x; x++)
@@ -97,7 +97,7 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 		}
 	}
 
-	// Entrée / Sortie
+	// Entrï¿½e / Sortie
 	map->entry.x = 0, map->entry.y = 1;
 	map->exit.x = map->size.x - 1, map->exit.y = map->size.y - 2;
 
@@ -162,14 +162,21 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 	return map;
 }
 
-void printMap(Map* map)
-{
+
+void printMapData(Map* map, int x, int y){
+	printf("2%d ", map->data[x][y]);
+}
+
+void printPath(Map* map,int x,int y){
+	printf("%c ", map->data[x][y] == 0 ? ' ' : '@');
+}
+
+void print_shard(Map* map,void (*fct)(Map*,int,int)){
 	for (int y = 0; y < map->size.y; y++)
 	{
 		for (int x = 0; x < map->size.x; x++)
 		{
-			//printf("%c ", map->data[x][y] == 0 ? ' ' : '@');
-			printf("2%d ", map->data[x][y]);
+			(*fct)(map,x,y);
 		}
 		printf("\n");
 	}

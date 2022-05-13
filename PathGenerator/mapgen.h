@@ -34,5 +34,10 @@ typedef struct map {
 }Map;
 
 Map* genMap(Map* map, Vec2 size, Difficulty diff);
-void printMap(Map* map);
+
+void printMapData(Map* map, int x, int y);
+void printPath(Map* map,int x,int y);
+void print_shard(Map* map,void (*fct)(Map*,int,int));
+
 int exportMap(Map* map, char* fichier);
+

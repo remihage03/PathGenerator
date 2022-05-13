@@ -105,46 +105,24 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 		{
 			checkDir(map, &newPos, lastPos, dir);
 			newDir = dir;
-			/*if (rand() % 2 == 0)
-			{
-				temp = newPos;
-				temp.y++;
-				if (temp.y != lastPos.y && checkPos(map, temp) && countNeighbors(map, temp) == 1)
-					newPos.y++, newDir = DIR_DOWN;
-			}
-			*/
 			break;
 		}
 		case DIR_LEFT:
 		{
 			checkDir(map, &newPos, lastPos, dir);
 			newDir = dir;
-			/*if (rand() % 2 == 0)
-			{
-				temp = newPos;
-				temp.x--;
-				if (temp.x != lastPos.x && checkPos(map, temp) && countNeighbors(map, temp) == 1)
-					newPos.x--, newDir = DIR_LEFT;
-			}*/
 			break;
 		}
 		case DIR_RIGHT:
 		{
 			checkDir(map, &newPos, lastPos, dir);
 			newDir = dir;
-			/*if (rand() % 2 == 0)
-			{
-				temp = newPos;
-				temp.x++;
-				if (temp.x != lastPos.x && checkPos(map, temp) && countNeighbors(map, temp) == 1)
-					newPos.x++, newDir = DIR_RIGHT;
-			}*/
 			break;
 		}
 		default:
 			break;
 		}
-		if(lastDir != currDir){
+		if(lastDir != newDir) {
 			addCorner(map,cornerPos(lastPos,lastDir));
 		}
 
@@ -168,7 +146,7 @@ void printMapData(Map* map, int x, int y) {
 }
 
 void printPath(Map* map,int x,int y) {
-	printf("%c ", map->data[x][y] == 0 ? ' ' : '@');
+	printf("%c ", map->data[x][y] != 1 ? ' ' : '@');
 }
 
 void print_shard(Map* map,void (*fct)(Map*,int,int)) {
@@ -192,7 +170,6 @@ Vec2 cornerPos(Vec2 pivot,Dir from){
 	}
 	else if(from == DIR_LEFT){
 		x = pivot.x-1, y = pivot.y;
-
 	}
 	else if(from == DIR_RIGHT){
 		x = pivot.x+1, y = pivot.y;
@@ -203,6 +180,7 @@ Vec2 cornerPos(Vec2 pivot,Dir from){
 }
 
 int addCorner(Map* map,Vec2 corner){
-	map->data[corner.x][corner.y] = 3;
+	if (checkPos(map, corner))
+		map->data[corner.x][corner.y] = 3;
 	return SUCCESS;
 }

@@ -181,17 +181,16 @@ void print_shard(Map* map,void (*fct)(Map*,int,int)) {
 int exportMap(Map* map, char* fichier);
 
 
-
-Vec2 cornerPos(Vec2 entry,Dir from){
+Vec2 cornerPos(Vec2 pivot,Dir from){
 	Vec2 corner;
 	if(from == DIR_DOWN){
-		corner = {entry.x,entry.y+1};
+		corner = {pivot.x,pivot.y+1};
 	}
 	else if(from == DIR_LEFT){
-		corner = {entry.x-1,entry.y};		
+		corner = {pivot.x-1,pivot.y};		
 	}
 	else if(from == DIR_RIGHT){
-		corner = {entry.x+1,entry.y};
+		corner = {pivot.x+1,pivot.y};
 	}
 	return corner;
 }

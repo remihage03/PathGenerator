@@ -7,10 +7,12 @@
 int main()
 {
 	srand(time(NULL));
+	printf("test");
 	Map* map = NULL;
 	Vec2 size = { 21, 21 };
 
 	map = genMap(map, size, DIFF_EASY);
+
 	// print_shard(map,&printPath);
 	print_shard(map,&printMapData);
 

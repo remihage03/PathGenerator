@@ -41,3 +41,5 @@ void print_shard(Map* map,void (*fct)(Map*,int,int));
 
 int exportMap(Map* map, char* fichier);
 
+int cornerPos(Vec2 entry,Vec2 exit);
+int addCorner(Map* map,Vec2 entry_pos,Vec2 exit_pos);

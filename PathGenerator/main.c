@@ -2,7 +2,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include "mapgen.h"
-#include "mapgen.c"
+//#include "mapgen.c"
 
 int main(int argc, char* argv[])
 {
@@ -21,6 +21,10 @@ int main(int argc, char* argv[])
 	print_shard(map,&printPath);
 	print_shard(map,&printMapData);
 	exportMap(map, argv[4]);
+	
+	solver(map);
+
+	//printf("%d", calcDist(map->entry, map->exit));
 
 	return EXIT_SUCCESS;
 }

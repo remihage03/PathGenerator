@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <math.h>
 #include "mapgen.h"
 
 
@@ -148,8 +149,9 @@ void printPath(Map* map,int x,int y) {
 	char chr = 'a';
 	if (map->data[x][y] == 0) chr = ' ';
 	else if (map->data[x][y] == 1) chr = '@';
-	else if(map->data[x][y] == 3) chr = 'X';
-	else chr = 'R';
+	else if (map->data[x][y] == 5) chr = 'O';
+	else chr = 'X';
+
 	printf("%c ", chr);
 }
 
@@ -284,5 +286,68 @@ Vec2 cornerPos(Vec2 pivot,Dir from){
 int addCorner(Map* map,Vec2 corner){
 	if (checkPos(map, corner))
 		map->data[corner.x][corner.y] = 4;
+	return SUCCESS;
+}
+
+void move(Map* map, Vec2* pos, Dir dir, int lastDist)
+{
+	Vec2 _pos = *pos;
+	switch (dir)
+	{
+	case DIR_DOWN:
+		_pos.y++;
+		break;
+	case DIR_LEFT:
+		_pos.x--;
+		break;
+	case DIR_RIGHT:
+		_pos.x++;
+		break;
+	default:
+		break;
+	}
+	if (checkPos(map, _pos))
+		if (map->data[_pos.x][_pos.y] != 3 && map->data[_pos.x][_pos.y] != 4 && calcDist(_pos, map->exit) <= lastDist)
+			*pos = _pos;
+}
+
+unsigned int calcDist(Vec2 a, Vec2 b)
+{
+	if (a.x == b.x && a.y == b.y) return 0;
+	// * 10 pour avoir plus de précision (en gros 1 chiffre après la virgule mais sans virgule)
+	return (unsigned int)(10 * sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2)));
+}
+
+int solver(Map* map)
+{
+	Vec2 pos = map->entry, lastPos = pos;
+	Dir dir = DIR_RIGHT, lastDir = dir;
+	unsigned int dst = calcDist(pos, map->exit);
+
+	for (size_t i = 0; i < 100; i++)
+	//while (dst != 0)
+	{
+		while (checkPos(map, pos))
+		{
+			move(map, &pos, dir, dst);
+
+			if (pos.x != lastPos.x || pos.y != lastPos.y)
+			{
+				map->data[pos.x][pos.y] = 5;
+				dst = calcDist(pos, map->exit);
+				lastPos = pos;
+			}
+		}
+
+		if (map->data[pos.x + 1][pos.y] == 3)
+			dir = DIR_DOWN;
+		else if (map->data[pos.x][pos.y + 1] == 3)
+			dir = DIR_RIGHT;
+
+		lastDir = dir;
+	}
+
+	print_shard(map, &printPath);
+
 	return SUCCESS;
 }

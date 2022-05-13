@@ -51,3 +51,5 @@ int exportMap(Map* map, char* fichier);
 bool checkPos(Map* map, Vec2 pos);
 Vec2 cornerPos(Vec2 pivot,Dir from);
 int addCorner(Map* map,Vec2 corner);
+
+int solver(Map* map);

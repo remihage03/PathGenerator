@@ -13,6 +13,7 @@ int main()
 	map = genMap(map, size, DIFF_EASY);
 	print_shard(map,&printPath);
 	print_shard(map,&printMapData);
+	exportMap(map, "level.ice");
 
 	/*printf("\n");
 	for (int y = map->size.y / 2 - 1; y <= map->size.y / 2 + 1; y++)

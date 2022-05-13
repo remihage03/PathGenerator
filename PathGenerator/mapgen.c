@@ -62,15 +62,6 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 		return NULL;
 	}
 
-	// Map initialis�e, on rempli de 0;
-	for (int y = 0; y < map->size.y; y++)
-	{
-		for (int x = 0; x < map->size.x; x++)
-		{
-			map->data[x][y] = 0;
-		}
-	}
-
 	// Entr�e / Sortie
 	map->entry.x = 0, map->entry.y = 1;
 	map->exit.x = map->size.x - 1, map->exit.y = map->size.y - 2;
@@ -79,18 +70,12 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 	Vec2 lastPos = newPos;
 	Vec2 temp;
 
-	for (int i = 0; i < map->size.x * map->size.y; i++) //while (newPos.x != map->size.x - 1 || newPos.y != map->size.y - 1) // Tant qu'on a pas atteint un bord
+	for (int i = 0; i < map->size.x * map->size.y; i++)//while (newPos.x != map->size.x - 1 || newPos.y != map->size.y - 1) // Tant qu'on a pas atteint un bord
 	{
 		int dir = rand() % 4;
 
 		switch (dir)
 		{
-		case DIR_UP:
-			temp = newPos;
-			temp.y--;
-			if (temp.y != lastPos.y && temp.y >= 0 && countNeighbors(map, temp) == 1)
-				newPos.y--;
-			break;
 		case DIR_DOWN:
 			temp = newPos;
 			temp.y++;
@@ -117,35 +102,25 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 		map->data[newPos.x][newPos.y] = 1;
 
 		if (newPos.x == map->size.x - 1 || newPos.y == map->size.y - 1)
+		{
+			map->exit = newPos;
 			break;
+		}
 	}
-
-	//int obs = 0;
-	//switch (diff)
-	//{
-	//case DIFF_EASY:
-	//	break;
-	//case DIFF_MEDIUM:
-	//	break;
-	//case DIFF_HARD:
-	//	break;
-	//default:
-	//	break;
-	//}
 
 	return map;
 }
 
 
-void printMapData(Map* map, int x, int y){
-	printf("2%d ", map->data[x][y]);
+void printMapData(Map* map, int x, int y) {
+	printf("%2d ", map->data[x][y]);
 }
 
-void printPath(Map* map,int x,int y){
+void printPath(Map* map,int x,int y) {
 	printf("%c ", map->data[x][y] == 0 ? ' ' : '@');
 }
 
-void print_shard(Map* map,void (*fct)(Map*,int,int)){
+void print_shard(Map* map,void (*fct)(Map*,int,int)) {
 	for (int y = 0; y < map->size.y; y++)
 	{
 		for (int x = 0; x < map->size.x; x++)

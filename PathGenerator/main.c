@@ -2,7 +2,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include "mapgen.h"
-//#include "mapgen.c"
+#include "mapgen.c"
 
 int main(int argc, char* argv[])
 {

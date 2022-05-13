@@ -291,7 +291,7 @@ void move(Map* map, Vec2* pos, Dir dir, int lastDist)
 		break;
 	}
 	if (checkPos(map, _pos))
-		if (map->data[_pos.x][_pos.y] != 3)
+		if (map->data[_pos.x][_pos.y] != 3 && map->data[_pos.x][_pos.y] != 4 && calcDist(_pos, map->exit) <= lastDist)
 			*pos = _pos;
 }
 
@@ -304,14 +304,31 @@ unsigned int calcDist(Vec2 a, Vec2 b)
 
 int solver(Map* map)
 {
-	Vec2 pos = map->entry;
-	Dir dir = DIR_RIGHT;
+	Vec2 pos = map->entry, lastPos = pos;
+	Dir dir = DIR_RIGHT, lastDir = dir;
 	unsigned int dst = calcDist(pos, map->exit);
-	for (size_t i = 0; i < 100; i++) //while (dst != 0)
+
+	for (size_t i = 0; i < 100; i++)
+	//while (dst != 0)
 	{
-		move(map, &pos, dir, dst);
-		map->data[pos.x][pos.y] = 5;
-		dst = calcDist(pos, map->exit);
+		while (checkPos(map, pos))
+		{
+			move(map, &pos, dir, dst);
+
+			if (pos.x != lastPos.x || pos.y != lastPos.y)
+			{
+				map->data[pos.x][pos.y] = 5;
+				dst = calcDist(pos, map->exit);
+				lastPos = pos;
+			}
+		}
+
+		if (map->data[pos.x + 1][pos.y] == 3)
+			dir = DIR_DOWN;
+		else if (map->data[pos.x][pos.y + 1] == 3)
+			dir = DIR_RIGHT;
+
+		lastDir = dir;
 	}
 
 	print_shard(map, &printPath);

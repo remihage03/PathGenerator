@@ -7,9 +7,13 @@
 #define T_ROCK 0
 #define T_ICE -1
 #define T_GRD -3
+#define T_WALL -2
 
 #define X_MAX 999
 #define Y_MAX 999
+
+
+
 
 typedef enum DIFFICULTY
 {
@@ -41,6 +45,8 @@ void printMapData(Map* map, int x, int y);
 void printPath(Map* map,int x,int y);
 void print_shard(Map* map,void (*fct)(Map*,int,int));
 
+
+char* renderPos(int posValue);
 int exportMap(Map* map, char* fichier);
 bool checkPos(Map* map, Vec2 pos);
 Vec2 cornerPos(Vec2 pivot,Dir from);

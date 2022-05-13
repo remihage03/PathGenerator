@@ -5,6 +5,9 @@
 #include <stdbool.h>
 #include "mapgen.h"
 
+
+
+
 bool checkPos(Map* map, Vec2 pos)
 {
 	return (pos.x >= 1 && pos.x < map->size.x - 1 && pos.y >= 1 && pos.y < map->size.y - 1);
@@ -145,8 +148,8 @@ void printPath(Map* map,int x,int y) {
 	char chr = 'a';
 	if (map->data[x][y] == 0) chr = ' ';
 	else if (map->data[x][y] == 1) chr = '@';
-	else chr = 'X';
-
+	else if(map->data[x][y] == 3) chr = 'X';
+	else chr = 'R';
 	printf("%c ", chr);
 }
 
@@ -160,6 +163,31 @@ void print_shard(Map* map,void (*fct)(Map*,int,int)) {
 		}
 		printf("\n");
 	}
+}
+
+
+char* renderPos(int posValue){
+	// char buffer[4];
+	char* buffer = (char*)calloc(4, sizeof(char));
+	switch (posValue)
+	{
+	case 0:
+		sprintf_s(buffer, 3,"%d",T_WALL);
+		break;
+	case 1:
+		sprintf_s(buffer, 3,"%d",T_ICE);
+		break;
+	case 3:
+		sprintf_s(buffer, 3,"%d",T_GRD);
+		break;
+	case 4:
+		sprintf_s(buffer, 3,"%d",T_ROCK);
+		break;
+	default:
+		break;
+	}
+	return buffer;
+
 }
 
 int exportMap(Map* map, char* fichier)
@@ -184,21 +212,22 @@ int exportMap(Map* map, char* fichier)
 
 	int last_mazeblock_index = map->size.y * map->size.x;
 	int check_last_block = 1;
-	char* default_parsing_string = "%d, ";
+	char* default_parsing_string = "%s, ";
 	char* _default_parsing_string;
 
 	for (int i = 0; i < map->size.y; i++)
 	{
 		for (int j = 0; j < map->size.x; j++)
 		{
-			char c_buffer[5];
+			char c_buffer[6];
 			_default_parsing_string = default_parsing_string;
 
 			if (check_last_block == last_mazeblock_index) {
-				_default_parsing_string = "%d";
+				_default_parsing_string = "%s";
 			}
 
-			sprintf_s(c_buffer, 4, _default_parsing_string, map->data[j][i]);
+			char* test = renderPos(map->data[j][i]);
+			sprintf_s(c_buffer,5, _default_parsing_string, test);
 			fprintf(fichier_data, "%s", c_buffer);
 			check_last_block++;
 		}
@@ -238,6 +267,6 @@ Vec2 cornerPos(Vec2 pivot,Dir from){
 
 int addCorner(Map* map,Vec2 corner){
 	if (checkPos(map, corner))
-		map->data[corner.x][corner.y] = 3;
+		map->data[corner.x][corner.y] = 4;
 	return SUCCESS;
 }

@@ -129,7 +129,7 @@ void printPath(Map* map,int x,int y) {
 	char chr = 'a';
 	if (map->data[x][y] == 0) chr = ' ';
 	if (map->data[x][y] == 1) chr = '@';
-	if(map->data[x][y] == 3) chr = '�';
+	if(map->data[x][y] == 3) chr = 'X';
 
 	printf("%c ", chr);
 }

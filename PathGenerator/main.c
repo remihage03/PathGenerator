@@ -2,7 +2,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include "mapgen.h"
-//#include "mapgen.c"
+#include "mapgen.c"
 
 int main()
 {
@@ -13,7 +13,7 @@ int main()
 
 	map = genMap(map, size, DIFF_EASY);
 	print_shard(map,&printPath);
-	print_shard(map,&printMapData);
+	// print_shard(map,&printMapData);
 
 	/*printf("\n");
 	for (int y = map->size.y / 2 - 1; y <= map->size.y / 2 + 1; y++)

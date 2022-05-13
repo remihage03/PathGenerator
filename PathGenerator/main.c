@@ -4,7 +4,6 @@
 #include "mapgen.h"
 //#include "mapgen.c"
 
-
 int main()
 {
 	srand(time(NULL));

@@ -86,7 +86,7 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 		return NULL;
 	}
 
-	// Entr�e / Sortie
+	// Entree / Sortie
 	map->entry.x = 0, map->entry.y = 1;
 	map->exit.x = map->size.x - 1, map->exit.y = map->size.y - 2;
 
@@ -179,3 +179,24 @@ void print_shard(Map* map,void (*fct)(Map*,int,int)) {
 }
 
 int exportMap(Map* map, char* fichier);
+
+
+
+Vec2 cornerPos(Vec2 entry,Dir from){
+	Vec2 corner;
+	if(from == DIR_DOWN){
+		corner = {entry.x,entry.y+1};
+	}
+	else if(from == DIR_LEFT){
+		corner = {entry.x-1,entry.y};		
+	}
+	else if(from == DIR_RIGHT){
+		corner = {entry.x+1,entry.y};
+	}
+	return corner;
+}
+
+int addCorner(Map* map,Vec2 corner){
+	map[corner.x][corner.y] == "X";
+	return SUCCESS;
+}

@@ -93,7 +93,7 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 	Vec2 newPos = map->entry;
 	Vec2 lastPos = newPos;
 	Vec2 temp;
-	Dir currDir;
+	Dir currDir = DIR_RIGHT, lastDir = currDir;
 
 	for (int i = 0; i < map->size.x * map->size.y; i++)//while (newPos.x != map->size.x - 1 || newPos.y != map->size.y - 1) // Tant qu'on a pas atteint un bord
 	{
@@ -145,6 +145,7 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 		}
 
 		lastPos = newPos;
+		lastDir = currDir;
 		map->data[newPos.x][newPos.y] = 1;
 
 		if (newPos.x == map->size.x - 1 || newPos.y == map->size.y - 1)

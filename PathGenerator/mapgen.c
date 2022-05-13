@@ -92,17 +92,16 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 		for (int x = 0; x < map->size.x; x++)
 		{
 			if (x == 0 || y == 0 || x == map->size.x - 1 || y == map->size.y - 1)
-				map->data[x][y] = 1;
+				map->data[x][y] = 3;
 		}
 	}
 
 	print_shard(map, &printMapData);
 
 	// Entree / Sortie
-	map->entry.x = 0, map->entry.y = 1;
-	map->exit.x = map->size.x - 1, map->exit.y = map->size.y - 2;
+	map->entry.x = 1, map->entry.y = 1;
 
-	Vec2 newPos = { map->entry.x + 1, map->entry.y };
+	Vec2 newPos = map->entry;
 	Vec2 lastPos = newPos;
 	Vec2 temp;
 	Dir newDir = DIR_RIGHT, lastDir = newDir;
@@ -124,7 +123,12 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 
 		if (newPos.x == map->size.x - 2 || newPos.y == map->size.y - 2)
 		{
+			//if (newPos.x == map->size.x - 2) 
+			//	map->exit = (Vec2){ newPos.x + 1, newPos.y };
+			//else
+			//	map->exit = (Vec2){ newPos.x, newPos.y + 1 };
 			map->exit = newPos;
+			//map->data[map->exit.x][map->exit.y] = 1;
 			break;
 		}
 	}
@@ -171,7 +175,7 @@ int exportMap(Map* map, char* fichier)
 		return(ERROR);
 	}
 
-	const char* json = "{\"options\":{\"width\": %d, \"height\" : %d, \"lvl\" : %d},\"data\":[";
+	const char* json = "{\n\t\"header\": {\n\t\"width\": %d,\n\t\"height\" : %d,\n\t \"diff\" : %d\n\t},\n\t\"data\": [\n\t\t";
 	int newsize = 4 + 4 + strlen(json); //4 = strlen('1000') <=> strlen(maxsizeX/Y) 
 	char* buffer = (char*)calloc(newsize, sizeof(char));
 
@@ -180,7 +184,7 @@ int exportMap(Map* map, char* fichier)
 
 	int last_mazeblock_index = map->size.y * map->size.x;
 	int check_last_block = 1;
-	char* default_parsing_string = "%d,";
+	char* default_parsing_string = "%d, ";
 	char* _default_parsing_string;
 
 	for (int i = 0; i < map->size.y; i++)
@@ -199,10 +203,10 @@ int exportMap(Map* map, char* fichier)
 			check_last_block++;
 		}
 
-		fprintf(fichier_data, "%s", "\n");
+		fprintf(fichier_data, "%s", "\n\t\t");
 	}
 
-	char* nextOpt = "],\"entry\":{\"x\":%d,\"y\":%d},\"exit\":{\"x\":%d,\"y\":%d}}";
+	char* nextOpt = "],\n\t\"start\": { \"x\":%d, \"y\":%d }, \n\t\"end\": { \"x\":%d, \"y\":%d }\n}";
 	Vec2 in = map->entry, out = map->exit;
 	
 	sprintf_s(buffer, strlen(nextOpt), nextOpt, in.x, in.y, out.x, out.y);

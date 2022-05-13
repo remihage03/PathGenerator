@@ -1,4 +1,5 @@
 #pragma once
+#include <stdbool.h>
 
 #define ERROR -1
 #define SUCCESS 0
@@ -41,6 +42,6 @@ void printPath(Map* map,int x,int y);
 void print_shard(Map* map,void (*fct)(Map*,int,int));
 
 int exportMap(Map* map, char* fichier);
-
+bool checkPos(Map* map, Vec2 pos);
 Vec2 cornerPos(Vec2 pivot,Dir from);
 int addCorner(Map* map,Vec2 corner);

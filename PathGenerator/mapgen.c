@@ -168,8 +168,8 @@ void printMap(Map* map)
 	{
 		for (int x = 0; x < map->size.x; x++)
 		{
-			//printf("%c ", map->data[x][y] == 0 ? ' ' : '@');
-			printf("2%d ", map->data[x][y]);
+			printf("%c ", map->data[x][y] == 0 ? ' ' : '@');
+			//printf("2%d ", map->data[x][y]);
 		}
 		printf("\n");
 	}

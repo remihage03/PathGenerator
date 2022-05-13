@@ -7,6 +7,7 @@
 int main()
 {
 	srand(time(NULL));
+	printf("test");
 	Map* map = NULL;
 	Vec2 size = { 21, 21 };
 

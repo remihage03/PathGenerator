@@ -106,7 +106,6 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 		if(lastDir != newDir) {
 			addCorner(map,cornerPos(lastPos,lastDir));
 		}
-
 		lastPos = newPos;
 		lastDir = newDir;
 		map->data[newPos.x][newPos.y] = 1;
@@ -205,6 +204,7 @@ int exportMap(Map* map, char* fichier)
 
 Vec2 cornerPos(Vec2 pivot,Dir from){
 	int x = 0,y=0 ;
+	printf("\n pivot : %d %d",pivot.x,pivot.y);
 	if(from == DIR_DOWN){
 		x = pivot.x, y = pivot.y+1;
 	}
@@ -214,6 +214,7 @@ Vec2 cornerPos(Vec2 pivot,Dir from){
 	else if(from == DIR_RIGHT){
 		x = pivot.x+1, y = pivot.y;
 	}
+	printf("\n x,y : %d %d",x,y);
 	Vec2 corner = {x,y};
 	return corner;
 	

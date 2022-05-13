@@ -99,29 +99,10 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 	{
 		int dir = rand() % 3;
 
-		switch (dir)
-		{
-		case DIR_DOWN:
-		{
-			checkDir(map, &newPos, lastPos, dir);
+		checkDir(map, &newPos, lastPos, dir);
+		if (newPos.x != lastPos.x || newPos.y != lastPos.y)
 			newDir = dir;
-			break;
-		}
-		case DIR_LEFT:
-		{
-			checkDir(map, &newPos, lastPos, dir);
-			newDir = dir;
-			break;
-		}
-		case DIR_RIGHT:
-		{
-			checkDir(map, &newPos, lastPos, dir);
-			newDir = dir;
-			break;
-		}
-		default:
-			break;
-		}
+
 		if(lastDir != newDir) {
 			addCorner(map,cornerPos(lastPos,lastDir));
 		}
@@ -146,7 +127,12 @@ void printMapData(Map* map, int x, int y) {
 }
 
 void printPath(Map* map,int x,int y) {
-	printf("%c ", map->data[x][y] != 1 ? ' ' : '@');
+	char chr = 'a';
+	if (map->data[x][y] == 0) chr = ' ';
+	if (map->data[x][y] == 1) chr = '@';
+	if(map->data[x][y] == 3) chr = '°';
+
+	printf("%c ", chr);
 }
 
 void print_shard(Map* map,void (*fct)(Map*,int,int)) {

@@ -171,19 +171,20 @@ void print_shard(Map* map,void (*fct)(Map*,int,int)) {
 char* renderPos(int posValue){
 	// char buffer[4];
 	char* buffer = (char*)calloc(4, sizeof(char));
+	int buff_sz = 3;
 	switch (posValue)
 	{
 	case 0:
-		sprintf_s(buffer, 3,"%d",T_WALL);
+		sprintf_s(buffer, buff_sz,"%d",T_WALL);
 		break;
 	case 1:
-		sprintf_s(buffer, 3,"%d",T_ICE);
+		sprintf_s(buffer, buff_sz,"%d",T_ICE);
 		break;
 	case 3:
-		sprintf_s(buffer, 3,"%d",T_GRD);
+		sprintf_s(buffer, buff_sz,"%d",T_GRD);
 		break;
 	case 4:
-		sprintf_s(buffer, 3,"%d",T_ROCK);
+		sprintf_s(buffer, buff_sz,"%d",T_ROCK);
 		break;
 	default:
 		break;
@@ -205,17 +206,23 @@ int exportMap(Map* map, char* fichier)
 		return(ERROR);
 	}
 
-	const char* json = "{\n\t\"header\": {\n\t\"width\": %d,\n\t\"height\" : %d,\n\t \"diff\" : %d\n\t},\n\t\"data\": [\n\t\t";
-	int newsize = 4 + 4 + strlen(json); //4 = strlen('1000') <=> strlen(maxsizeX/Y) 
-	char* buffer = (char*)calloc(newsize, sizeof(char));
+	const char* header = "{\n\t\"header\": {\n\t\"width\": %d,\n\t\"height\" : %d,\n\t \"diff\" : %d\n\t},\n\t";
+	char* header_buff = (char*)calloc(strlen(header),sizeof(char));
+	sprintf(header_buff,header,map->size.x,map->size.y,map->level);
+	fprintf(fichier_data,"%s",header_buff);
+	free(header_buff);
 
-	sprintf_s(buffer, newsize, json, map->size.x, map->size.y, map->level);
-	fprintf(fichier_data, "%s", buffer);
+	const char* footer = "\"start\":{\"x\": %d ,\"y\": %d },\"end\":{\"x\":%d,\"y\":%d}}}";
+	char* footer_buff = (char*)calloc(strlen(footer),sizeof(char));
+	sprintf(footer_buff,footer,map->entry.x,map->entry.y,map->exit.x,map->exit.y);
 
+	int _data_size = 5*map->size.x*map->size.y+1;
+	
+	char* data_buffer = (char*)calloc(_data_size,sizeof(char));
 	int last_mazeblock_index = map->size.y * map->size.x;
-	int check_last_block = 1;
 	char* default_parsing_string = "%s, ";
 	char* _default_parsing_string;
+
 
 	for (int i = 0; i < map->size.y; i++)
 	{
@@ -224,27 +231,36 @@ int exportMap(Map* map, char* fichier)
 			char c_buffer[6];
 			_default_parsing_string = default_parsing_string;
 
-			if (check_last_block == last_mazeblock_index) {
+			if ((i+1)*(+1+j) == last_mazeblock_index) {
 				_default_parsing_string = "%s";
 			}
 
-			char* test = renderPos(map->data[j][i]);
-			sprintf_s(c_buffer,5, _default_parsing_string, test);
-			fprintf(fichier_data, "%s", c_buffer);
-			check_last_block++;
+			if(0 > sprintf_s(c_buffer,5, _default_parsing_string, renderPos(map->data[j][i]))){
+				printf("\nerror in sprintf");
+			};
+			if(strcat_s(data_buffer,_data_size,c_buffer) != 0){
+				printf("\nerror");
+			}
 		}
-
-		fprintf(fichier_data, "%s", "\n\t\t");
 	}
 
-	char* nextOpt = "],\n\t\"start\": { \"x\":%d, \"y\":%d }, \n\t\"end\": { \"x\":%d, \"y\":%d }\n}";
-	Vec2 in = map->entry, out = map->exit;
-	
-	sprintf_s(buffer, strlen(nextOpt), nextOpt, in.x, in.y, out.x, out.y);
-	fprintf(fichier_data, "%s", buffer);
-	
-	printf("Done Writing in %s !\n", fichier);
+	char* body = "\"body\":{\n\t\t\"texture\":[%s],\"data\":[%s],";
+	int body_size = strlen(body)+2*strlen(data_buffer);
+	char* body_buff = (char*)calloc(body_size,sizeof(char));
+
+	if( 0 > sprintf_s(body_buff,body_size,body,data_buffer,data_buffer)){
+		printf("error in sprintf_s");
+	}
+	free(data_buffer);
+	fprintf(fichier_data,"%s",body_buff);
+	free(body_buff);
+
+	fprintf(fichier_data,"%s",footer_buff);
+	free(footer_buff);
+
+	printf("Done Writing in %s and in x sec!\n",fichier);
 	fclose(fichier_data);
+
 	return SUCCESS;
 }
 

@@ -448,37 +448,3 @@ Map* parseJson(Map* map,char* filename){
 	printf("\nParsing successful.");
 	return map;
 } 
-
-int solver(Map* map)
-{
-	Vec2 pos = map->entry, lastPos = pos;
-	Dir dir = DIR_RIGHT, lastDir = dir;
-	unsigned int dst = calcDist(pos, map->exit);
-
-	for (size_t i = 0; i < 100; i++)
-	//while (dst != 0)
-	{
-		while (checkPos(map, pos))
-		{
-			move(map, &pos, dir, dst);
-
-			if (pos.x != lastPos.x || pos.y != lastPos.y)
-			{
-				map->data[pos.x][pos.y] = 5;
-				dst = calcDist(pos, map->exit);
-				lastPos = pos;
-			}
-		}
-
-		if (map->data[pos.x + 1][pos.y] == 3)
-			dir = DIR_DOWN;
-		else if (map->data[pos.x][pos.y + 1] == 3)
-			dir = DIR_RIGHT;
-
-		lastDir = dir;
-	}
-
-	print_shard(map, &printPath);
-
-	return SUCCESS;
-}

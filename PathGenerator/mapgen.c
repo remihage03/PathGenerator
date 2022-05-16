@@ -311,7 +311,7 @@ int solver(Map* map)
 	for (size_t i = 0; i < 100; i++)
 	//while (dst != 0)
 	{
-		while (checkPos(map, pos))
+		while (lastDir == dir)
 		{
 			move(map, &pos, dir, dst);
 
@@ -321,12 +321,14 @@ int solver(Map* map)
 				dst = calcDist(pos, map->exit);
 				lastPos = pos;
 			}
+			else
+			{
+				if (map->data[pos.x + 1][pos.y] == 3)
+					dir = DIR_DOWN;
+				else if (map->data[pos.x][pos.y + 1] == 3)
+					dir = DIR_RIGHT;
+			}
 		}
-
-		if (map->data[pos.x + 1][pos.y] == 3)
-			dir = DIR_DOWN;
-		else if (map->data[pos.x][pos.y + 1] == 3)
-			dir = DIR_RIGHT;
 
 		lastDir = dir;
 	}

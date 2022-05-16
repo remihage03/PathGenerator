@@ -41,6 +41,7 @@ typedef struct map {
 
 Map* genMap(Map* map, Vec2 size, Difficulty diff);
 
+void printMapInfo(Map* map);
 void printMapData(Map* map, int x, int y);
 void printPath(Map* map,int x,int y);
 void print_shard(Map* map,void (*fct)(Map*,int,int));
@@ -51,5 +52,7 @@ int exportMap(Map* map, char* fichier);
 bool checkPos(Map* map, Vec2 pos);
 Vec2 cornerPos(Vec2 pivot,Dir from);
 int addCorner(Map* map,Vec2 corner);
+int posToMap(int pos);
+Map* parseJson(Map* map,char* filename);
 
-int solver(Map* map);
+// int solver(Map* map);

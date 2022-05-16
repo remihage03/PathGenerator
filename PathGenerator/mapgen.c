@@ -100,7 +100,7 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 		}
 	}
 
-	print_shard(map, &printMapData);
+	// print_shard(map, &printMapData); // print juste les bords
 
 	// Entree / Sortie
 	map->entry.x = 1, map->entry.y = 1;
@@ -136,10 +136,13 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 			break;
 		}
 	}
-
 	return map;
 }
 
+void printMapInfo(Map* map){
+	printf("map : %d",map->level);
+	printf("\nWidth : %d, Height : %d, level : %d",map->size.x,map->size.y,map->level);
+}
 
 void printMapData(Map* map, int x, int y) {
 	printf("%2d ", map->data[x][y]);
@@ -169,7 +172,6 @@ void print_shard(Map* map,void (*fct)(Map*,int,int)) {
 
 
 char* renderPos(int posValue){
-	// char buffer[4];
 	char* buffer = (char*)calloc(4, sizeof(char));
 	int buff_sz = 3;
 	switch (posValue)
@@ -190,7 +192,6 @@ char* renderPos(int posValue){
 		break;
 	}
 	return buffer;
-
 }
 
 int exportMap(Map* map, char* fichier)
@@ -212,15 +213,15 @@ int exportMap(Map* map, char* fichier)
 	fprintf(fichier_data,"%s",header_buff);
 	free(header_buff);
 
-	const char* footer = "\"start\":{\"x\": %d ,\"y\": %d },\"end\":{\"x\":%d,\"y\":%d}}}";
+	const char* footer = "\"start\":{\"x\":%2d,\"y\":%2d},\"end\":{\"x\":%2d,\"y\":%2d}";
 	char* footer_buff = (char*)calloc(strlen(footer),sizeof(char));
 	sprintf(footer_buff,footer,map->entry.x,map->entry.y,map->exit.x,map->exit.y);
 
-	int _data_size = 5*map->size.x*map->size.y+1;
+	int _data_size = 6*map->size.x*map->size.y+1;
 	
 	char* data_buffer = (char*)calloc(_data_size,sizeof(char));
 	int last_mazeblock_index = map->size.y * map->size.x;
-	char* default_parsing_string = "%s, ";
+	char* default_parsing_string = "%3s,";
 	char* _default_parsing_string;
 
 
@@ -232,7 +233,7 @@ int exportMap(Map* map, char* fichier)
 			_default_parsing_string = default_parsing_string;
 
 			if ((i+1)*(+1+j) == last_mazeblock_index) {
-				_default_parsing_string = "%s";
+				_default_parsing_string = "%3s";
 			}
 
 			if(0 > sprintf_s(c_buffer,5, _default_parsing_string, renderPos(map->data[j][i]))){
@@ -244,23 +245,22 @@ int exportMap(Map* map, char* fichier)
 		}
 	}
 
-	char* body = "\"body\":{\n\t\t\"texture\":[%s],\"data\":[%s],";
-	int body_size = strlen(body)+2*strlen(data_buffer);
+	char* body = "\"body\":{\n\t\t%s,\"texture\":[%s],\"data\":[%s]}}";
+	int body_size = strlen(body)+2*strlen(data_buffer)+strlen(footer_buff);
 	char* body_buff = (char*)calloc(body_size,sizeof(char));
 
-	if( 0 > sprintf_s(body_buff,body_size,body,data_buffer,data_buffer)){
+	if( 0 > sprintf_s(body_buff,body_size,body,footer_buff,data_buffer,data_buffer)){
 		printf("error in sprintf_s");
 	}
 	free(data_buffer);
 	fprintf(fichier_data,"%s",body_buff);
 	free(body_buff);
-
-	fprintf(fichier_data,"%s",footer_buff);
 	free(footer_buff);
+
+	// fprintf(fichier_data,"%s",footer_buff);
 
 	printf("Done Writing in %s and in x sec!\n",fichier);
 	fclose(fichier_data);
-
 	return SUCCESS;
 }
 
@@ -289,65 +289,195 @@ int addCorner(Map* map,Vec2 corner){
 	return SUCCESS;
 }
 
-void move(Map* map, Vec2* pos, Dir dir, int lastDist)
-{
-	Vec2 _pos = *pos;
-	switch (dir)
+// void move(Map* map, Vec2* pos, Dir dir, int lastDist)
+// {
+// 	Vec2 _pos = *pos;
+// 	switch (dir)
+// 	{
+// 	case DIR_DOWN:
+// 		_pos.y++;
+// 		break;
+// 	case DIR_LEFT:
+// 		_pos.x--;
+// 		break;
+// 	case DIR_RIGHT:
+// 		_pos.x++;
+// 		break;
+// 	default:
+// 		break;
+// 	}
+// 	if (checkPos(map, _pos))
+// 		if (map->data[_pos.x][_pos.y] != 3 && map->data[_pos.x][_pos.y] != 4 && calcDist(_pos, map->exit) <= lastDist)
+// 			*pos = _pos;
+// }
+
+// unsigned int calcDist(Vec2 a, Vec2 b)
+// {
+// 	if (a.x == b.x && a.y == b.y) return 0;
+// 	// * 10 pour avoir plus de précision (en gros 1 chiffre après la virgule mais sans virgule)
+// 	return (unsigned int)(10 * sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2)));
+// }
+
+
+
+int posToMap(int pos){
+	// char* buffer = (char*)calloc(4, sizeof(char));
+	int buffer;
+	// int buff_sz = 3;
+	switch (pos)
 	{
-	case DIR_DOWN:
-		_pos.y++;
+	case T_WALL:
+		// sprintf_s(buffer, buff_sz,"%d",T_WALL);
+		buffer = 0;
 		break;
-	case DIR_LEFT:
-		_pos.x--;
+	case T_ICE:
+		// sprintf_s(buffer, buff_sz,"%d",T_ICE);
+		buffer = 1;
 		break;
-	case DIR_RIGHT:
-		_pos.x++;
+	case T_GRD:
+		// sprintf_s(buffer, buff_sz,"%d",T_GRD);
+		buffer = 3;
+		break;
+	case T_ROCK:
+		// sprintf_s(buffer, buff_sz,"%d",T_ROCK);
+		buffer = 4;
 		break;
 	default:
+		buffer = 9;
 		break;
 	}
-	if (checkPos(map, _pos))
-		if (map->data[_pos.x][_pos.y] != 3 && map->data[_pos.x][_pos.y] != 4 && calcDist(_pos, map->exit) <= lastDist)
-			*pos = _pos;
+	return buffer;
 }
 
-unsigned int calcDist(Vec2 a, Vec2 b)
-{
-	if (a.x == b.x && a.y == b.y) return 0;
-	// * 10 pour avoir plus de précision (en gros 1 chiffre après la virgule mais sans virgule)
-	return (unsigned int)(10 * sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2)));
-}
+Map* parseJson(Map* map,char* filename){
+	if (!filename) return NULL;
 
-int solver(Map* map)
-{
-	Vec2 pos = map->entry, lastPos = pos;
-	Dir dir = DIR_RIGHT, lastDir = dir;
-	unsigned int dst = calcDist(pos, map->exit);
+	FILE* fichier_data;
+	errno_t err = fopen_s(&fichier_data, filename, "r+");
 
-	for (size_t i = 0; i < 100; i++)
-	//while (dst != 0)
+	if (err)
 	{
-		while (checkPos(map, pos))
-		{
-			move(map, &pos, dir, dst);
-
-			if (pos.x != lastPos.x || pos.y != lastPos.y)
-			{
-				map->data[pos.x][pos.y] = 5;
-				dst = calcDist(pos, map->exit);
-				lastPos = pos;
-			}
-		}
-
-		if (map->data[pos.x + 1][pos.y] == 3)
-			dir = DIR_DOWN;
-		else if (map->data[pos.x][pos.y + 1] == 3)
-			dir = DIR_RIGHT;
-
-		lastDir = dir;
+		perror("fopen");
+		return(NULL);
 	}
 
-	print_shard(map, &printPath);
+	map = (Map*)calloc(1, sizeof(Map));
 
-	return SUCCESS;
-}
+	if (!map)
+	{
+		free(map);
+		return NULL;
+	}
+
+	char _width[4];
+	char _height[4];
+	char _diff[2];
+
+	fseek(fichier_data,27,0);
+	fread(_width,2,1,fichier_data);
+	fseek(fichier_data,44,0);
+	fread(_height,2,1,fichier_data);
+	fseek(fichier_data,60,0);
+	fread(_diff,1,1,fichier_data);
+
+
+	char _entry_x[3];
+	char _entry_y[3];
+	fseek(fichier_data,94,0);
+	fread(_entry_x,2,1,fichier_data);
+	fseek(fichier_data,101,0);
+	fread(_entry_y,2,1,fichier_data);
+
+	int x = strtol(_entry_x,NULL,10);
+	int y = strtol(_entry_y,NULL,10);
+	Vec2 entry = {x,y};
+	map->entry = entry;
+	char _exit_x[3];
+	char _exit_y[3];
+	fseek(fichier_data,116,0);
+	fread(_entry_x,2,1,fichier_data);
+	fseek(fichier_data,123,0);
+	fread(_entry_y,2,1,fichier_data);
+	Vec2 exit = {strtol(_exit_x,NULL,10),strtol(_exit_y,NULL,10)};
+	map->exit = exit;
+
+	int width = strtol(_width,NULL,10);
+	int height = strtol(_height,NULL,10);
+	int diff = strtol(_diff,NULL,10);
+	printf("Width = %d, Height = %d, diff = %d\n", width,height,diff);
+	Vec2 size = {width,height};
+	map->size = size;
+	map->level = diff;
+
+
+	map->data = (int**)calloc(size.x, sizeof(int*)); // Malloc des x
+	for (int i = 0; i < size.x; i++)
+		map->data[i] = (int*)calloc(size.y, sizeof(int)); // Malloc des y
+
+	if (!map->data)
+	{
+		free(map->data);
+		printf("error");
+		return NULL;
+	}
+	
+	int* textures = NULL;
+	int* map_data = NULL;
+
+	int res = width*height;
+	// texture // data
+	fseek(fichier_data,139,0);
+	char tmp_val[4];
+	int pos;
+	for(int i = 0;i<height;i++){
+		for(int j = 0;j<width;j++){
+			fread(tmp_val,2,1,fichier_data);
+			fseek(fichier_data,2,SEEK_CUR);
+			// printf("%ld ",strtol(tmp_val,NULL,10));
+			// printf("%d ",posToMap(strtol(tmp_val,NULL,10)));
+			pos = posToMap(strtol(tmp_val,NULL,10));
+			// map->data[i][j] =  strtol(tmp_val,NULL,10);
+			map->data[i][j] = pos;
+		}
+	 	// printf("\n");
+	}
+	// entry :
+	fclose(fichier_data);
+	print_shard(map,&printMapData);
+	printf("\nParsing successful.");
+	return map;
+} 
+
+// int solver(Map* map)
+// {
+// 	Vec2 pos = map->entry, lastPos = pos;
+// 	Dir dir = DIR_RIGHT, lastDir = dir;
+// 	unsigned int dst = calcDist(pos, map->exit);
+
+// 	for (size_t i = 0; i < 100; i++)
+// 	//while (dst != 0)
+// 	{
+// 		while (checkPos(map, pos))
+// 		{
+// 			move(map, &pos, dir, dst);
+
+// 			if (pos.x != lastPos.x || pos.y != lastPos.y)
+// 			{
+// 				map->data[pos.x][pos.y] = 5;
+// 				dst = calcDist(pos, map->exit);
+// 				lastPos = pos;
+// 			}
+// 		}
+
+// 		if (map->data[pos.x + 1][pos.y] == 3)
+// 			dir = DIR_DOWN;
+// 		else if (map->data[pos.x][pos.y + 1] == 3)
+// 			dir = DIR_RIGHT;
+
+// 		lastDir = dir;
+// 	}
+
+// 	print_shard(map, &printPath);
+
+// 	return SUCCESS;
+// }

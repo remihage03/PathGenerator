@@ -319,7 +319,6 @@ unsigned int calcDist(Vec2 a, Vec2 b)
 }
 
 
-
 int posToMap(int pos){
 	int buffer;
 	switch (pos)

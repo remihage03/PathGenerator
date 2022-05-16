@@ -55,4 +55,6 @@ int addCorner(Map* map,Vec2 corner);
 int posToMap(int pos);
 Map* parseJson(Map* map,char* filename);
 
-// int solver(Map* map);
+
+unsigned int calcDist(Vec2 a, Vec2 b);
+int solver(Map* map);

@@ -289,57 +289,51 @@ int addCorner(Map* map,Vec2 corner){
 	return SUCCESS;
 }
 
-// void move(Map* map, Vec2* pos, Dir dir, int lastDist)
-// {
-// 	Vec2 _pos = *pos;
-// 	switch (dir)
-// 	{
-// 	case DIR_DOWN:
-// 		_pos.y++;
-// 		break;
-// 	case DIR_LEFT:
-// 		_pos.x--;
-// 		break;
-// 	case DIR_RIGHT:
-// 		_pos.x++;
-// 		break;
-// 	default:
-// 		break;
-// 	}
-// 	if (checkPos(map, _pos))
-// 		if (map->data[_pos.x][_pos.y] != 3 && map->data[_pos.x][_pos.y] != 4 && calcDist(_pos, map->exit) <= lastDist)
-// 			*pos = _pos;
-// }
+void move(Map* map, Vec2* pos, Dir dir, int lastDist)
+{
+	Vec2 _pos = *pos;
+	switch (dir)
+	{
+	case DIR_DOWN:
+		_pos.y++;
+		break;
+	case DIR_LEFT:
+		_pos.x--;
+		break;
+	case DIR_RIGHT:
+		_pos.x++;
+		break;
+	default:
+		break;
+	}
+	if (checkPos(map, _pos))
+		if (map->data[_pos.x][_pos.y] != 3 && map->data[_pos.x][_pos.y] != 4 && calcDist(_pos, map->exit) <= lastDist)
+			*pos = _pos;
+}
 
-// unsigned int calcDist(Vec2 a, Vec2 b)
-// {
-// 	if (a.x == b.x && a.y == b.y) return 0;
-// 	// * 10 pour avoir plus de précision (en gros 1 chiffre après la virgule mais sans virgule)
-// 	return (unsigned int)(10 * sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2)));
-// }
+unsigned int calcDist(Vec2 a, Vec2 b)
+{
+	if (a.x == b.x && a.y == b.y) return 0;
+	// * 10 pour avoir plus de précision (en gros 1 chiffre après la virgule mais sans virgule)
+	return (unsigned int)(10 * sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2)));
+}
 
 
 
 int posToMap(int pos){
-	// char* buffer = (char*)calloc(4, sizeof(char));
 	int buffer;
-	// int buff_sz = 3;
 	switch (pos)
 	{
 	case T_WALL:
-		// sprintf_s(buffer, buff_sz,"%d",T_WALL);
 		buffer = 0;
 		break;
 	case T_ICE:
-		// sprintf_s(buffer, buff_sz,"%d",T_ICE);
 		buffer = 1;
 		break;
 	case T_GRD:
-		// sprintf_s(buffer, buff_sz,"%d",T_GRD);
 		buffer = 3;
 		break;
 	case T_ROCK:
-		// sprintf_s(buffer, buff_sz,"%d",T_ROCK);
 		buffer = 4;
 		break;
 	default:
@@ -448,36 +442,36 @@ Map* parseJson(Map* map,char* filename){
 	return map;
 } 
 
-// int solver(Map* map)
-// {
-// 	Vec2 pos = map->entry, lastPos = pos;
-// 	Dir dir = DIR_RIGHT, lastDir = dir;
-// 	unsigned int dst = calcDist(pos, map->exit);
+int solver(Map* map)
+{
+	Vec2 pos = map->entry, lastPos = pos;
+	Dir dir = DIR_RIGHT, lastDir = dir;
+	unsigned int dst = calcDist(pos, map->exit);
 
-// 	for (size_t i = 0; i < 100; i++)
-// 	//while (dst != 0)
-// 	{
-// 		while (checkPos(map, pos))
-// 		{
-// 			move(map, &pos, dir, dst);
+	for (size_t i = 0; i < 100; i++)
+	//while (dst != 0)
+	{
+		while (checkPos(map, pos))
+		{
+			move(map, &pos, dir, dst);
 
-// 			if (pos.x != lastPos.x || pos.y != lastPos.y)
-// 			{
-// 				map->data[pos.x][pos.y] = 5;
-// 				dst = calcDist(pos, map->exit);
-// 				lastPos = pos;
-// 			}
-// 		}
+			if (pos.x != lastPos.x || pos.y != lastPos.y)
+			{
+				map->data[pos.x][pos.y] = 5;
+				dst = calcDist(pos, map->exit);
+				lastPos = pos;
+			}
+		}
 
-// 		if (map->data[pos.x + 1][pos.y] == 3)
-// 			dir = DIR_DOWN;
-// 		else if (map->data[pos.x][pos.y + 1] == 3)
-// 			dir = DIR_RIGHT;
+		if (map->data[pos.x + 1][pos.y] == 3)
+			dir = DIR_DOWN;
+		else if (map->data[pos.x][pos.y + 1] == 3)
+			dir = DIR_RIGHT;
 
-// 		lastDir = dir;
-// 	}
+		lastDir = dir;
+	}
 
-// 	print_shard(map, &printPath);
+	print_shard(map, &printPath);
 
-// 	return SUCCESS;
-// }
+	return SUCCESS;
+}

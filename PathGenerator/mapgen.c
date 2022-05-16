@@ -296,3 +296,126 @@ int addCorner(Map* map,Vec2 corner){
 		map->data[corner.x][corner.y] = 4;
 	return SUCCESS;
 }
+
+
+int posToMap(int pos){
+	int buffer;
+	switch (pos)
+	{
+	case T_WALL:
+		buffer = 0;
+		break;
+	case T_ICE:
+		buffer = 1;
+		break;
+	case T_GRD:
+		buffer = 3;
+		break;
+	case T_ROCK:
+		buffer = 4;
+		break;
+	default:
+		buffer = 9;
+		break;
+	}
+	return buffer;
+}
+
+Map* parseJson(Map* map,char* filename){
+	if (!filename) return NULL;
+
+	FILE* fichier_data;
+	errno_t err = fopen_s(&fichier_data, filename, "r+");
+
+	if (err)
+	{
+		perror("fopen");
+		return(NULL);
+	}
+
+	map = (Map*)calloc(1, sizeof(Map));
+
+	if (!map)
+	{
+		free(map);
+		return NULL;
+	}
+
+	char _width[4];
+	char _height[4];
+	char _diff[2];
+
+	fseek(fichier_data,27,0);
+	fread(_width,2,1,fichier_data);
+	fseek(fichier_data,44,0);
+	fread(_height,2,1,fichier_data);
+	fseek(fichier_data,60,0);
+	fread(_diff,1,1,fichier_data);
+
+
+	char _entry_x[3];
+	char _entry_y[3];
+	fseek(fichier_data,94,0);
+	fread(_entry_x,2,1,fichier_data);
+	fseek(fichier_data,101,0);
+	fread(_entry_y,2,1,fichier_data);
+
+	int x = strtol(_entry_x,NULL,10);
+	int y = strtol(_entry_y,NULL,10);
+	Vec2 entry = {x,y};
+	map->entry = entry;
+	char _exit_x[3];
+	char _exit_y[3];
+	fseek(fichier_data,116,0);
+	fread(_entry_x,2,1,fichier_data);
+	fseek(fichier_data,123,0);
+	fread(_entry_y,2,1,fichier_data);
+	Vec2 exit = {strtol(_exit_x,NULL,10),strtol(_exit_y,NULL,10)};
+	map->exit = exit;
+
+	int width = strtol(_width,NULL,10);
+	int height = strtol(_height,NULL,10);
+	int diff = strtol(_diff,NULL,10);
+	printf("Width = %d, Height = %d, diff = %d\n", width,height,diff);
+	Vec2 size = {width,height};
+	map->size = size;
+	map->level = diff;
+
+
+	map->data = (int**)calloc(size.x, sizeof(int*)); // Malloc des x
+	for (int i = 0; i < size.x; i++)
+		map->data[i] = (int*)calloc(size.y, sizeof(int)); // Malloc des y
+
+	if (!map->data)
+	{
+		free(map->data);
+		printf("error");
+		return NULL;
+	}
+	
+	int* textures = NULL;
+	int* map_data = NULL;
+
+	int res = width*height;
+	// texture // data
+	fseek(fichier_data,139,0);
+	char tmp_val[4];
+	int pos;
+	for(int i = 0;i<height;i++){
+		for(int j = 0;j<width;j++){
+			fread(tmp_val,2,1,fichier_data);
+			fseek(fichier_data,2,SEEK_CUR);
+			// printf("%ld ",strtol(tmp_val,NULL,10));
+			// printf("%d ",posToMap(strtol(tmp_val,NULL,10)));
+			pos = posToMap(strtol(tmp_val,NULL,10));
+			// map->data[i][j] =  strtol(tmp_val,NULL,10);
+			map->data[i][j] = pos;
+		}
+	 	// printf("\n");
+	}
+	// entry :
+	fclose(fichier_data);
+	print_shard(map,&printMapData);
+	printf("\nParsing successful.");
+	return map;
+} 

@@ -46,6 +46,9 @@ void checkDir(Map* map, Vec2* pos, Vec2 lastPos, Dir dir)
 		Vec2 _pos = *pos;
 		switch (dir)
 		{
+		case DIR_UP:
+			_pos.y--;
+			break;
 		case DIR_DOWN:
 			_pos.y++;
 			break;
@@ -66,8 +69,8 @@ void checkDir(Map* map, Vec2* pos, Vec2 lastPos, Dir dir)
 Map* genMap(Map* map, Vec2 size, Difficulty diff)
 {
 	if (size.x < 5 || size.y < 5 || size.x > X_MAX || size.y > Y_MAX) return NULL;
-	if (size.x % 2 == 0) size.x--;
-	if (size.y % 2 == 0) size.y--;
+	//if (size.x % 2 == 0) size.x--;
+	//if (size.y % 2 == 0) size.y--;
 
 	map = (Map*)calloc(1, sizeof(Map));
 
@@ -100,7 +103,7 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 		}
 	}
 
-	print_shard(map, &printMapData);
+	//print_shard(map, &printMapData);
 
 	// Entree / Sortie
 	map->entry.x = 1, map->entry.y = 1;
@@ -110,9 +113,9 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 	Vec2 temp;
 	Dir newDir = DIR_RIGHT, lastDir = newDir;
 
-	for (int i = 0; i < map->size.x * map->size.y; i++)//while (newPos.x != map->size.x - 1 || newPos.y != map->size.y - 1) // Tant qu'on a pas atteint un bord
+	for (int i = 0; i < map->size.x * map->size.y; i++)
 	{
-		int dir = rand() % 3;
+		int dir = rand() % 4;
 
 		checkDir(map, &newPos, lastPos, dir);
 		if (newPos.x != lastPos.x || newPos.y != lastPos.y)
@@ -137,12 +140,13 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 		}
 	}
 
+
 	return map;
 }
 
 
 void printMapData(Map* map, int x, int y) {
-	printf("%2d ", map->data[x][y]);
+	printf("%4d ", map->data[x][y]);
 }
 
 void printPath(Map* map,int x,int y) {
@@ -237,7 +241,7 @@ int exportMap(Map* map, char* fichier)
 
 			if(0 > sprintf_s(c_buffer,5, _default_parsing_string, renderPos(map->data[j][i]))){
 				printf("\nerror in sprintf");
-			};
+			}
 			if(strcat_s(data_buffer,_data_size,c_buffer) != 0){
 				printf("\nerror");
 			}
@@ -268,7 +272,10 @@ int exportMap(Map* map, char* fichier)
 Vec2 cornerPos(Vec2 pivot,Dir from){
 	int x = 0,y=0 ;
 	//printf("\n pivot : %d %d",pivot.x,pivot.y);
-	if(from == DIR_DOWN){
+	if (from == DIR_UP) {
+		x = pivot.x, y = pivot.y - 1;
+	}
+	else if(from == DIR_DOWN){
 		x = pivot.x, y = pivot.y+1;
 	}
 	else if(from == DIR_LEFT){
@@ -286,70 +293,5 @@ Vec2 cornerPos(Vec2 pivot,Dir from){
 int addCorner(Map* map,Vec2 corner){
 	if (checkPos(map, corner))
 		map->data[corner.x][corner.y] = 4;
-	return SUCCESS;
-}
-
-void move(Map* map, Vec2* pos, Dir dir, int lastDist)
-{
-	Vec2 _pos = *pos;
-	switch (dir)
-	{
-	case DIR_DOWN:
-		_pos.y++;
-		break;
-	case DIR_LEFT:
-		_pos.x--;
-		break;
-	case DIR_RIGHT:
-		_pos.x++;
-		break;
-	default:
-		break;
-	}
-	if (checkPos(map, _pos))
-		if (map->data[_pos.x][_pos.y] != 3 && map->data[_pos.x][_pos.y] != 4 && calcDist(_pos, map->exit) <= lastDist)
-			*pos = _pos;
-}
-
-unsigned int calcDist(Vec2 a, Vec2 b)
-{
-	if (a.x == b.x && a.y == b.y) return 0;
-	// * 10 pour avoir plus de précision (en gros 1 chiffre après la virgule mais sans virgule)
-	return (unsigned int)(10 * sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2)));
-}
-
-int solver(Map* map)
-{
-	Vec2 pos = map->entry, lastPos = pos;
-	Dir dir = DIR_RIGHT, lastDir = dir;
-	unsigned int dst = calcDist(pos, map->exit);
-
-	for (size_t i = 0; i < 100; i++)
-	//while (dst != 0)
-	{
-		while (lastDir == dir)
-		{
-			move(map, &pos, dir, dst);
-
-			if (pos.x != lastPos.x || pos.y != lastPos.y)
-			{
-				map->data[pos.x][pos.y] = 5;
-				dst = calcDist(pos, map->exit);
-				lastPos = pos;
-			}
-			else
-			{
-				if (map->data[pos.x + 1][pos.y] == 3)
-					dir = DIR_DOWN;
-				else if (map->data[pos.x][pos.y + 1] == 3)
-					dir = DIR_RIGHT;
-			}
-		}
-
-		lastDir = dir;
-	}
-
-	print_shard(map, &printPath);
-
 	return SUCCESS;
 }

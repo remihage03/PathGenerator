@@ -122,7 +122,7 @@ Dir getNewDir(Map* map, Vec2 pos, Dir dir)
 					closestObs = (Vec2){ pos.x, y };
 			}
 		}
-		if (newDir[i] == DIR_DOWN)
+		else if (newDir[i] == DIR_DOWN)
 		{
 			for (int y = pos.y; y < map->size.y - 1; y++)
 			{
@@ -130,7 +130,7 @@ Dir getNewDir(Map* map, Vec2 pos, Dir dir)
 					closestObs = (Vec2){ pos.x, y };
 			}
 		}
-		if (newDir[i] == DIR_LEFT)
+		else if (newDir[i] == DIR_LEFT)
 		{
 			for (int x = pos.x; x >= 1; x--)
 			{
@@ -138,7 +138,7 @@ Dir getNewDir(Map* map, Vec2 pos, Dir dir)
 					closestObs = (Vec2){ x, pos.y };
 			}
 		}
-		if (newDir[i] == DIR_RIGHT)
+		else if (newDir[i] == DIR_RIGHT)
 		{
 			for (int x = pos.x; x < map->size.x - 1; x++)
 			{

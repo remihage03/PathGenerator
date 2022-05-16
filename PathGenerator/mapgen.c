@@ -297,35 +297,6 @@ int addCorner(Map* map,Vec2 corner){
 	return SUCCESS;
 }
 
-void move(Map* map, Vec2* pos, Dir dir, int lastDist)
-{
-	Vec2 _pos = *pos;
-	switch (dir)
-	{
-	case DIR_DOWN:
-		_pos.y++;
-		break;
-	case DIR_LEFT:
-		_pos.x--;
-		break;
-	case DIR_RIGHT:
-		_pos.x++;
-		break;
-	default:
-		break;
-	}
-	if (checkPos(map, _pos))
-		if (map->data[_pos.x][_pos.y] != 3 && map->data[_pos.x][_pos.y] != 4 && calcDist(_pos, map->exit) <= lastDist)
-			*pos = _pos;
-}
-
-unsigned int calcDist(Vec2 a, Vec2 b)
-{
-	if (a.x == b.x && a.y == b.y) return 0;
-	// * 10 pour avoir plus de précision (en gros 1 chiffre après la virgule mais sans virgule)
-	return (unsigned int)(10 * sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2)));
-}
-
 
 int posToMap(int pos){
 	int buffer;

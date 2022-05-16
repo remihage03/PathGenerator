@@ -144,6 +144,10 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 	return map;
 }
 
+void printMapInfo(Map* map){
+	printf("map : %d",map->level);
+	printf("\nWidth : %d, Height : %d, level : %d",map->size.x,map->size.y,map->level);
+}
 
 void printMapData(Map* map, int x, int y) {
 	printf("%4d ", map->data[x][y]);
@@ -173,7 +177,6 @@ void print_shard(Map* map,void (*fct)(Map*,int,int)) {
 
 
 char* renderPos(int posValue){
-	// char buffer[4];
 	char* buffer = (char*)calloc(4, sizeof(char));
 	int buff_sz = 3;
 	switch (posValue)
@@ -194,7 +197,6 @@ char* renderPos(int posValue){
 		break;
 	}
 	return buffer;
-
 }
 
 int exportMap(Map* map, char* fichier)
@@ -216,15 +218,15 @@ int exportMap(Map* map, char* fichier)
 	fprintf(fichier_data,"%s",header_buff);
 	free(header_buff);
 
-	const char* footer = "\"start\":{\"x\": %d ,\"y\": %d },\"end\":{\"x\":%d,\"y\":%d}}}";
+	const char* footer = "\"start\":{\"x\":%2d,\"y\":%2d},\"end\":{\"x\":%2d,\"y\":%2d}";
 	char* footer_buff = (char*)calloc(strlen(footer),sizeof(char));
 	sprintf(footer_buff,footer,map->entry.x,map->entry.y,map->exit.x,map->exit.y);
 
-	int _data_size = 5*map->size.x*map->size.y+1;
+	int _data_size = 6*map->size.x*map->size.y+1;
 	
 	char* data_buffer = (char*)calloc(_data_size,sizeof(char));
 	int last_mazeblock_index = map->size.y * map->size.x;
-	char* default_parsing_string = "%s, ";
+	char* default_parsing_string = "%3s,";
 	char* _default_parsing_string;
 
 
@@ -236,7 +238,7 @@ int exportMap(Map* map, char* fichier)
 			_default_parsing_string = default_parsing_string;
 
 			if ((i+1)*(+1+j) == last_mazeblock_index) {
-				_default_parsing_string = "%s";
+				_default_parsing_string = "%3s";
 			}
 
 			if(0 > sprintf_s(c_buffer,5, _default_parsing_string, renderPos(map->data[j][i]))){
@@ -248,23 +250,22 @@ int exportMap(Map* map, char* fichier)
 		}
 	}
 
-	char* body = "\"body\":{\n\t\t\"texture\":[%s],\"data\":[%s],";
-	int body_size = strlen(body)+2*strlen(data_buffer);
+	char* body = "\"body\":{\n\t\t%s,\"texture\":[%s],\"data\":[%s]}}";
+	int body_size = strlen(body)+2*strlen(data_buffer)+strlen(footer_buff);
 	char* body_buff = (char*)calloc(body_size,sizeof(char));
 
-	if( 0 > sprintf_s(body_buff,body_size,body,data_buffer,data_buffer)){
+	if( 0 > sprintf_s(body_buff,body_size,body,footer_buff,data_buffer,data_buffer)){
 		printf("error in sprintf_s");
 	}
 	free(data_buffer);
 	fprintf(fichier_data,"%s",body_buff);
 	free(body_buff);
-
-	fprintf(fichier_data,"%s",footer_buff);
 	free(footer_buff);
+
+	// fprintf(fichier_data,"%s",footer_buff);
 
 	printf("Done Writing in %s and in x sec!\n",fichier);
 	fclose(fichier_data);
-
 	return SUCCESS;
 }
 

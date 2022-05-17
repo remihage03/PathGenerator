@@ -38,31 +38,6 @@ unsigned int calcDist(Vec2 a, Vec2 b)
 	return (unsigned int)(100 * sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2)));
 }
 
-/*bool opVec2(Vec2 a, Vec2 b, char operator)
-{
-	switch (operator)
-	{
-	case '=':
-		return (a.x == b.x && a.y == b.y);
-		break;
-	case '<=':
-		return (a.x <= b.x || a.y <= b.y);
-		break;
-	case '>=':
-		return (a.x >= b.x || a.y >= b.y);
-		break;
-	case '<':
-		return (a.x < b.x || a.y < b.y);
-		break;
-	case '>':
-		return (a.x > b.x || a.y > b.y);
-		break;
-	default:
-		return false;
-		break;
-	}
-}*/
-
 int getNeighbor(Map* map, Vec2 pos, Dir dir)
 {
 	switch (dir)
@@ -225,7 +200,6 @@ int solver(Map* map)
 				map->data[x][y] = calcDist((Vec2) { x, y }, map->exit);
 		}
 	}
-
 
 	//while (pos.x != map->exit.x && pos.y != map->exit.y)
 	for (int i = 0; i < map->size.x * map->size.y * 10; i++)

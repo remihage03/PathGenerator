@@ -22,6 +22,9 @@
 #define X_MAX 999
 #define Y_MAX 999
 
+#define RATE_EASY 0.05
+#define RATE_MID 0.07
+#define RATE_HARD 0.1
 
 
 

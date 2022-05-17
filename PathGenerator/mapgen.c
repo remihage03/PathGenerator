@@ -7,16 +7,30 @@
 #include "mapgen.h"
 
 
-int rangedRand(int range_min, int range_max)
-{
+// int rangedRand(int range_min, int range_max)
+// {
+//     int u = (int)((double)rand() / ((double)RAND_MAX + 1) * ((double)range_max - (double)range_min)) + range_min;
+//     return(u);
+// }
+int rangedRandWrapped(int range_min,int range_max){
     int u = 0;
     while (u == 0 || u == 1)
     {   
-        u = (int)((double)rand() / ((double)RAND_MAX + 1) * ((double)range_max - (double)range_min)) + range_min;
-        // if(u == -2 && rand()%10 > (rand()%9+1)) rangedRand(range_min,range_max);
+        u = rangedRand(range_min,range_max);
     }
     return(u);
 }
+int rangedRand(int range_min, int range_max)
+{
+    // int u = 0;
+    // while (u == 0 || u == 1)
+    // {   
+    int u = (int)((double)rand() / ((double)RAND_MAX + 1) * ((double)range_max - (double)range_min)) + range_min;
+        // if(u == -2 && rand()%10 > (rand()%9+1)) rangedRand(range_min,range_max);
+    // }
+    return(u);
+}
+
 
 bool check_pos(int _data){
     if(_data == T_WALL || _data == PATH || _data == D_ROCK) return false;
@@ -90,6 +104,7 @@ Map* init_wall(Map* map){
 	}
     return map;
 }
+
 Map* init_path(Map* map){
     if(!(map && map->data)) return NULL;
     Vec2 current_pos = map->entry;
@@ -102,9 +117,9 @@ Map* init_path(Map* map){
 	{
         if(rand()%10 == 0)
             newDir = lastDir;
-        else
-            newDir = rangedRand(-2,3);
-
+        else{
+            newDir = rangedRandWrapped(-2,3);
+        }
         if(check_move(map,current_pos,newDir)){
             exec_move(&current_pos,newDir);
             if(newDir != lastDir)
@@ -124,10 +139,26 @@ Map* init_path(Map* map){
     return map;
 }
 
-// Map* init_fake(Map* map){
-//     if(!map || !map->data) return NULL;
-//     int res = map->size.x*map->size.y;
-// }
+Map* init_fake(Map* map){
+    if(!map || !map->data) return NULL;
+    print_shard(map,&printPath);
+    float rate;
+    if(map->level == DIFF_EASY) rate = RATE_EASY;
+    else if(map->level == DIFF_MEDIUM) rate = RATE_MID;
+    else if(map->level == DIFF_HARD) rate = RATE_HARD;
+    int nbObs = floor(map->size.x*map->size.y* rate);
+    while(nbObs>0)
+    {
+        int _x = rangedRand(2,map->size.x-1);
+        int _y = rangedRand(2,map->size.y-1);
+        if(check_pos(map->data[_x][_y])){
+            map->data[_x][_y] = D_ROCK;
+            nbObs--;
+        }
+    }
+    print_shard(map,&printPath);
+    return map;
+}
 
 //only alloc memory then call other functinos
 Map* genMap(Map* map, Vec2 size, Difficulty diff)
@@ -139,24 +170,8 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
     map = init_memory(map,size,diff);
     map = init_wall(map);
     map = init_path(map);
-
-	// int ite = 0;
-	// // Plus c'est dur, plus on a de leurres
-	// switch (diff)
-	// {
-	// case DIFF_EASY:
-	// 	ite = floor(map->size.x * map->size.y / 10);
-	// 	break;
-	// case DIFF_MEDIUM:
-	// 	ite = floor(map->size.x * map->size.y / 7);
-	// 	break;
-	// case DIFF_HARD:
-	// 	ite = floor(map->size.x * map->size.y / 4);
-	// 	break;
-	// default:
-	// 	break;
-	// }
-
+    map = init_fake(map);
+	
 	// // Génération d'obstacles leurres
 	// for (int i = 0; i < ite; i++)
 	// {

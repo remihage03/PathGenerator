@@ -19,7 +19,7 @@ int main(int argc, char* argv[])
 	map = genMap(map, size, (Difficulty)atoi(argv[3]));
 	print_shard(map,&printPath);
 	// print_shard(map,&printMapData);
-	exportMap(map, argv[4]);
+	export_map(map, argv[4]);
 	Map* map2 = NULL;
 	map2 = import_map(map2,"file.json");
 	// print_shard(map2,&printMapData);

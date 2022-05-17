@@ -6,13 +6,8 @@
 #include <math.h>
 #include "mapgen.h"
 
-
-// int rangedRand(int range_min, int range_max)
-// {
-//     int u = (int)((double)rand() / ((double)RAND_MAX + 1) * ((double)range_max - (double)range_min)) + range_min;
-//     return(u);
-// }
-int rangedRandWrapped(int range_min,int range_max){
+int rangedRandWrapped(int range_min,int range_max)
+{
     int u = 0;
     while (u == 0 || u == 1)
     {   
@@ -22,23 +17,16 @@ int rangedRandWrapped(int range_min,int range_max){
 }
 int rangedRand(int range_min, int range_max)
 {
-    // int u = 0;
-    // while (u == 0 || u == 1)
-    // {   
     int u = (int)((double)rand() / ((double)RAND_MAX + 1) * ((double)range_max - (double)range_min)) + range_min;
-        // if(u == -2 && rand()%10 > (rand()%9+1)) rangedRand(range_min,range_max);
-    // }
     return(u);
 }
-
 
 bool check_pos(int _data){
     if(_data == T_WALL || _data == PATH || _data == D_ROCK) return false;
     return true;
 }
 
-//up right down left
-int count_card(Map* map,Vec2 pos){
+int count_cardinals(Map* map,Vec2 pos){
     int count = 0;
     if(!check_pos(map->data[pos.x][pos.y-1])) count++; //up
     if(!check_pos(map->data[pos.x+1][pos.y])) count++; //right
@@ -59,7 +47,7 @@ bool check_move(Map* map,Vec2 pos,Dir dir){
     Vec2 _pos = {pos.x,pos.y};
     exec_move(&_pos,dir);
     if(!check_pos(map->data[_pos.x][_pos.y])) return false;
-    if(count_card(map,_pos)==4) return false;
+    if(count_cardinals(map,_pos)==4) return false;
     return true;
 }
 
@@ -171,18 +159,6 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
     map = init_wall(map);
     map = init_path(map);
     map = init_fake(map);
-	
-	// // Génération d'obstacles leurres
-	// for (int i = 0; i < ite; i++)
-	// {
-	// 	// Coordonnées aléatoires
-	// 	Vec2 pos = { (rand() % (map->size.x - 1)) + 1, (rand() % (map->size.y - 1)) + 1 };
-
-	// 	int* cell = &map->data[pos.x][pos.y];
-	// 	if (*cell != 3 && *cell != 1 && *cell != 4)
-	// 		*cell = 4;
-	// }
-
 	return map;
 }
 
@@ -253,7 +229,7 @@ FILE* open_file(FILE* file,char* filename,char* mode){
     return file;
 }
 
-int exportMap(Map* map, char* fichier)
+int export_map(Map* map, char* fichier)
 {
 	if (!map || !fichier) return ERROR;
 

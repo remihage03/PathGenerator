@@ -53,12 +53,18 @@ typedef struct map {
 	Difficulty level;
 }Map;
 
-
+int rangedRandWrapped(int range_min,int range_max);
 int rangedRand(int range_min, int range_max);
-void move(int* x,int* y,Dir dir);
+bool check_pos(int _data);
+int count_cardinals(Map* map,Vec2 pos);
 
-int move_if_can(Map* map,Vec2* pos,Dir dir);
-Map* createBorder(Map* map);
+void exec_move(Vec2* pos,Dir dir);
+bool check_move(Map* map,Vec2 pos,Dir dir);
+
+Map* init_memory(Map* map,Vec2 size,int diff);
+Map* init_wall(Map* map);
+Map* init_path(Map* map);
+Map* init_fake(Map* map);
 Map* genMap(Map* map, Vec2 size, Difficulty diff);
 
 void printMapInfo(Map* map);
@@ -68,14 +74,16 @@ void print_shard(Map* map,void (*fct)(Map*,int,int));
 
 
 char* renderPos(int posValue);
-int exportMap(Map* map, char* fichier);
-bool checkPos(Map* map, Vec2 pos);
+FILE* open_file(FILE* file,char* filename,char* mode);
+
+
+int export_map(Map* map, char* fichier);
 Vec2 cornerPos(Vec2 pivot,Dir from);
 int addCorner(Map* map,Vec2 pivot,Dir from);
 
 int posToMap(int pos);
+int string_to_int(FILE* file,int seek,int seek_from,int readsize,int count);
 Map* import_map(Map* map,char* filename);
-
 
 unsigned int calcDist(Vec2 a, Vec2 b);
 Vec2* solver(Vec2* soluce, char* json);

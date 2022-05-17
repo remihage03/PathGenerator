@@ -34,7 +34,7 @@ void move(Map* map, Vec2* pos, Dir dir)
 unsigned int calcDist(Vec2 a, Vec2 b)
 {
 	if (a.x == b.x && a.y == b.y) return 0;
-	// * 100 pour avoir plus de précision (en gros 2 chiffre après la virgule mais sans virgule)
+	// * 100 pour avoir plus de prï¿½cision (en gros 2 chiffre aprï¿½s la virgule mais sans virgule)
 	return (unsigned int)(100 * sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2)));
 }
 
@@ -179,7 +179,7 @@ int solver(Map* map)
 		}
 	}
 
-	//while (getNeighbor(map, pos, DIR_RIGHT) != 4) // De base on va à droite
+	//while (getNeighbor(map, pos, DIR_RIGHT) != 4) // De base on va ï¿½ droite
 	//{
 	//	move(map, &pos, DIR_RIGHT);
 	//	map->data[pos.x][pos.y] = -1;

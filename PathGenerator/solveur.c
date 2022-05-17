@@ -111,118 +111,159 @@ Dir getNewDir(Map* map, Vec2 pos, Dir dir)
 		}
 	}
 
-	Vec2 closestObs;
+	if (ctr == 1) return newDir[0];
+
+	Vec2 obs[3] = {{-1, -1}, {-1, -1}, {-1, -1}};
+	unsigned int oldDst;
+
+	ctr = 0;
+
+	// On enregistre les coordonnées des obstacles les plus proches des direction possibles
 	for (int i = 0; i < 3; i++)
 	{
 		if (newDir[i] == DIR_UP)
 		{
 			for (int y = pos.y; y >= 1; y--)
 			{
-				if (map->data[pos.x][y] == 4)
-					closestObs = (Vec2){ pos.x, y };
+				//if (map->data[pos.x][y] == -1) break;
+
+				if (map->data[pos.x][y] == 4 || map->data[pos.x][y] == 3)
+				{
+					obs[ctr] = (Vec2){ pos.x, y };
+					ctr++;
+					break;
+				}
 			}
 		}
 		else if (newDir[i] == DIR_DOWN)
 		{
 			for (int y = pos.y; y < map->size.y - 1; y++)
 			{
-				if (map->data[pos.x][y] == 4)
-					closestObs = (Vec2){ pos.x, y };
+				//if (map->data[pos.x][y] == -1) break;
+
+				if (map->data[pos.x][y] == 4 || map->data[pos.x][y] == 3)
+				{
+					obs[ctr] = (Vec2){ pos.x, y };
+					ctr++;
+					break;
+				}
 			}
 		}
 		else if (newDir[i] == DIR_LEFT)
 		{
 			for (int x = pos.x; x >= 1; x--)
 			{
-				if (map->data[x][pos.y] == 4)
-					closestObs = (Vec2){ x, pos.y };
+				//if (map->data[x][pos.y] == -1) break;
+				if (map->data[x][pos.y] == 4 || map->data[x][pos.y] == 3)
+				{
+					obs[ctr] = (Vec2){ x, pos.y };
+					ctr++;
+					break;
+				}
 			}
 		}
 		else if (newDir[i] == DIR_RIGHT)
 		{
 			for (int x = pos.x; x < map->size.x - 1; x++)
 			{
-				if (map->data[x][pos.y] == 4)
-					closestObs = (Vec2){ x, pos.y };
+				//if (map->data[x][pos.y] == -1) break;
+				if (map->data[x][pos.y] == 4 || map->data[x][pos.y] == 3)
+				{
+					obs[ctr] = (Vec2){ x, pos.y };
+					ctr++;
+					break;
+				}
+					
 			}
 		}
 	}
 
-	return newDir[0];
+	unsigned int closest = _CRT_INT_MAX;
+	Dir ret = DIR_UNDEFINED;
+	// On cherche l'obstacle le plus proche
+	for (int i = 0; i < 3; i++)
+	{
+		if (obs[i].x != -1 && obs[i].y != -1)
+		{
+			if (calcDist(obs[i], pos) <= closest)
+			{
+				closest = calcDist(obs[i], pos);
+
+				// On en déduit la direction
+				if (obs[i].x < pos.x) ret = DIR_LEFT;
+				else if (obs[i].x > pos.x) ret = DIR_RIGHT;
+				else if (obs[i].y < pos.y) ret = DIR_UP;
+				else if (obs[i].y > pos.y) ret = DIR_DOWN;
+			}
+		}	
+	}
+
+	return ret;
 }
 
 int solver(Map* map)
 {
-	Vec2 pos = map->entry, lastPos = pos;
-	Dir dir = DIR_RIGHT, lastDir = dir;
-	unsigned int dst = calcDist(pos, map->exit);
+	Vec2 pos = map->entry;
+	Dir dir = DIR_RIGHT;
 
-	//for (int i = 1; i < map->size.y - 1; i++)
+	//for (size_t i = 0; i < 100; i++)
 	//{
-	//	for (int j = 1; j < map->size.x - 1; j++)
+	//	move(map, &pos, dir);
+	//	map->data[pos.x][pos.y] = -1;
+
+	//	if (getNeighbor(map, pos, dir) == 4 || getNeighbor(map, pos, dir) == 3)
 	//	{
-	//		if (map->data[i][j] != 4)
-	//			map->data[i][j] = calcDist((Vec2) { i, j }, map->exit);
+	//		dir = getNewDir(map, pos, dir);
 	//	}
 	//}
 
-	pos = map->entry;
-
-	for (size_t i = 0; i < 10; i++)
+	for (int y = 1; y < map->size.y - 1; y++)
 	{
-		move(map, &pos, dir);
-		map->data[pos.x][pos.y] = -1;
-
-		if (getNeighbor(map, pos, dir) == 4)
+		for (int x = 1; x < map->size.x - 1; x++)
 		{
-			dir = getNewDir(map, pos, dir);
+			if (map->data[x][y] != 4)
+				map->data[x][y] = calcDist((Vec2) { x, y }, map->exit);
 		}
 	}
 
-	//while (getNeighbor(map, pos, DIR_RIGHT) != 4) // De base on va à droite
-	//{
-	//	move(map, &pos, DIR_RIGHT);
-	//	map->data[pos.x][pos.y] = -1;
-	//}
 
-	//while (getNeighbor(map, pos, DIR_DOWN) != 4) // Puis on descend
-	//{
-	//	move(map, &pos, DIR_DOWN);
-	//	map->data[pos.x][pos.y] = -1;
-	//}
+	//while (pos.x != map->exit.x && pos.y != map->exit.y)
+	for (int i = 0; i < map->size.x * map->size.y * 10; i++)
+	{
+		int neighbors[4];
+		//*neighbors = getNeighbors(map, pos);
+		neighbors[DIR_UP] = getNeighbor(map, pos, DIR_UP);
+		neighbors[DIR_DOWN] = getNeighbor(map, pos, DIR_DOWN);
+		neighbors[DIR_LEFT] = getNeighbor(map, pos, DIR_LEFT);
+		neighbors[DIR_RIGHT] = getNeighbor(map, pos, DIR_RIGHT);
 
-	//for (int i = 1; i < map->size.x - 1; i++) // On cherche l'obstacle le plus proche
-	//{
-	//	if (map->data[i][pos.y] == 4)
-	//		dir = (i < pos.x) ? DIR_LEFT : DIR_RIGHT;
-	//}
+		int smallest = 9999;
+		Dir newDir = DIR_UNDEFINED;
+		for (int i = 0; i < 4; i++)
+		{
+			if (neighbors[i] < smallest && neighbors[i] != -1 && neighbors[i] != -3 && neighbors[i] != 4)
+			{
+				smallest = neighbors[i];
+				newDir = i;
+			}
+		}
 
-	//for (size_t i = 0; i < 100; i++)
-	////while (dst != 0)
-	//{
-	//	while (lastDir == dir)
-	//	{
-	//		move(map, &pos, dir, dst);
+		move(map, &pos, newDir);
+		map->data[pos.x][pos.y] = -1;
+		//print_shard(map, &printPath);
 
-	//		if (pos.x != lastPos.x || pos.y != lastPos.y)
-	//		{
-	//			map->data[pos.x][pos.y] = 5;
-	//			dst = calcDist(pos, map->exit);
-	//			lastPos = pos;
-	//		}
-	//		else
-	//		{
-	//			if (map->data[pos.x + 1][pos.y] == 3)
-	//				dir = DIR_DOWN;
-	//			else if (map->data[pos.x][pos.y + 1] == 3)
-	//				dir = DIR_RIGHT;
-	//		}
-	//	}
+		if (pos.x == map->exit.x && pos.y == map->exit.y)
+			break;
+	}
 
-	//	lastDir = dir;
-	//}
-
-	print_shard(map, &printMapData);
+	for (int y = 1; y < map->size.y - 1; y++)
+	{
+		for (int x = 1; x < map->size.x - 1; x++)
+		{
+			if (map->data[x][y] != 4 && map->data[x][y] != -1)
+				map->data[x][y] = 0;
+		}
+	}
 
 	return SUCCESS;
 }

@@ -137,6 +137,33 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 		}
 	}
 
+	int ite = 0;
+	// Plus c'est dur, plus on a de leurres
+	switch (diff)
+	{
+	case DIFF_EASY:
+		ite = floor(map->size.x * map->size.y / 10);
+		break;
+	case DIFF_MEDIUM:
+		ite = floor(map->size.x * map->size.y / 7);
+		break;
+	case DIFF_HARD:
+		ite = floor(map->size.x * map->size.y / 4);
+		break;
+	default:
+		break;
+	}
+
+	// Génération d'obstacles leurres
+	for (int i = 0; i < ite; i++)
+	{
+		// Coordonnées aléatoires
+		Vec2 pos = { (rand() % map->size.x - 1) + 1, (rand() % map->size.y - 1) + 1 };
+
+		int* cell = &map->data[pos.x][pos.y];
+		if (*cell != 3 && *cell != 1 && *cell != 4)
+			*cell = 4;
+	}
 
 	return map;
 }
@@ -154,7 +181,7 @@ void printPath(Map* map,int x,int y) {
 	char chr = 'a';
 	if (map->data[x][y] == 0) chr = ' ';
 	else if (map->data[x][y] == 1) chr = '@';
-	else if (map->data[x][y] == 5) chr = 'O';
+	else if (map->data[x][y] == -1) chr = 'O';
 	else chr = 'X';
 
 	printf("%c ", chr);

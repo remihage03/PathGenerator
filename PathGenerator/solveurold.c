@@ -36,7 +36,7 @@ void move(Map* map, Vec2* pos, Dir dir)
 unsigned int calcDist(Vec2 a, Vec2 b)
 {
 	if (a.x == b.x && a.y == b.y) return 0;
-	// * 100 pour avoir plus de précision (en gros 2 chiffre après la virgule mais sans virgule)
+	// * 100 pour avoir plus de prï¿½cision (en gros 2 chiffre aprï¿½s la virgule mais sans virgule)
 	return (unsigned int)(100 * sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2)));
 }
 
@@ -95,7 +95,7 @@ Dir getNewDir(Map* map, Vec2 pos, Dir dir)
 
 	ctr = 0;
 
-	// On enregistre les coordonnées des obstacles les plus proches des direction possibles
+	// On enregistre les coordonnï¿½es des obstacles les plus proches des direction possibles
 	for (int i = 0; i < 3; i++)
 	{
 		if (newDir[i] == DIR_UP)
@@ -160,7 +160,7 @@ Dir getNewDir(Map* map, Vec2 pos, Dir dir)
 			{
 				closest = calcDist(obs[i], pos);
 
-				// On en déduit la direction
+				// On en dï¿½duit la direction
 				if (obs[i].x < pos.x) ret = DIR_LEFT;
 				else if (obs[i].x > pos.x) ret = DIR_RIGHT;
 				else if (obs[i].y < pos.y) ret = DIR_UP;
@@ -187,7 +187,6 @@ int solver(Map* map)
 				map->data[x][y] = calcDist((Vec2) { x, y }, map->exit);
 		}
 	}
-
 
 	//while (pos.x != map->exit.x && pos.y != map->exit.y)
 	for (int i = 0; i < map->size.x * map->size.y * 10; i++)

@@ -11,7 +11,7 @@
 
 bool checkPos(Map* map, Vec2 pos)
 {
-	return (pos.x >= 1 && pos.x < map->size.x - 1 && pos.y >= 1 && pos.y < map->size.y - 1);
+	return (pos.x >= 0 && pos.x < map->size.x && pos.y >= 0 && pos.y < map->size.y);
 }
 
 int countNeighbors(Map* map, Vec2 pos) // Compte les voisins aux 4 points cardinaux de pos

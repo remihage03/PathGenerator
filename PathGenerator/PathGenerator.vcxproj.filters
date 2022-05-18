@@ -24,9 +24,15 @@
     <ClCompile Include="solveur.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="stack.c">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mapgen.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="stack.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
 	
 	print_shard(map, &printPath);
 	solver(map);
-	print_shard(map, &printPath);
+	//print_shard(map, &printPath);
 
 	// printf("%d", calcDist(map->entry, map->exit));
 	return EXIT_SUCCESS;

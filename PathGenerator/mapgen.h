@@ -59,4 +59,5 @@ Map* parseJson(Map* map,char* filename);
 
 
 unsigned int calcDist(Vec2 a, Vec2 b);
+int countNeighbors(Map* map, Vec2 pos);
 int solver(Map* map);

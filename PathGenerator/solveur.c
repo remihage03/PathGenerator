@@ -1,5 +1,7 @@
 #include "mapgen.h"
+#include "stack.h"
 #include <math.h>
+#include <stdlib.h>
 #include <stdio.h>
 
 bool canMove(Map* map, Vec2 pos, Dir dir)
@@ -37,31 +39,6 @@ unsigned int calcDist(Vec2 a, Vec2 b)
 	// * 100 pour avoir plus de précision (en gros 2 chiffre après la virgule mais sans virgule)
 	return (unsigned int)(100 * sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2)));
 }
-
-/*bool opVec2(Vec2 a, Vec2 b, char operator)
-{
-	switch (operator)
-	{
-	case '=':
-		return (a.x == b.x && a.y == b.y);
-		break;
-	case '<=':
-		return (a.x <= b.x || a.y <= b.y);
-		break;
-	case '>=':
-		return (a.x >= b.x || a.y >= b.y);
-		break;
-	case '<':
-		return (a.x < b.x || a.y < b.y);
-		break;
-	case '>':
-		return (a.x > b.x || a.y > b.y);
-		break;
-	default:
-		return false;
-		break;
-	}
-}*/
 
 int getNeighbor(Map* map, Vec2 pos, Dir dir)
 {
@@ -125,8 +102,6 @@ Dir getNewDir(Map* map, Vec2 pos, Dir dir)
 		{
 			for (int y = pos.y; y >= 1; y--)
 			{
-				//if (map->data[pos.x][y] == -1) break;
-
 				if (map->data[pos.x][y] == 4 || map->data[pos.x][y] == 3)
 				{
 					obs[ctr] = (Vec2){ pos.x, y };
@@ -139,8 +114,6 @@ Dir getNewDir(Map* map, Vec2 pos, Dir dir)
 		{
 			for (int y = pos.y; y < map->size.y - 1; y++)
 			{
-				//if (map->data[pos.x][y] == -1) break;
-
 				if (map->data[pos.x][y] == 4 || map->data[pos.x][y] == 3)
 				{
 					obs[ctr] = (Vec2){ pos.x, y };
@@ -153,7 +126,6 @@ Dir getNewDir(Map* map, Vec2 pos, Dir dir)
 		{
 			for (int x = pos.x; x >= 1; x--)
 			{
-				//if (map->data[x][pos.y] == -1) break;
 				if (map->data[x][pos.y] == 4 || map->data[x][pos.y] == 3)
 				{
 					obs[ctr] = (Vec2){ x, pos.y };
@@ -166,7 +138,6 @@ Dir getNewDir(Map* map, Vec2 pos, Dir dir)
 		{
 			for (int x = pos.x; x < map->size.x - 1; x++)
 			{
-				//if (map->data[x][pos.y] == -1) break;
 				if (map->data[x][pos.y] == 4 || map->data[x][pos.y] == 3)
 				{
 					obs[ctr] = (Vec2){ x, pos.y };
@@ -203,19 +174,10 @@ Dir getNewDir(Map* map, Vec2 pos, Dir dir)
 
 int solver(Map* map)
 {
-	Vec2 pos = map->entry;
+	Vec2 pos = map->entry, oldPos = pos;
 	Dir dir = DIR_RIGHT;
-
-	//for (size_t i = 0; i < 100; i++)
-	//{
-	//	move(map, &pos, dir);
-	//	map->data[pos.x][pos.y] = -1;
-
-	//	if (getNeighbor(map, pos, dir) == 4 || getNeighbor(map, pos, dir) == 3)
-	//	{
-	//		dir = getNewDir(map, pos, dir);
-	//	}
-	//}
+	Stack* visited;
+	NewStack(&visited, map->size.x * map->size.y);
 
 	for (int y = 1; y < map->size.y - 1; y++)
 	{
@@ -231,17 +193,21 @@ int solver(Map* map)
 	for (int i = 0; i < map->size.x * map->size.y * 10; i++)
 	{
 		int neighbors[4];
-		//*neighbors = getNeighbors(map, pos);
 		neighbors[DIR_UP] = getNeighbor(map, pos, DIR_UP);
 		neighbors[DIR_DOWN] = getNeighbor(map, pos, DIR_DOWN);
 		neighbors[DIR_LEFT] = getNeighbor(map, pos, DIR_LEFT);
 		neighbors[DIR_RIGHT] = getNeighbor(map, pos, DIR_RIGHT);
 
-		int smallest = 9999;
+		int smallest = INT_MAX;
 		Dir newDir = DIR_UNDEFINED;
 		for (int i = 0; i < 4; i++)
 		{
-			if (neighbors[i] < smallest && neighbors[i] != -1 && neighbors[i] != -3 && neighbors[i] != 4)
+			if (neighbors[i] <= smallest && neighbors[i] != -1 && neighbors[i] != -3 && neighbors[i] != 4)
+			{
+				smallest = neighbors[i];
+				newDir = i;
+			}
+			else if (neighbors[i] != -1 && neighbors[i] != -3 && neighbors[i] != 4)
 			{
 				smallest = neighbors[i];
 				newDir = i;
@@ -249,21 +215,42 @@ int solver(Map* map)
 		}
 
 		move(map, &pos, newDir);
-		map->data[pos.x][pos.y] = -1;
-		//print_shard(map, &printPath);
-
-		if (pos.x == map->exit.x && pos.y == map->exit.y)
-			break;
-	}
-
-	for (int y = 1; y < map->size.y - 1; y++)
-	{
-		for (int x = 1; x < map->size.x - 1; x++)
+		if (pos.x != oldPos.x || pos.y != oldPos.y)
 		{
-			if (map->data[x][y] != 4 && map->data[x][y] != -1)
-				map->data[x][y] = 0;
+			map->data[pos.x][pos.y] = -1;
+			oldPos = pos;
+			push(visited, pos);
+			printf("<-- (%d, %d)\n", pos.x, pos.y);
 		}
+
+		if (countNeighbors(map, pos) == 0 && pos.x != map->exit.x && pos.y != map->exit.y)
+		{
+			pull(visited, &pos);
+			printf("--> (%d, %d)\n", pos.x, pos.y);
+			oldPos = pos;
+		}
+		//system("cls");
+		print_shard(map, &printMapData);
+
+		//if (pos.x == map->exit.x && pos.y == map->exit.y)
+		//	break;
 	}
+
+	//for (int y = 1; y < map->size.y - 1; y++)
+	//{
+	//	for (int x = 1; x < map->size.x - 1; x++)
+	//	{
+	//		int* cell = &map->data[x][y];
+	//		if (*cell != 4 && *cell != -1)
+	//			*cell = 0;
+	//	}
+	//}
+
+	//while (!isStackEmpty(visited))
+	//{
+	//	pull(visited, &pos);
+	//	map->data[pos.x][pos.y] = -1;
+	//}
 
 	return SUCCESS;
 }

@@ -32,7 +32,7 @@ void pullNode(Stack* stack, Node node)
 	}
 
 	/* Decrement array size by 1 */
-	stack->size--;
+	stack->eltsCount--;
 }
 
 unsigned int calcDist(Vec2 a, Vec2 b)

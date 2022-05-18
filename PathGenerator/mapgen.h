@@ -1,5 +1,6 @@
 #pragma once
 #include <stdbool.h>
+#include <stdio.h>
 
 #define ERROR -1
 #define SUCCESS 0

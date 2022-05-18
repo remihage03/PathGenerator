@@ -2,6 +2,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include "mapgen.h"
+#include "solver.h"
 //#include "mapgen.c"
 //#include "solver.c"
 
@@ -22,6 +23,8 @@ int main(int argc, char* argv[])
 	export_map(map, argv[4]);
 	Map* map2 = NULL;
 	map2 = import_map(map2,"file.json");
+
+	megaSolver2000(map);
 	// print_shard(map2,&printMapData);
 
 	//solver prend un fichier json

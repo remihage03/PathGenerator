@@ -5,11 +5,12 @@
 #include <locale.h>
 #include <stdbool.h>
 #include "mapgen.h"
+#include "solver.h"
 
 #define STACKOVERFLOW -1
 
 typedef struct {
-	Vec2* array;
+	Node* array;
 	int size;
 	int eltsCount;
 } Stack;
@@ -18,6 +19,6 @@ typedef struct {
 void NewStack(Stack** stack, int initialStackSize);
 bool isStackFull(Stack* stack);
 bool isStackEmpty(Stack* stack);
-int push(Stack* stack, Vec2 value);
-int pull(Stack* stack, Vec2* value);
-int peek(Stack* stack, Vec2* value);
+int push(Stack* stack, Node value);
+int pull(Stack* stack, Node* value);
+int peek(Stack* stack, Node* value);

@@ -21,10 +21,10 @@
     <ClCompile Include="mapgen.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="solveur.c">
+    <ClCompile Include="stack.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="stack.c">
+    <ClCompile Include="solver.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -33,6 +33,9 @@
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
     <ClInclude Include="stack.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="solver.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

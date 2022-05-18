@@ -153,7 +153,7 @@ void printMapInfo(Map* map) {
 }
 
 void printMapData(Map* map, int x, int y) {
-	printf("%4d ", map->data[x][y]);
+	printf("%3d ", map->data[x][y]);
 }
 
 void printPath(Map* map, int x, int y) {

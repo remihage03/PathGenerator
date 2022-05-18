@@ -5,9 +5,9 @@
 #include <stdint.h>
 #include <math.h>
 
-#define DEBUG
+//#define DEBUG
 
-isInStack(Stack* stack, Node node)
+bool isInStack(Stack* stack, Node node)
 {
 	for (int i = 0; i < stack->eltsCount; i++)
 	{
@@ -15,6 +15,24 @@ isInStack(Stack* stack, Node node)
 			return true;
 	}
 	return false;
+}
+
+void pullNode(Stack* stack, Node node)
+{
+	int idx = 0;
+	for (idx; idx < stack->eltsCount; idx++)
+	{
+		if (stack->array[idx].pos.x == node.pos.x && stack->array[idx].pos.y == node.pos.y)
+			break;
+	}
+
+	for (int i = idx; i < stack->size - 1; i++)
+	{
+		stack->array[i] = stack->array[i + 1];
+	}
+
+	/* Decrement array size by 1 */
+	stack->size--;
 }
 
 unsigned int calcDist(Vec2 a, Vec2 b)
@@ -47,6 +65,7 @@ void printNode(Node node)
 	printf("\n[+] Node:\nPos: (%d, %d)\nG_cost: %d\nH_cost: %d\nF_cost: %d\n", node.pos.x, node.pos.y, node.g_cost, node.h_cost, node.f_cost);
 }
 
+// Algorithme A*
 int megaSolver2000(Map* map)
 {
 	if (!map) return ERROR;
@@ -54,7 +73,6 @@ int megaSolver2000(Map* map)
 	// Stack of nodes to be evaluated
 	Stack* open;
 	NewStack(&open, map->size.x * map->size.y);
-
 
 	// Stack of nodes already evaluated
 	Stack* closed;
@@ -71,9 +89,13 @@ int megaSolver2000(Map* map)
 #endif // DEBUG
 
 	Node curr = startNode;
-	while (!isStackEmpty(open))
+	unsigned int ite = 0;
+	while (!isStackEmpty(open) && ite < 50000)
 	{
-		Node bestNode = curr;
+		ite++;
+
+		// Getting the the lowest f_cost node in open
+		Node cursor = curr;
 		unsigned int lowest = INT_MAX;
 		for (int i = 0; i < open->eltsCount; i++)
 		{
@@ -81,7 +103,7 @@ int megaSolver2000(Map* map)
 			if (curr.f_cost < lowest)
 			{
 				lowest = curr.f_cost;
-				bestNode = curr;
+				cursor = curr;
 			}
 		}
 
@@ -91,18 +113,22 @@ int megaSolver2000(Map* map)
 #endif // DEBUG
 
 
-		pull(open, &bestNode);
-		push(closed, bestNode);
+		//pull(open, &bestNode);
+		// Remove cursor from open to place it into closed
+		pullNode(open, cursor);
+		if (!isInStack(closed, cursor))
+			push(closed, cursor);
 
-		if (bestNode.pos.x == endNode.pos.x && bestNode.pos.y == endNode.pos.y)
-			return;
+		// If we found the path we break => we don't need to go further
+		if (cursor.pos.x == endNode.pos.x && cursor.pos.y == endNode.pos.y)
+			break;
 
 		// Get Node neighbors
 		Node neighbors[4];
-		neighbors[0] = getNodeFromMap(map, (Vec2) { bestNode.pos.x, bestNode.pos.y - 1 });
-		neighbors[1] = getNodeFromMap(map, (Vec2) { bestNode.pos.x + 1, bestNode.pos.y });
-		neighbors[2] = getNodeFromMap(map, (Vec2) { bestNode.pos.x, bestNode.pos.y + 1 });
-		neighbors[3] = getNodeFromMap(map, (Vec2) { bestNode.pos.x - 1, bestNode.pos.y });
+		neighbors[0] = getNodeFromMap(map, (Vec2) { cursor.pos.x, cursor.pos.y - 1 });
+		neighbors[1] = getNodeFromMap(map, (Vec2) { cursor.pos.x + 1, cursor.pos.y });
+		neighbors[2] = getNodeFromMap(map, (Vec2) { cursor.pos.x, cursor.pos.y + 1 });
+		neighbors[3] = getNodeFromMap(map, (Vec2) { cursor.pos.x - 1, cursor.pos.y });
 
 #ifdef DEBUG
 		printf("\nBest Node neighbors: ");
@@ -112,18 +138,19 @@ int megaSolver2000(Map* map)
 		}
 #endif // DEBUG
 
-		Node closest = bestNode;
+		// Getting the closest neighbor
+		Node closest = cursor;
 		for (int i = 0; i < 4; i++)
 		{
 			Vec2 pos = neighbors[i].pos;
 			int cell = map->data[pos.x][pos.y];
 			
-			// Is the node traversable ?
+			// Is the node traversable or already traversed ?
 			if ((cell != 1 && cell != 0) || isInStack(closed, neighbors[i]))
 				continue;
 
-			// Geting the closest node
-			if (neighbors[i].f_cost <= closest.f_cost || !isInStack(open, neighbors[i]))
+			// Geting the closest node or one that haven't been traversed
+			if (neighbors[i].f_cost < closest.f_cost || !isInStack(open, neighbors[i]))
 				closest = neighbors[i];
 		}
 		if (!isInStack(open, closest))
@@ -135,6 +162,14 @@ int megaSolver2000(Map* map)
 #endif // DEBUG
 	}
 
+	while (!isStackEmpty(closed))
+	{
+		Node tmp;
+		pull(closed, &tmp);
+		//printf("(%d, %d)\n", tmp.pos.x, tmp.pos.y);
+		map->data[tmp.pos.x][tmp.pos.y] = -1;
+	}
+	print_shard(map, &printPath);
 
 	return SUCCESS;
 }

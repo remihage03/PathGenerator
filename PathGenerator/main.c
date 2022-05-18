@@ -2,8 +2,8 @@
 #include <time.h>
 #include <stdlib.h>
 #include "mapgen.h"
-#include "mapgen.c"
-#include "solver.c"
+//#include "mapgen.c"
+//#include "solver.c"
 
 int main(int argc, char* argv[])
 {

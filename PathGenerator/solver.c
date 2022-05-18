@@ -39,7 +39,8 @@ unsigned int calcDist(Vec2 a, Vec2 b)
 {
 	if (a.x == b.x && a.y == b.y) return 0;
 	// * 10 pour avoir plus de précision (en gros 2 chiffre après la virgule mais sans virgule)
-	return (unsigned int)(10 * sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2)));
+	//return (unsigned int)(10 * sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2)));
+	return (unsigned int)(10 * (abs(b.x - a.x) + abs(b.y - a.y)));
 }
 
 bool isValid(Map* map, Vec2 pos)
@@ -84,7 +85,10 @@ int megaSolver2000(Map* map)
 	push(open, startNode);
 
 #ifdef DEBUG
+	printf("\nStart node:");
 	printNode(startNode);
+
+	printf("\nEnd node:");
 	printNode(endNode);
 #endif // DEBUG
 
@@ -109,7 +113,7 @@ int megaSolver2000(Map* map)
 
 #ifdef DEBUG
 		printf("\nBest node:");
-		printNode(bestNode);
+		printNode(cursor);
 #endif // DEBUG
 
 

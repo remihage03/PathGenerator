@@ -229,6 +229,14 @@ FILE* open_file(FILE* file,char* filename,char* mode){
     return file;
 }
 
+// int alloc_and_write(FILE* file,const char* pattern,Map* map){
+// 	char* buffer = (char*)calloc(strlen(pattern),sizeof(char));
+// 	sprintf(buffer,pattern,map->size.x,map->size.y,map->level);
+// 	fprintf(file,"%s",buffer);
+// 	free(buffer);
+//     return SUCCESS;
+// }
+
 int export_map(Map* map, char* fichier)
 {
 	if (!map || !fichier) return ERROR;
@@ -237,7 +245,8 @@ int export_map(Map* map, char* fichier)
     fichier_data = open_file(fichier_data,fichier,"w+");
 	
 	const char* header = "{\n\t\"header\": {\n\t\"width\": %d,\n\t\"height\" : %d,\n\t \"diff\" : %2d\n\t},\n\t";
-	char* header_buff = (char*)calloc(strlen(header),sizeof(char));
+	
+    char* header_buff = (char*)calloc(strlen(header),sizeof(char));
 	sprintf(header_buff,header,map->size.x,map->size.y,map->level);
 	fprintf(fichier_data,"%s",header_buff);
 	free(header_buff);
@@ -252,7 +261,6 @@ int export_map(Map* map, char* fichier)
 	int last_mazeblock_index = map->size.y * map->size.x;
 	char* default_parsing_string = "%3s,";
 	char* _default_parsing_string;
-
 
 	for (int i = 0; i < map->size.y; i++)
 	{

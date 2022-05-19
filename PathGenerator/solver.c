@@ -198,10 +198,12 @@ int megaSolver2000(Map* map)
 #endif // DEBUG
 	}
 
+	bool found = true;
+
 	Node tmp;
 	peek(closed, &tmp);
 	if (tmp.pos.x != map->exit.x || tmp.pos.y != map->exit.y)
-		printf("\n[+] Unable to find a path !\n");
+		printf("\n[+] Unable to find a path !\n"), found = false;
 
 	while (!isStackEmpty(closed))
 	{
@@ -211,5 +213,5 @@ int megaSolver2000(Map* map)
 	}
 	print_shard(map, &printPath);
 
-	return SUCCESS;
+	return (found ? SUCCESS : ERROR);
 }

@@ -7,7 +7,7 @@ typedef struct node {
 }Node;
 
 
-unsigned int calcDist(Vec2 a, Vec2 b);
+unsigned int ManDist(Vec2 a, Vec2 b);
 
 bool isValid(Map* map, Vec2 pos);
 

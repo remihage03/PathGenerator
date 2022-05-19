@@ -2,10 +2,10 @@
 #include "solver.h"
 #include "stack.h"
 #include <stdlib.h>
-#include <stdint.h>
+#include <stdio.h>
 #include <math.h>
 
-//#define DEBUG
+#define DEBUG
 
 bool isInStack(Stack* stack, Node node)
 {
@@ -20,11 +20,17 @@ bool isInStack(Stack* stack, Node node)
 void pullNode(Stack* stack, Node node)
 {
 	int idx = 0;
+	bool found = false;
 	for (idx; idx < stack->eltsCount; idx++)
 	{
 		if (stack->array[idx].pos.x == node.pos.x && stack->array[idx].pos.y == node.pos.y)
+		{
+			found = true;
 			break;
+		}
 	}
+
+	if (!found) return;
 
 	for (int i = idx; i < stack->size - 1; i++)
 	{
@@ -35,12 +41,18 @@ void pullNode(Stack* stack, Node node)
 	stack->eltsCount--;
 }
 
-unsigned int calcDist(Vec2 a, Vec2 b)
+unsigned int ManDist(Vec2 a, Vec2 b)
 {
 	if (a.x == b.x && a.y == b.y) return 0;
-	// * 10 pour avoir plus de précision (en gros 2 chiffre après la virgule mais sans virgule)
-	//return (unsigned int)(10 * sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2)));
-	return (unsigned int)(10 * (abs(b.x - a.x) + abs(b.y - a.y)));
+	// * 10 pour avoir plus de précision (en gros 1 chiffre après la virgule mais sans virgule)
+	return (unsigned int)(10 * (abs(b.x - a.x) + abs(b.y - a.y))); // Distance Manhattan
+}
+
+unsigned int EuclDist(Vec2 a, Vec2 b)
+{
+	if (a.x == b.x && a.y == b.y) return 0;
+	// * 10 pour avoir plus de précision (en gros 1 chiffre après la virgule mais sans virgule)
+	return (unsigned int)(10 * sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2))); // Distance Euclidienne
 }
 
 bool isValid(Map* map, Vec2 pos)
@@ -54,8 +66,8 @@ Node getNodeFromMap(Map* map, Vec2 pos)
 
 	Node tmp;
 	tmp.pos = pos;
-	tmp.g_cost = calcDist(pos, map->entry);
-	tmp.h_cost = calcDist(pos, map->exit);
+	tmp.g_cost = ManDist(pos, map->entry); //10;
+	tmp.h_cost = EuclDist(pos, map->exit);
 	tmp.f_cost = tmp.g_cost + tmp.h_cost;
 
 	return tmp;
@@ -170,10 +182,11 @@ int megaSolver2000(Map* map)
 	{
 		Node tmp;
 		pull(closed, &tmp);
-		//printf("(%d, %d)\n", tmp.pos.x, tmp.pos.y);
 		map->data[tmp.pos.x][tmp.pos.y] = -1;
 	}
+#ifdef DEBUG
 	print_shard(map, &printPath);
+#endif
 
 	return SUCCESS;
 }

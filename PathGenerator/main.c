@@ -19,20 +19,11 @@ int main(int argc, char* argv[])
 	Vec2 size = { atoi(argv[1]), atoi(argv[2]) };
 	map = genMap(map, size, (Difficulty)atoi(argv[3]));
 	print_shard(map,&printPath);
-	// print_shard(map,&printMapData);
+	print_shard(map,&printMapData);
 	export_map(map, argv[4]);
-	Map* map2 = NULL;
-	map2 = import_map(map2,"file.json");
+	//Map* map2 = NULL;
+	//map2 = import_map(map2,"file.json");
 
 	megaSolver2000(map);
-	// print_shard(map2,&printMapData);
-
-	//solver prend un fichier json
-	//créé une map et résoud le tout
-	// Vec2* soluce = NULL;
-	// soluce = solver(soluce,argv[4]);
-	
-
-	// printf("%d", calcDist(map->entry, map->exit));
 	return EXIT_SUCCESS;
 }

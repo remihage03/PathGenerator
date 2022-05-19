@@ -22,8 +22,7 @@ int rangedRand(int range_min, int range_max)
 }
 
 bool check_pos(int _data){
-    if(_data == T_WALL || _data == PATH || _data == D_ROCK) return false;
-    return true;
+	return (!(_data == T_WALL || _data == PATH || _data == D_ROCK));
 }
 
 int count_cardinals(Map* map,Vec2 pos){
@@ -148,6 +147,39 @@ Map* init_fake(Map* map){
     return map;
 }
 
+void printMapInfo(Map* map) {
+	printf("exit x %d, y %d", map->exit.x, map->exit.y);
+	printf("\nWidth : %d, Height : %d, level : %d", map->size.x, map->size.y, map->level);
+}
+
+void printMapData(Map* map, int x, int y) {
+	printf("%3d ", map->data[x][y]);
+}
+
+void printPath(Map* map, int x, int y) {
+	char chr = 'a';
+	if (map->entry.x == y && map->entry.y == x) chr = 'E';
+	else if (map->exit.x == x && map->exit.y == y) chr = 'S';
+	else if (map->data[x][y] == T_WALL) chr = 'W';
+	else if (map->data[x][y] == 1) chr = '@';
+	else if (map->data[x][y] == -1) chr = 'O';
+	else if (map->data[x][y] == D_ROCK) chr = 'X';
+	else chr = ' ';
+	printf("%c ", chr);
+}
+
+void print_shard(Map* map, void (*fct)(Map*, int, int)) {
+	printf("\n");
+	for (int y = 0; y < map->size.y; y++)
+	{
+		for (int x = 0; x < map->size.x; x++)
+		{
+			(*fct)(map, x, y);
+		}
+		printf("\n");
+	}
+}
+
 //only alloc memory then call other functinos
 Map* genMap(Map* map, Vec2 size, Difficulty diff)
 {
@@ -162,39 +194,28 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 	return map;
 }
 
-void printMapInfo(Map* map){
-	printf("exit x %d, y %d",map->exit.x,map->exit.y);
-	printf("\nWidth : %d, Height : %d, level : %d",map->size.x,map->size.y,map->level);
+Vec2 cornerPos(Vec2 pivot, Dir from) {
+	int x = pivot.x;
+	int y = pivot.y;
+	if (from == DIR_UP) y--;
+	else if (from == DIR_RIGHT) x++;
+	else if (from == DIR_DOWN)y++;
+	else if (from == DIR_LEFT) x--;
+	Vec2 corner = { x,y };
+	return corner;
 }
 
-void printMapData(Map* map, int x, int y) {
-	printf("%4d ", map->data[x][y]);
-}
-
-void printPath(Map* map,int x,int y) {
-	char chr = 'a';
-	if(map->entry.x == y && map->entry.y == x) chr = 'E';
-	else if(map->exit.x == x && map->exit.y == y) chr = 'S';
-	else if(map->data[x][y] == T_WALL) chr = 'W';
-	else if (map->data[x][y] == 1) chr = '@';
-	else if (map->data[x][y] == -1) chr = 'O';
-    else if (map->data[x][y] == D_ROCK) chr = 'X';
-    else chr = ' ';
-	printf("%c ", chr);
-}
-
-void print_shard(Map* map,void (*fct)(Map*,int,int)) {
-	printf("\n");
-	for (int y = 0; y < map->size.y; y++)
-	{
-		for (int x = 0; x < map->size.x; x++)
-		{
-			(*fct)(map,x,y);
-		}
-		printf("\n");
+int addCorner(Map* map, Vec2 pivot, Dir from) {
+	Vec2 corner = cornerPos(pivot, from);
+	int c = map->data[corner.x][corner.y];
+	if (c != T_WALL && c != PATH) {
+		map->data[corner.x][corner.y] = D_ROCK;
+		return SUCCESS;
 	}
+	return ERROR;
 }
 
+// Import export
 char* renderPos(int posValue){
 	char* buffer = (char*)calloc(4, sizeof(char));
 	int buff_sz = 3;
@@ -241,7 +262,7 @@ int export_map(Map* map, char* fichier)
 {
 	if (!map || !fichier) return ERROR;
 
-	FILE* fichier_data;
+	FILE* fichier_data = NULL;
     fichier_data = open_file(fichier_data,fichier,"w+");
 	
 	const char* header = "{\n\t\"header\": {\n\t\"width\": %d,\n\t\"height\" : %d,\n\t \"diff\" : %2d\n\t},\n\t";
@@ -301,28 +322,6 @@ int export_map(Map* map, char* fichier)
 	return SUCCESS;
 }
 
-
-Vec2 cornerPos(Vec2 pivot,Dir from){
-	int x = pivot.x;
-    int y=pivot.y ;
-    if(from == DIR_UP) y --;
-    else if( from == DIR_RIGHT) x++;
-    else if(from == DIR_DOWN)y++ ;
-    else if(from == DIR_LEFT) x--;
-	Vec2 corner = {x,y};
-	return corner;
-}
-
-int addCorner(Map* map,Vec2 pivot,Dir from){
-    Vec2 corner = cornerPos(pivot,from);
-    int c = map->data[corner.x][corner.y];
-    if(c != T_WALL && c != PATH){
-        map->data[corner.x][corner.y] = D_ROCK;
-    	return SUCCESS;
-    }
-    return ERROR;
-}
-
 int posToMap(int pos){
 	int buffer;
     if(pos == T_WALL) return T_WALL;
@@ -343,7 +342,7 @@ int string_to_int(FILE* file,int seek,int seek_from,int readsize,int count){
 Map* import_map(Map* map,char* filename){
 	if (!filename) return NULL;
 
-	FILE* fichier_data;
+	FILE* fichier_data = NULL;
     fichier_data = open_file(fichier_data,filename,"r+");
    
     int width = string_to_int(fichier_data,27,0,2,1);

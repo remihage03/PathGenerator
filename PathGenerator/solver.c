@@ -1,192 +1,215 @@
-// #include "mapgen.h"
-// #include <math.h>
-// #include <stdio.h>
+﻿#include "mapgen.h"
+#include "stack.h"
+#include "solver.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
 
-// bool canMove(Map* map, Vec2 pos, Dir dir)
-// {
-// 	return (checkPos(map, pos) && map->data[pos.x][pos.y] != 3 && map->data[pos.x][pos.y] != 4);
-// }
+//#define DEBUG
 
-// void move(Map* map, Vec2* pos, Dir dir)
-// {
-// 	Vec2 _pos = *pos;
-// 	switch (dir)
-// 	{
-// 	case DIR_UP:
-// 		_pos.y--;
-// 		break;
-// 	case DIR_DOWN:
-// 		_pos.y++;
-// 		break;
-// 	case DIR_LEFT:
-// 		_pos.x--;
-// 		break;
-// 	case DIR_RIGHT:
-// 		_pos.x++;
-// 		break;
-// 	default:
-// 		break;
-// 	}
-// 	if (canMove(map, _pos, dir))
-// 		*pos = _pos;
-// }
+bool isInStack(Stack* stack, Node node)
+{
+	for (int i = 0; i < stack->eltsCount; i++)
+	{
+		if (stack->array[i].pos.x == node.pos.x && stack->array[i].pos.y == node.pos.y)
+			return true;
+	}
+	return false;
+}
 
-// unsigned int calcDist(Vec2 a, Vec2 b)
-// {
-// 	if (a.x == b.x && a.y == b.y) return 0;
-// 	// * 100 pour avoir plus de pr�cision (en gros 2 chiffre apr�s la virgule mais sans virgule)
-// 	return (unsigned int)(100 * sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2)));
-// }
+void pullNode(Stack* stack, Node node)
+{
+	int idx = 0;
+	bool found = false;
+	for (idx; idx < stack->eltsCount; idx++)
+	{
+		if (stack->array[idx].pos.x == node.pos.x && stack->array[idx].pos.y == node.pos.y)
+		{
+			found = true;
+			break;
+		}
+	}
 
-// int getNeighbor(Map* map, Vec2 pos, Dir dir)
-// {
-// 	switch (dir)
-// 	{
-// 	case DIR_UP:
-// 		pos.y--;
-// 		break;
-// 	case DIR_DOWN:
-// 		pos.y++;
-// 		break;
-// 	case DIR_LEFT:
-// 		pos.x--;
-// 		break;
-// 	case DIR_RIGHT:
-// 		pos.x++;
-// 		break;
-// 	default:
-// 		break;
-// 	}
+	if (!found) return;
 
-// 	if (checkPos(map, pos))
-// 		return (map->data[pos.x][pos.y]);
-// 	else return -1;
-// }
+	for (int i = idx; i < stack->size - 1; i++)
+	{
+		stack->array[i] = stack->array[i + 1];
+	}
 
-// Dir getNewDir(Map* map, Vec2 pos, Dir dir)
-// {
-// 	int neighbors[4]; // Liste des voisins
-// 	Dir newDir[3] = { DIR_UNDEFINED, DIR_UNDEFINED, DIR_UNDEFINED }; // 3 directions possibles (on ne retourne pas sur nos pas)
-// 	int ctr = 0;
+	/* Decrement array size by 1 */
+	stack->eltsCount--;
+}
 
-// 	// On prend les 4 voisins
-// 	neighbors[DIR_UP] = getNeighbor(map, pos, DIR_UP);
-// 	neighbors[DIR_DOWN] = getNeighbor(map, pos, DIR_DOWN);
-// 	neighbors[DIR_LEFT] = getNeighbor(map, pos, DIR_LEFT);
-// 	neighbors[DIR_RIGHT] = getNeighbor(map, pos, DIR_RIGHT);
+unsigned int ManDist(Vec2 a, Vec2 b)
+{
+	if (a.x == b.x && a.y == b.y) return 0;
+	// * 10 pour avoir plus de précision (en gros 1 chiffre après la virgule mais sans virgule)
+	return (unsigned int)(10 * (abs(b.x - a.x) + abs(b.y - a.y))); // Distance Manhattan
+}
 
-// 	for (int i = 0; i < 4; i++)
-// 	{
-// 		// Si le voisin n'est pas un obstacle et que ce n'est pas notre ancienne direction
-// 		if (neighbors[i] != 4 && neighbors[i] != 3 && neighbors[i] != -1 && i != dir)
-// 		{
-// 			// On ajoute la nouvelle direction potentielle
-// 			newDir[ctr] = i;
-// 			ctr++;
-// 		}
-// 	}
+unsigned int EuclDist(Vec2 a, Vec2 b) // Heuristic
+{
+	if (a.x == b.x && a.y == b.y) return 0;
+	return (unsigned int)(10 * sqrt(pow(b.x - a.x, 2))); // Distance Euclidienne
+}
 
-// 	if (ctr == 1) return newDir[0];
+bool isValid(Map* map, Vec2 pos)
+{
+	return (pos.x >= 0 && pos.x < map->size.x && pos.y >= 0 && pos.y < map->size.y);
+}
 
-// 	Vec2 obs[3] = {{-1, -1}, {-1, -1}, {-1, -1}};
-// 	unsigned int oldDst;
+Node getNodeFromMap(Map* map, Vec2 pos)
+{
+	if (!map || !isValid(map, pos)) return;
 
-// 	ctr = 0;
+	Node tmp;
+	tmp.pos = pos;
+	tmp.g_cost = ManDist(pos, map->entry);
+	tmp.h_cost = EuclDist(pos, map->exit);
+	tmp.f_cost = tmp.g_cost + tmp.h_cost;
 
-// 	// On enregistre les coordonn�es des obstacles les plus proches des direction possibles
-// 	for (int i = 0; i < 3; i++)
-// 	{
-// 		if (newDir[i] == DIR_UP)
-// 		{
-// 			for (int y = pos.y; y >= 1; y--)
-// 			{
-// 				//if (map->data[pos.x][y] == -1) break;
+	return tmp;
+}
 
-// 				if (map->data[pos.x][y] == 4 || map->data[pos.x][y] == 3)
-// 				{
-// 					obs[ctr] = (Vec2){ pos.x, y };
-// 					ctr++;
-// 					break;
-// 				}
-// 			}
-// 		}
-// 		else if (newDir[i] == DIR_DOWN)
-// 		{
-// 			for (int y = pos.y; y < map->size.y - 1; y++)
-// 			{
-// 				//if (map->data[pos.x][y] == -1) break;
+void printNode(Node node)
+{
+	printf("\n[+] Node:\nPos: (%d, %d)\nG_cost: %d\nH_cost: %d\nF_cost: %d\n", node.pos.x, node.pos.y, node.g_cost, node.h_cost, node.f_cost);
+}
 
-// 				if (map->data[pos.x][y] == 4 || map->data[pos.x][y] == 3)
-// 				{
-// 					obs[ctr] = (Vec2){ pos.x, y };
-// 					ctr++;
-// 					break;
-// 				}
-// 			}
-// 		}
-// 		else if (newDir[i] == DIR_LEFT)
-// 		{
-// 			for (int x = pos.x; x >= 1; x--)
-// 			{
-// 				//if (map->data[x][pos.y] == -1) break;
-// 				if (map->data[x][pos.y] == 4 || map->data[x][pos.y] == 3)
-// 				{
-// 					obs[ctr] = (Vec2){ x, pos.y };
-// 					ctr++;
-// 					break;
-// 				}
-// 			}
-// 		}
-// 		else if (newDir[i] == DIR_RIGHT)
-// 		{
-// 			for (int x = pos.x; x < map->size.x - 1; x++)
-// 			{
-// 				//if (map->data[x][pos.y] == -1) break;
-// 				if (map->data[x][pos.y] == 4 || map->data[x][pos.y] == 3)
-// 				{
-// 					obs[ctr] = (Vec2){ x, pos.y };
-// 					ctr++;
-// 					break;
-// 				}
-					
-// 			}
-// 		}
-// 	}
+int countNeighbors(Map* map, Vec2 pos) // Compte les voisins aux 4 points cardinaux de pos
+{
+	if (!map) return ERROR;
 
-// 	unsigned int closest = _CRT_INT_MAX;
-// 	Dir ret = DIR_UNDEFINED;
-// 	// On cherche l'obstacle le plus proche
-// 	for (int i = 0; i < 3; i++)
-// 	{
-// 		if (obs[i].x != -1 && obs[i].y != -1)
-// 		{
-// 			if (calcDist(obs[i], pos) <= closest)
-// 			{
-// 				closest = calcDist(obs[i], pos);
+	int nbNeighbors = 0;
 
-// 				// On en d�duit la direction
-// 				if (obs[i].x < pos.x) ret = DIR_LEFT;
-// 				else if (obs[i].x > pos.x) ret = DIR_RIGHT;
-// 				else if (obs[i].y < pos.y) ret = DIR_UP;
-// 				else if (obs[i].y > pos.y) ret = DIR_DOWN;
-// 			}
-// 		}	
-// 	}
+	for (int y = pos.y - 1; y <= pos.y + 1; y++)
+	{
+		Vec2 _pos = { pos.x, y };
+		if (isValid(map, _pos))
+			if (y != pos.y && map->data[pos.x][y] != T_WALL && map->data[pos.x][y] != D_ROCK)
+				nbNeighbors++;
+	}
 
-// 	return ret;
-// }
+	for (int x = pos.x - 1; x <= pos.x + 1; x++)
+	{
+		Vec2 _pos = { x, pos.y };
+		if (isValid(map, _pos))
+			if (x != pos.x && map->data[x][pos.y] != T_WALL && map->data[x][pos.y] != -D_ROCK)
+				nbNeighbors++;
+	}
 
+	return nbNeighbors;
+}
 
+// Algorithme A*
+int megaSolver2000(Map* map)
+{
+	if (!map) return ERROR;
 
+	// Stack of nodes to be evaluated
+	Stack* open;
+	NewStack(&open, map->size.x * map->size.y);
 
-// Vec2* solver(Vec2* soluce, char* json)
-// {
-//     //création de l'objet map pour le résoudre
-//     Map* map = NULL;
-//     map = parseJson(map,json);
-//     if(!map) return NULL;
-//     // print_shard(map,&printMapData);
-//     // printMapInfo(map);
-//     print_shard(map,&printPath);
+	// Stack of nodes already evaluated
+	Stack* closed;
+	NewStack(&closed, map->size.x * map->size.y);
 
-// }
+	Node startNode = getNodeFromMap(map, map->entry);
+	Node endNode = getNodeFromMap(map, map->exit);
+
+	push(open, startNode);
+
+#ifdef DEBUG
+	printf("\nStart node:");
+	printNode(startNode);
+
+	printf("\nEnd node:");
+	printNode(endNode);
+#endif // DEBUG
+
+	Node curr = startNode;
+	unsigned int ite = 0;
+	while (!isStackEmpty(open) && ite < 50000)
+	{
+		ite++;
+
+		// Getting the the lowest f_cost node in open
+		int winner = 0;
+		for (int i = 0; i < open->eltsCount; i++)
+		{
+			curr = open->array[i];
+			if (curr.f_cost < open->array[winner].f_cost)
+				winner = i;
+		}
+		curr = open->array[winner];
+
+#ifdef DEBUG
+		printf("\nBest node:");
+		printNode(cursor);
+#endif // DEBUG
+
+		// Remove curr from open to place it into closed
+		pullNode(open, curr);
+		if (!isInStack(closed, curr))
+			push(closed, curr);
+
+		// If we found the path we break => we don't need to go further
+		if (curr.pos.x == endNode.pos.x && curr.pos.y == endNode.pos.y)
+			break;
+
+		// Get Node neighbors
+		Node neighbors[4];
+
+		neighbors[0] = getNodeFromMap(map, (Vec2) { curr.pos.x, curr.pos.y - 1 });
+		neighbors[1] = getNodeFromMap(map, (Vec2) { curr.pos.x + 1, curr.pos.y });
+		neighbors[2] = getNodeFromMap(map, (Vec2) { curr.pos.x, curr.pos.y + 1 });
+		neighbors[3] = getNodeFromMap(map, (Vec2) { curr.pos.x - 1, curr.pos.y });
+
+#ifdef DEBUG
+		printf("\nBest Node neighbors: ");
+		for (size_t i = 0; i < 4; i++)
+		{
+			printNode(neighbors[i]);
+		}
+#endif // DEBUG
+
+		// Getting the closest neighbor
+		Node closest = curr;
+		for (int i = 0; i < 4; i++)
+		{
+			Vec2 pos = neighbors[i].pos;
+			int cell = map->data[pos.x][pos.y];
+			
+			// Is the node traversable or already traversed ?
+			if (cell == T_WALL || cell == D_ROCK || isInStack(closed, neighbors[i]) || countNeighbors(map, pos) <= 1)
+				continue;
+
+			// Geting the closest node or one that haven't been traversed
+			if (neighbors[i].f_cost < closest.f_cost || !isInStack(open, neighbors[i]))
+				closest = neighbors[i];
+		}
+		if (!isInStack(open, closest))
+			push(open, closest), curr = closest;
+
+#ifdef DEBUG
+		printf("\nMoving to:");
+		printNode(closest);
+#endif // DEBUG
+	}
+
+	Node tmp;
+	peek(closed, &tmp);
+	if (tmp.pos.x != map->exit.x || tmp.pos.y != map->exit.y)
+		printf("\n[+] Unable to find a path !\n");
+
+	while (!isStackEmpty(closed))
+	{
+		Node tmp;
+		pull(closed, &tmp);
+		map->data[tmp.pos.x][tmp.pos.y] = -1;
+	}
+	print_shard(map, &printPath);
+
+	return SUCCESS;
+}

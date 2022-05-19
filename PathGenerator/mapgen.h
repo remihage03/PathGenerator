@@ -1,5 +1,6 @@
 #pragma once
 #include <stdbool.h>
+#include <stdio.h>
 
 #define ERROR -1
 #define SUCCESS 0
@@ -85,5 +86,5 @@ int posToMap(int pos);
 int string_to_int(FILE* file,int seek,int seek_from,int readsize,int count);
 Map* import_map(Map* map,char* filename);
 
-unsigned int calcDist(Vec2 a, Vec2 b);
-Vec2* solver(Vec2* soluce, char* json);
+//unsigned int calcDist(Vec2 a, Vec2 b);
+//Vec2* solver(Vec2* soluce, char* json);

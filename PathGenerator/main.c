@@ -2,10 +2,10 @@
 #include <time.h>
 #include <stdlib.h>
 #include "mapgen.h"
-#include "mapgen.c"
-// #include "solver.h"
-#include "solver.c"
-#include "stack.c"
+#include "solver.h"
+//#include "solver.c"
+//#include "stack.c"
+//#include "mapgen.c"
 
 int main(int argc, char* argv[])
 {

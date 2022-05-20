@@ -66,7 +66,7 @@ bool isWalkable(Map* map, Vec2 pos)
 	return (isValid(map, pos) && map->data[pos.x][pos.y] != T_WALL && map->data[pos.x][pos.y] != D_ROCK);
 }
 
-int countNeighbors(Map* map, Vec2 pos) // Compte les voisins aux 4 points cardinaux de pos
+int countNeighbors(Map* map, Vec2 pos, Stack* stack) // Compte les voisins aux 4 points cardinaux de pos
 {
 	if (!map) return ERROR;
 
@@ -93,11 +93,6 @@ bool canMove(Map* map, Vec2 pos, Dir dir)
 {
 	exec_move(&pos, dir);
 	return isWalkable(map, pos);
-}
-
-bool isEqual(Vec2 a, Vec2 b)
-{
-	return (a.x == b.x && a.y == b.y);
 }
 
 int megaSolver3000(Map* map)

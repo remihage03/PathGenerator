@@ -1,9 +1,10 @@
 #include "stack.h"
 #include <stdbool.h>
+#include "mapgen.h"
 
 #define STACKOVERFLOW -1
 
-// création d'une pile
+// crï¿½ation d'une pile
 // stack : nom de la pile
 // initialStackSize : taille de la pile en nombre de valeurs empilables
 void NewStack(Stack** stack, int initialStackSize)
@@ -12,17 +13,17 @@ void NewStack(Stack** stack, int initialStackSize)
 	*stack = (Stack*)malloc(sizeof(Stack));
 	if (*stack != NULL)
 	{
-		// allocation du tableau de données
-		(*stack)->array = (Node*)malloc(sizeof(Node) * initialStackSize);
+		// allocation du tableau de donnees
+		(*stack)->array = (Vec2*)malloc(sizeof(Vec2) * initialStackSize);
 		if (((*stack)->array) != NULL)
 		{
-			// initialisation des paramètres de la pile
+			// initialisation des paramï¿½tres de la pile
 			(*stack)->size = initialStackSize;
 			(*stack)->eltsCount = 0;
 		}
 		else
 		{
-			// la pile n'a pas pu être créée, stack vaut NULL
+			// la pile n'a pas pu ï¿½tre crï¿½ï¿½e, stack vaut NULL
 			free(*stack);
 			*stack = NULL;
 		}
@@ -40,7 +41,7 @@ bool isStackEmpty(Stack* stack) {
 }
 
 // pousse une valeur sur la pile
-int push(Stack* stack, Node value)
+int push(Stack* stack, Vec2 value)
 {
 	if (!isStackFull(stack))
 	{
@@ -51,21 +52,21 @@ int push(Stack* stack, Node value)
 	else return(STACKOVERFLOW);
 }
 
-// récupère la valeur au sommet de la pile
-int pull(Stack* stack, Node* value)
+// rï¿½cupï¿½re la valeur au sommet de la pile
+int pull(Stack* stack, Vec2* value)
 {
 	if (!isStackEmpty(stack))
 	{
 		// COMPLETER LE CODE ICI ************************
 		*value = stack->array[stack->eltsCount - 1];
-		stack->eltsCount--; // On décrémente le nombre d'éléments de 1: notre dernier élément peut être écrasé
+		stack->eltsCount--; // On dï¿½crï¿½mente le nombre d'ï¿½lï¿½ments de 1: notre dernier ï¿½lï¿½ment peut ï¿½tre ï¿½crasï¿½
 
 		return(EXIT_SUCCESS);
 	}
 	return(EXIT_FAILURE);
 }
 
-int peek(Stack* stack, Node* value)
+int peek(Stack* stack, Vec2* value)
 {
 	if (!isStackEmpty(stack))
 	{

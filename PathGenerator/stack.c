@@ -13,7 +13,7 @@ void NewStack(Stack** stack, int initialStackSize)
 	if (*stack != NULL)
 	{
 		// allocation du tableau de données
-		(*stack)->array = (Node*)malloc(sizeof(Node) * initialStackSize);
+		(*stack)->array = (Vec2*)malloc(sizeof(Vec2) * initialStackSize);
 		if (((*stack)->array) != NULL)
 		{
 			// initialisation des paramètres de la pile
@@ -40,11 +40,11 @@ bool isStackEmpty(Stack* stack) {
 }
 
 // pousse une valeur sur la pile
-int push(Stack* stack, Node value)
+int push(Stack* stack, Vec2 Vec2)
 {
 	if (!isStackFull(stack))
 	{
-		stack->array[stack->eltsCount] = value;
+		stack->array[stack->eltsCount] = Vec2 ;
 		stack->eltsCount++;
 		return(0);
 	}
@@ -52,7 +52,7 @@ int push(Stack* stack, Node value)
 }
 
 // récupère la valeur au sommet de la pile
-int pull(Stack* stack, Node* value)
+int pull(Stack* stack, Vec2* value)
 {
 	if (!isStackEmpty(stack))
 	{
@@ -65,7 +65,7 @@ int pull(Stack* stack, Node* value)
 	return(EXIT_FAILURE);
 }
 
-int peek(Stack* stack, Node* value)
+int peek(Stack* stack, Vec2* value)
 {
 	if (!isStackEmpty(stack))
 	{

@@ -24,6 +24,6 @@ int main(int argc, char* argv[])
 	//Map* map2 = NULL;
 	//map2 = import_map(map2,"file.json");
 
-	megaSolver2000(map);
+	megaSolver3000(map);
 	return EXIT_SUCCESS;
 }

@@ -110,7 +110,7 @@ int megaSolver3000(Map* map)
 
 	unsigned int ite = 0;
 
-	while (!isEqual(pos, map->exit) && ite < 5000)
+	while (!isEqual(pos, map->exit) && ite < res)
 	{
 		ite++;
 

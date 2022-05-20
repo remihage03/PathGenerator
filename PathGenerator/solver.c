@@ -1,47 +1,12 @@
 #include "mapgen.h"
 #include "stack.h"
+#include "solver.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
 
-typedef struct Path{
-    int move;
-    int cel;
-}Path;
+//#define DEBUG
 
-<<<<<<< HEAD
-
-bool vec2_equals(Vec2 first,Vec2 second){
-    return (first.x == second.x && first.y == second.y) ? true: false;
-}
-
-bool slide_move(Map* map,Vec2* pos,Dir dir,Stack* path){
-    bool move_flag = false;
-    while(check_move(map,*pos,dir))
-    {
-        exec_move(pos,dir); // on avance
-        // printf("\n POS : %d %d",pos->x,pos->y);
-        // push(path,*pos); // on push la valeur
-        map->data[pos->x][pos->y] = 1; //on update la map
-        move_flag = true;
-        if(vec2_equals(*pos,map->exit)) break;
-    }
-    return move_flag;
-}
-
-bool slide_move_print(Map* map,Vec2* pos,Dir dir){
-    bool move_flag = false;
-    while(check_move(map,*pos,dir))
-    {
-        exec_move(pos,dir); // on avance
-        map->data[pos->x][pos->y] = 1; //on update la map
-        move_flag = true;
-        if(vec2_equals(*pos,map->exit)) break;
-    }
-    return move_flag;
-}
-
-bool check_slide_move(Map* map,Vec2 from,Dir dir){
-    Vec2 _from = from;
-    return slide_move(map,&_from,dir,NULL);
-=======
 bool isInStack(Stack* stack, Vec2 vec)
 {
 	for (int i = 0; i < stack->eltsCount; i++)
@@ -51,7 +16,7 @@ bool isInStack(Stack* stack, Vec2 vec)
 	}
 	return false;
 }
-//
+
 //void pullNode(Stack* stack, Node node)
 //{
 //	int idx = 0;
@@ -84,68 +49,24 @@ unsigned int EuclDist(Vec2 a, Vec2 b) // Heuristic
 {
 	if (a.x == b.x && a.y == b.y) return 0;
 	return (unsigned int)(10 * sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2))); // Distance Euclidienne
->>>>>>> e4d0e7a38533644f3669aa84ba58b3ce0778cfe0
 }
 
-void print_directions_val(int* directions){
-    printf("\nUP : %d\nRIGHT : %d\nDOWN : %d\nLEFT : %d",directions[0],directions[1],directions[2],directions[3]);
-}
-
-<<<<<<< HEAD
-
-Vec2 pull_until_last(Stack* path,Vec2 current,Vec2 last,Map* map){
-    if(vec2_equals(current,last)) return current;
-    map->data[current.x][current.y] = 0;
-    pull(path,&current);
-    return pull_until_last(path,current,last,map);
-}
-
-Dir* valid_direction(Map* map,Vec2 pos,Dir current)
+bool isValid(Map* map, Vec2 pos)
 {
-    
+	return (pos.x >= 0 && pos.x < map->size.x && pos.y >= 0 && pos.y < map->size.y);
 }
-=======
+
 bool isWalkable(Map* map, Vec2 pos)
 {
 	return (isValid(map, pos) && map->data[pos.x][pos.y] != T_WALL && map->data[pos.x][pos.y] != D_ROCK);
 }
 
-//Node getNodeFromMap(Map* map, Vec2 pos)
-//{
-//	if (!map || !isValid(map, pos)) return;
-//
-//	Node tmp;
-//	tmp.pos = pos;
-//	tmp.g_cost = ManDist(pos, map->entry);
-//	tmp.h_cost = ManDist(pos, map->exit);
-//	tmp.f_cost = tmp.g_cost + tmp.h_cost;
-//	tmp.walkable = isWalkable(map, pos);
-//	tmp.parent = NULL;
-//
-//	return tmp;
-//}
-//
-//void printNode(Node node)
-//{
-//	printf("\n[+] Node:\nPos: (%d, %d)\nG_cost: %d\nH_cost: %d\nF_cost: %d\nWalkable: %d\n", node.pos.x, node.pos.y, node.g_cost, node.h_cost, node.f_cost, node.walkable);
-//}
->>>>>>> e4d0e7a38533644f3669aa84ba58b3ce0778cfe0
+int countNeighbors(Map* map, Vec2 pos) // Compte les voisins aux 4 points cardinaux de pos
+{
+	if (!map) return ERROR;
 
+	int nbNeighbors = 0;
 
-
-<<<<<<< HEAD
-//je dois ajouter chaque point où je tourne à la stack
-// et si au final je suis bloqué je return
-
-int test_path(Stack* path,Map* map, Dir last,int ite){
-    Vec2 last_pivot;
-    peek(path,&last_pivot);
-    // printf("\n from %d %d",last_pivot.x,last_pivot.y);
-    if(vec2_equals(map->exit,last_pivot)) return SUCCESS;
-    
-    printf("\nite : %d",ite);
-    bool has_moved = false;
-=======
 	for (int y = pos.y - 1; y <= pos.y + 1; y++)
 	{
 		Vec2 _pos = { pos.x, y };
@@ -159,274 +80,15 @@ int test_path(Stack* path,Map* map, Dir last,int ite){
 		if (isWalkable(map, _pos) && x != pos.x)
 			nbNeighbors++;
 	}
->>>>>>> e4d0e7a38533644f3669aa84ba58b3ce0778cfe0
 
-
-    for(int i = -2;i<3;i++){
-        if(i != 0 && i != -last){
-            has_moved = false;
-            Vec2 _last_pivot = last_pivot;
-            // printf("\ni : %d",i);
-            if(!check_slide_move(map,last_pivot,i)){
-                // pull(path,NULL);
-                return ERROR;
-            }
-            if(slide_move(map,&last_pivot,i,path))
-            {
-                has_moved = true;
-                last = i;
-                push(path,last_pivot);
-                return test_path(path,map,last,ite+1);
-                // if(test_path(path,map,last,ite+1) == ERROR) pull(path,NULL); 
-                // return test_path(path,map,last,ite+1);
-            }
-            // printf("\ni = %d from %d %d to %d %d",i,_last_pivot.x,_last_pivot.y,last_pivot.x,last_pivot.y);
-            // if(has_moved){
-            // }
-            
-        }
-    }
-    //si on a pas bougé
-    if(!has_moved) return ERROR;
-    Vec2 osef;
-    printf("\n changement ! ");
-    // pull(path,&osef);
-    return test_path(path,map,last,ite+1);
-    // print_shard(map,&printPath);
+	return nbNeighbors;
 }
 
-<<<<<<< HEAD
-
-
-Dir render_distance(Map* map, Vec2 from,Vec2 to)
-{
-    int dx = to.x - from.x;
-    int dy = to.y - from.y;
-    if(dy == 0)
-    {
-        if(dx > 0) return DIR_RIGHT;
-        return DIR_LEFT;
-    }
-    else if(dx == 0)
-    {
-        if(dy > 0) return DIR_DOWN;
-        return DIR_UP;
-    }
-}
-
-void renderStack(Stack* path,Map* map)
-{
-    Vec2 from;
-    Vec2 to;
-    Vec2 tmp;
-    pull(path,&to);
-    while(!isStackEmpty(path))
-    {
-        pull(path,&from);
-        Dir l_dir = render_distance(map,from,to);
-        tmp = from;
-        map->data[to.x][to.y] = 1;
-        slide_move_print(map,&tmp,l_dir);
-        to = from;
-    }
-}
-
-void printStack(Stack* path,Map* map){
-    Vec2 tmp;
-    if(isStackEmpty(path)){
-        return;
-    }
-    pull(path,&tmp);
-    map->data[tmp.x][tmp.y] = 1;
-    printStack(path,map);
-    // printf("\nx = %d ; y = %d",tmp.x,tmp.y);
-}
-
-//le path final est une liste chainée de vec2
-//
-Vec2* solve_maze(Vec2* path,char* maze_file){
-    Map* map = NULL;
-    map = import_map(map,maze_file);
-    print_shard(map,&printPath);
-    int max_dist = map->size.x*map->size.y;
-    int *directions = (int*)malloc(sizeof(int)*4);
-    Vec2 last_turn;
-    int move_since_turn = 0;
-    Vec2 current_pos = map->entry;
-    Stack* path_stack = NULL;
-    NewStack(&path_stack,max_dist);
-    push(path_stack,map->entry);
-
-
-    if(test_path(path_stack,map,-1,0) == SUCCESS){
-        printf("\nsuccessful!");
-    }
-
-    print_shard(map,&printPath);
-
-    // Vec2 tmp;
-    // printStack(path_stack,map);
-    renderStack(path_stack,map);
-    print_shard(map,&printPath);
-
-    // for(int i = 0;i<path_stack->eltsCount;i++){
-        // pull(path_stack,&tmp);
-        // printf("\ni : %d, x : %d, y : %d",i,tmp.x,tmp.y);
-    // }
-
-    // printf("\n%d %d",current_pos.x,current_pos.y);
-    // exec_solve_move(map,&current_pos,2);
-    // printf("\n%d %d",current_pos.x,current_pos.y);
-
-    // for(int i = 0;i<max_dist;i++){
-    //     directions = valid_directions(map,map->entry);
-    //     // print_directions_val(directions);
-    // }
-
-    return NULL;
-=======
 bool canMove(Map* map, Vec2 pos, Dir dir)
 {
 	exec_move(&pos, dir);
 	return isWalkable(map, pos);
 }
-
-// Algorithme A*
-//int megaSolver2000(Map* map)
-//{
-//	if (!map) return ERROR;
-//
-//	// Stack of nodes to be evaluated
-//	Stack* open;
-//	NewStack(&open, map->size.x * map->size.y);
-//
-//	// Stack of nodes already evaluated
-//	Stack* closed;
-//	NewStack(&closed, map->size.x * map->size.y);
-//
-//	Stack* output;
-//	NewStack(&output, map->size.x * map->size.y);
-//
-//	Node startNode = getNodeFromMap(map, map->entry);
-//	Node endNode = getNodeFromMap(map, map->exit);
-//
-//	push(open, startNode);
-//
-//#ifdef DEBUG
-//	printf("\nStart node:");
-//	printNode(startNode);
-//
-//	printf("\nEnd node:");
-//	printNode(endNode);
-//#endif // DEBUG
-//
-//	Node curr = startNode;
-//	unsigned int ite = 0;
-//	while (!isStackEmpty(open) && ite < 50000)
-//	{
-//		ite++;
-//		// Getting the the lowest f_cost node in open
-//		//curr = open->array[0];
-//		//for (int i = 0; i < open->eltsCount; i++)
-//		//{
-//		//	if (open->array[i].f_cost < curr.f_cost || open->array[i].f_cost == curr.f_cost && open->array[i].h_cost < curr.h_cost)
-//		//		curr = open->array[i];
-//		//}
-//
-//		int winner = 0;
-//		for (int i = 0; i < open->eltsCount; i++)
-//		{
-//			if (open->array[i].f_cost < open->array[winner].f_cost)
-//				winner = i;
-//
-//			if (open->array[i].f_cost == open->array[winner].f_cost)
-//			{
-//				//Prefer to explore options with longer known paths (closer to goal)
-//				if (open->array[i].g_cost > open->array[winner].g_cost) {
-//					winner = i;
-//				}
-//				if (open->array[i].g_cost == open->array[winner].g_cost && open->array[i].h_cost < open->array[winner].h_cost)
-//				{
-//					winner = i;
-//				}
-//		}
-//	}
-//
-//		curr = open->array[winner];
-//
-//
-//#ifdef DEBUG
-//		printf("\nBest node:");
-//		printNode(curr);
-//#endif // DEBUG
-//
-//		// Remove curr from open to place it into closed
-//		pullNode(open, curr);
-//		if (!isInStack(closed, curr))
-//			push(closed, curr);
-//
-//		// If we found the path we break => we don't need to go further
-//		if (curr.pos.x == endNode.pos.x && curr.pos.y == endNode.pos.y)
-//			break;
-//
-//		// Get Node neighbors
-//		Node neighbors[4];
-//
-//		neighbors[0] = getNodeFromMap(map, (Vec2) { curr.pos.x, curr.pos.y - 1 });
-//		neighbors[1] = getNodeFromMap(map, (Vec2) { curr.pos.x + 1, curr.pos.y });
-//		neighbors[2] = getNodeFromMap(map, (Vec2) { curr.pos.x, curr.pos.y + 1 });
-//		neighbors[3] = getNodeFromMap(map, (Vec2) { curr.pos.x - 1, curr.pos.y });
-//
-//		// Getting the closest neighbor
-//		Node closest = curr;
-//		for (int i = 0; i < 4; i++)
-//		{
-//			Vec2 pos = neighbors[i].pos;
-//			int cell = map->data[pos.x][pos.y];
-//			
-//			// Is the node traversable or already traversed ?
-//			if (!neighbors[i].walkable || isInStack(closed, neighbors[i]) || countNeighbors(map, pos) <= 1)
-//				continue;
-//
-//			// Geting the closest node or one that haven't been traversed
-//			unsigned int dist = curr.g_cost + ManDist(curr.pos, pos);
-//			if (dist < neighbors[i].g_cost || !isInStack(open, neighbors[i]))
-//			{
-//				neighbors[i].g_cost = dist;
-//				neighbors[i].h_cost = ManDist(curr.pos, pos);
-//				neighbors[i].f_cost = neighbors[i].g_cost + neighbors[i].h_cost;
-//				neighbors[i].parent = &curr;
-//				curr = neighbors[i];
-//
-//				// Ici ça trouve à chaque fois mais impossible d'extraire le chemin à cause de parent
-//				if (!isInStack(open, curr))
-//					push(open, curr);
-//
-//			}
-//		}
-//		// Si on met le if ici, ça marche dans le cas où on trouve direct
-//		//if (!isInStack(open, curr))
-//		//	push(open, curr);
-//
-//#ifdef DEBUG
-//		printf("\nMoving to best neighbor:");
-//		printNode(closest);
-//#endif // DEBUG
-//	}
-//
-//	bool found = true;
-//
-//	while (!isStackEmpty(closed))
-//	{
-//		Node tmp;
-//		pull(closed, &tmp);
-//		map->data[tmp.pos.x][tmp.pos.y] = -1;
-//	}
-//
-//	print_shard(map, &printPath);
-//
-//	return (found ? SUCCESS : ERROR);
-//}
 
 bool isEqual(Vec2 a, Vec2 b)
 {
@@ -506,5 +168,4 @@ int megaSolver3000(Map* map)
 		map->data[tmp.x][tmp.y] = -1;
 	}
 	print_shard(map, &printPath);
->>>>>>> e4d0e7a38533644f3669aa84ba58b3ce0778cfe0
 }

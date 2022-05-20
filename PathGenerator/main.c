@@ -2,10 +2,10 @@
 #include <time.h>
 #include <stdlib.h>
 #include "mapgen.h"
-#include "mapgen.c"
-// #include "solver.h"
-#include "solver.c"
-#include "stack.c"
+#include "solver.h"
+//#include "solver.c"
+//#include "stack.c"
+//#include "mapgen.c"
 
 int main(int argc, char* argv[])
 {
@@ -24,5 +24,18 @@ int main(int argc, char* argv[])
 	export_map(map, argv[4]);
 
 	megaSolver3000(map);
+
+	//for (int i = 1; i < map->size.x - 1; i++)
+	//{
+	//	for (int j = 1; j < map->size.y - 1; j++)
+	//	{
+	//		Vec2 pos = { i, j };
+	//		int* cell = &map->data[i][j];
+	//		if (*cell != T_WALL && *cell != D_ROCK)
+	//			*cell = ManDist(pos, map->exit);
+	//	}
+	//}
+	//print_shard(map, &printMapData);
+
 	return EXIT_SUCCESS;
 }

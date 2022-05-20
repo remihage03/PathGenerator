@@ -141,6 +141,14 @@ int megaSolver3000(Map* map)
 				else if (i == 2) dir = DIR_DOWN;
 				else if (i == 3) dir = DIR_LEFT;
 			}
+			else
+			{
+				dst = newDst;
+				if (i == 0) dir = DIR_UP;
+				else if (i == 1) dir = DIR_RIGHT;
+				else if (i == 2) dir = DIR_DOWN;
+				else if (i == 3) dir = DIR_LEFT;
+			}
 		}
 		
 		// Tant qu'on a pas rencontré un obstacle, on continue de glisser
@@ -154,7 +162,8 @@ int megaSolver3000(Map* map)
 
 		if (countNeighbors(map, pos, path) == 0)
 		{
-			push(blocked, pos);
+			if (!isInStack(blocked, pos))
+				push(blocked, pos);
 			pull(path, &pos);
 			oldPos = pos;
 		}

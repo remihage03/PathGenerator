@@ -7,11 +7,16 @@
 
 //#define DEBUG
 
+bool isEqual(Vec2 a, Vec2 b)
+{
+	return (a.x == b.x && a.y == b.y);
+}
+
 bool isInStack(Stack* stack, Vec2 vec)
 {
 	for (int i = 0; i < stack->eltsCount; i++)
 	{
-		if (stack->array[i].x == vec.x && stack->array[i].y == vec.y)
+		if (isEqual(stack->array[i], vec))
 			return true;
 	}
 	return false;
@@ -81,7 +86,7 @@ bool isWalkable(Map* map, Vec2 pos)
 //	printf("\n[+] Node:\nPos: (%d, %d)\nG_cost: %d\nH_cost: %d\nF_cost: %d\nWalkable: %d\n", node.pos.x, node.pos.y, node.g_cost, node.h_cost, node.f_cost, node.walkable);
 //}
 
-int countNeighbors(Map* map, Vec2 pos) // Compte les voisins aux 4 points cardinaux de pos
+int countNeighbors(Map* map, Vec2 pos, Stack* stack) // Compte les voisins aux 4 points cardinaux de pos
 {
 	if (!map) return ERROR;
 
@@ -90,14 +95,14 @@ int countNeighbors(Map* map, Vec2 pos) // Compte les voisins aux 4 points cardin
 	for (int y = pos.y - 1; y <= pos.y + 1; y++)
 	{
 		Vec2 _pos = { pos.x, y };
-		if (isWalkable(map, pos) && y != pos.y)
+		if (isWalkable(map, pos) && y != pos.y && !isInStack(stack, pos))
 			nbNeighbors++;
 	}
 
 	for (int x = pos.x - 1; x <= pos.x + 1; x++)
 	{
 		Vec2 _pos = { x, pos.y };
-		if (isWalkable(map, _pos) && x != pos.x)
+		if (isWalkable(map, _pos) && x != pos.x && !isInStack(stack, pos))
 			nbNeighbors++;
 	}
 
@@ -247,11 +252,6 @@ bool canMove(Map* map, Vec2 pos, Dir dir)
 //	return (found ? SUCCESS : ERROR);
 //}
 
-bool isEqual(Vec2 a, Vec2 b)
-{
-	return (a.x == b.x && a.y == b.y);
-}
-
 int megaSolver3000(Map* map)
 {
 	// Va contenir notre chemin
@@ -259,8 +259,8 @@ int megaSolver3000(Map* map)
 	int res = map->size.x * map->size.y;
 	NewStack(&path, res);
 
-	//Stack* blocked;
-	//NewStack(&blocked, res);
+	Stack* blocked;
+	NewStack(&blocked, res);
 
 	Vec2 pos = map->entry, oldPos = pos, tmp;
 	push(path, pos);
@@ -287,7 +287,7 @@ int megaSolver3000(Map* map)
 		{
 			int newDst = ManDist(neighbors[i], map->exit);
 
-			if (!isWalkable(map, neighbors[i])/* || isEqual(pos, neighbors[i])*/)
+			if (!isWalkable(map, neighbors[i]) || countNeighbors(map, neighbors[i], path) == 0 || isInStack(blocked, neighbors[i]))
 				continue;
 
 			if (newDst < dst) // Le plus proche de l'arrivée
@@ -306,6 +306,13 @@ int megaSolver3000(Map* map)
 			exec_move(&pos, dir);
 			if (!isInStack(path, pos))
 				push(path, pos);
+			oldPos = pos;
+		}
+
+		if (countNeighbors(map, pos, path) == 0)
+		{
+			push(blocked, pos);
+			pull(path, &pos);
 			oldPos = pos;
 		}
 

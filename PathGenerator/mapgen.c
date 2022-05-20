@@ -10,8 +10,10 @@ int rangedRandWrapped(int range_min,int range_max)
 {
     int u = 0;
     while (u == 0 || u == 1)
-    {   
+    {
         u = rangedRand(range_min,range_max);
+		// if(u %2 == 0)
+			// return rangedRandWrapped(range_min,range_max);
     }
     return(u);
 }
@@ -41,6 +43,7 @@ void exec_move(Vec2* pos,Dir dir){
     else if(dir == DIR_DOWN) pos->y++;
     else if(dir == DIR_LEFT) pos->x--;
 }
+
 
 bool check_move(Map* map,Vec2 pos,Dir dir){
     Vec2 _pos = {pos.x,pos.y};
@@ -128,7 +131,7 @@ Map* init_path(Map* map){
 
 Map* init_fake(Map* map){
     if(!map || !map->data) return NULL;
-    print_shard(map,&printPath);
+    // print_shard(map,&printPath);
     float rate;
     if(map->level == DIFF_EASY) rate = RATE_EASY;
     else if(map->level == DIFF_MEDIUM) rate = RATE_MID;
@@ -143,7 +146,7 @@ Map* init_fake(Map* map){
             nbObs--;
         }
     }
-    print_shard(map,&printPath);
+    // print_shard(map,&printPath);
     return map;
 }
 
@@ -325,9 +328,9 @@ int export_map(Map* map, char* fichier)
 int posToMap(int pos){
 	int buffer;
     if(pos == T_WALL) return T_WALL;
-    else if(pos == T_ICE) return PATH;
+    // else if(pos == T_ICE) return 0;
     else if(pos == T_ROCK) return D_ROCK;
-    else if(pos == T_GRD) return 0;
+    // else if(pos == T_GRD) return 0;
     else return 0;
 }
 

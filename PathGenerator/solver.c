@@ -1,4 +1,4 @@
-﻿#include "mapgen.h"
+#include "mapgen.h"
 #include "stack.h"
 #include "solver.h"
 #include <stdlib.h>
@@ -21,7 +21,7 @@ bool isInStack(Stack* stack, Vec2 vec)
 	}
 	return false;
 }
-//
+
 //void pullNode(Stack* stack, Node node)
 //{
 //	int idx = 0;
@@ -66,27 +66,7 @@ bool isWalkable(Map* map, Vec2 pos)
 	return (isValid(map, pos) && map->data[pos.x][pos.y] != T_WALL && map->data[pos.x][pos.y] != D_ROCK);
 }
 
-//Node getNodeFromMap(Map* map, Vec2 pos)
-//{
-//	if (!map || !isValid(map, pos)) return;
-//
-//	Node tmp;
-//	tmp.pos = pos;
-//	tmp.g_cost = ManDist(pos, map->entry);
-//	tmp.h_cost = ManDist(pos, map->exit);
-//	tmp.f_cost = tmp.g_cost + tmp.h_cost;
-//	tmp.walkable = isWalkable(map, pos);
-//	tmp.parent = NULL;
-//
-//	return tmp;
-//}
-//
-//void printNode(Node node)
-//{
-//	printf("\n[+] Node:\nPos: (%d, %d)\nG_cost: %d\nH_cost: %d\nF_cost: %d\nWalkable: %d\n", node.pos.x, node.pos.y, node.g_cost, node.h_cost, node.f_cost, node.walkable);
-//}
-
-int countNeighbors(Map* map, Vec2 pos, Stack* stack) // Compte les voisins aux 4 points cardinaux de pos
+int countNeighbors(Map* map, Vec2 pos) // Compte les voisins aux 4 points cardinaux de pos
 {
 	if (!map) return ERROR;
 
@@ -115,142 +95,10 @@ bool canMove(Map* map, Vec2 pos, Dir dir)
 	return isWalkable(map, pos);
 }
 
-// Algorithme A*
-//int megaSolver2000(Map* map)
-//{
-//	if (!map) return ERROR;
-//
-//	// Stack of nodes to be evaluated
-//	Stack* open;
-//	NewStack(&open, map->size.x * map->size.y);
-//
-//	// Stack of nodes already evaluated
-//	Stack* closed;
-//	NewStack(&closed, map->size.x * map->size.y);
-//
-//	Stack* output;
-//	NewStack(&output, map->size.x * map->size.y);
-//
-//	Node startNode = getNodeFromMap(map, map->entry);
-//	Node endNode = getNodeFromMap(map, map->exit);
-//
-//	push(open, startNode);
-//
-//#ifdef DEBUG
-//	printf("\nStart node:");
-//	printNode(startNode);
-//
-//	printf("\nEnd node:");
-//	printNode(endNode);
-//#endif // DEBUG
-//
-//	Node curr = startNode;
-//	unsigned int ite = 0;
-//	while (!isStackEmpty(open) && ite < 50000)
-//	{
-//		ite++;
-//		// Getting the the lowest f_cost node in open
-//		//curr = open->array[0];
-//		//for (int i = 0; i < open->eltsCount; i++)
-//		//{
-//		//	if (open->array[i].f_cost < curr.f_cost || open->array[i].f_cost == curr.f_cost && open->array[i].h_cost < curr.h_cost)
-//		//		curr = open->array[i];
-//		//}
-//
-//		int winner = 0;
-//		for (int i = 0; i < open->eltsCount; i++)
-//		{
-//			if (open->array[i].f_cost < open->array[winner].f_cost)
-//				winner = i;
-//
-//			if (open->array[i].f_cost == open->array[winner].f_cost)
-//			{
-//				//Prefer to explore options with longer known paths (closer to goal)
-//				if (open->array[i].g_cost > open->array[winner].g_cost) {
-//					winner = i;
-//				}
-//				if (open->array[i].g_cost == open->array[winner].g_cost && open->array[i].h_cost < open->array[winner].h_cost)
-//				{
-//					winner = i;
-//				}
-//		}
-//	}
-//
-//		curr = open->array[winner];
-//
-//
-//#ifdef DEBUG
-//		printf("\nBest node:");
-//		printNode(curr);
-//#endif // DEBUG
-//
-//		// Remove curr from open to place it into closed
-//		pullNode(open, curr);
-//		if (!isInStack(closed, curr))
-//			push(closed, curr);
-//
-//		// If we found the path we break => we don't need to go further
-//		if (curr.pos.x == endNode.pos.x && curr.pos.y == endNode.pos.y)
-//			break;
-//
-//		// Get Node neighbors
-//		Node neighbors[4];
-//
-//		neighbors[0] = getNodeFromMap(map, (Vec2) { curr.pos.x, curr.pos.y - 1 });
-//		neighbors[1] = getNodeFromMap(map, (Vec2) { curr.pos.x + 1, curr.pos.y });
-//		neighbors[2] = getNodeFromMap(map, (Vec2) { curr.pos.x, curr.pos.y + 1 });
-//		neighbors[3] = getNodeFromMap(map, (Vec2) { curr.pos.x - 1, curr.pos.y });
-//
-//		// Getting the closest neighbor
-//		Node closest = curr;
-//		for (int i = 0; i < 4; i++)
-//		{
-//			Vec2 pos = neighbors[i].pos;
-//			int cell = map->data[pos.x][pos.y];
-//			
-//			// Is the node traversable or already traversed ?
-//			if (!neighbors[i].walkable || isInStack(closed, neighbors[i]) || countNeighbors(map, pos) <= 1)
-//				continue;
-//
-//			// Geting the closest node or one that haven't been traversed
-//			unsigned int dist = curr.g_cost + ManDist(curr.pos, pos);
-//			if (dist < neighbors[i].g_cost || !isInStack(open, neighbors[i]))
-//			{
-//				neighbors[i].g_cost = dist;
-//				neighbors[i].h_cost = ManDist(curr.pos, pos);
-//				neighbors[i].f_cost = neighbors[i].g_cost + neighbors[i].h_cost;
-//				neighbors[i].parent = &curr;
-//				curr = neighbors[i];
-//
-//				// Ici ça trouve à chaque fois mais impossible d'extraire le chemin à cause de parent
-//				if (!isInStack(open, curr))
-//					push(open, curr);
-//
-//			}
-//		}
-//		// Si on met le if ici, ça marche dans le cas où on trouve direct
-//		//if (!isInStack(open, curr))
-//		//	push(open, curr);
-//
-//#ifdef DEBUG
-//		printf("\nMoving to best neighbor:");
-//		printNode(closest);
-//#endif // DEBUG
-//	}
-//
-//	bool found = true;
-//
-//	while (!isStackEmpty(closed))
-//	{
-//		Node tmp;
-//		pull(closed, &tmp);
-//		map->data[tmp.pos.x][tmp.pos.y] = -1;
-//	}
-//
-//	print_shard(map, &printPath);
-//
-//	return (found ? SUCCESS : ERROR);
-//}
+bool isEqual(Vec2 a, Vec2 b)
+{
+	return (a.x == b.x && a.y == b.y);
+}
 
 int megaSolver3000(Map* map)
 {

@@ -165,7 +165,7 @@ void printPath(Map* map, int x, int y) {
 	else if (map->exit.x == x && map->exit.y == y) chr = 'S';
 	else if (map->data[x][y] == T_WALL) chr = 'W';
 	else if (map->data[x][y] == 1) chr = '@';
-	else if (map->data[x][y] == -1) chr = 'O';
+	else if (map->data[x][y] == -1) chr = '*';
 	else if (map->data[x][y] == D_ROCK) chr = 'X';
 	else chr = ' ';
 	printf("%c ", chr);
@@ -188,7 +188,7 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
 {
     //check si les tailles sont conformes
 	if (size.x < 5 || size.y < 5 || size.x > X_MAX || size.y > Y_MAX) return NULL;
-    if(map) free(map);
+    if(!map) free(map);
 
     map = init_memory(map,size,diff);
     map = init_wall(map);

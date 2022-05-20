@@ -13,7 +13,11 @@ void NewStack(Stack** stack, int initialStackSize)
 	*stack = (Stack*)malloc(sizeof(Stack));
 	if (*stack != NULL)
 	{
+<<<<<<< HEAD
 		// allocation du tableau de donnees
+=======
+		// allocation du tableau de données
+>>>>>>> e4d0e7a38533644f3669aa84ba58b3ce0778cfe0
 		(*stack)->array = (Vec2*)malloc(sizeof(Vec2) * initialStackSize);
 		if (((*stack)->array) != NULL)
 		{
@@ -41,18 +45,26 @@ bool isStackEmpty(Stack* stack) {
 }
 
 // pousse une valeur sur la pile
+<<<<<<< HEAD
 int push(Stack* stack, Vec2 value)
+=======
+int push(Stack* stack, Vec2 Vec2)
+>>>>>>> e4d0e7a38533644f3669aa84ba58b3ce0778cfe0
 {
 	if (!isStackFull(stack))
 	{
-		stack->array[stack->eltsCount] = value;
+		stack->array[stack->eltsCount] = Vec2 ;
 		stack->eltsCount++;
 		return(0);
 	}
 	else return(STACKOVERFLOW);
 }
 
+<<<<<<< HEAD
 // rï¿½cupï¿½re la valeur au sommet de la pile
+=======
+// récupère la valeur au sommet de la pile
+>>>>>>> e4d0e7a38533644f3669aa84ba58b3ce0778cfe0
 int pull(Stack* stack, Vec2* value)
 {
 	if (!isStackEmpty(stack))

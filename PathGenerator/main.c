@@ -23,6 +23,7 @@ int main(int argc, char* argv[])
 	print_shard(map,&printMapData);
 	export_map(map, argv[4]);
 
+<<<<<<< HEAD
 	//solving now
 	Vec2* shortest_path = NULL;
 
@@ -30,5 +31,8 @@ int main(int argc, char* argv[])
 
 
 	// megaSolver2000(map);
+=======
+	megaSolver3000(map);
+>>>>>>> e4d0e7a38533644f3669aa84ba58b3ce0778cfe0
 	return EXIT_SUCCESS;
 }

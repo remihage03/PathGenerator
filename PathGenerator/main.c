@@ -23,7 +23,9 @@ int main(int argc, char* argv[])
 	print_shard(map,&printMapData);
 	export_map(map, argv[4]);
 
-	megaSolver3000(map);
+	Map* map2 = NULL;
+	map2 = import_map(map2, argv[4]);
+	megaSolver3000(map2);
 
 	//for (int i = 1; i < map->size.x - 1; i++)
 	//{

@@ -95,8 +95,9 @@ bool canMove(Map* map, Vec2 pos, Dir dir)
 	return isWalkable(map, pos);
 }
 
-int megaSolver3000(Map* map)
-{
+int megaSolver3000(Map* map) {
+	if (!map) return ERROR;
+
 	// Va contenir notre chemin
 	Stack* path;
 	int res = map->size.x * map->size.y;
@@ -105,16 +106,15 @@ int megaSolver3000(Map* map)
 	Stack* blocked;
 	NewStack(&blocked, res);
 
-	Vec2 pos = map->entry, oldPos = pos, tmp;
+	Vec2 pos = map->entry, oldPos = pos;
 	push(path, pos);
 
 	unsigned int ite = 0;
 
-	while (!isEqual(pos, map->exit) && ite < res)
-	{
+	while (!isEqual(pos, map->exit) && ite < res) {
 		ite++;
 
-		Dir dir = DIR_RIGHT;
+		Dir dir = DIR_DOWN;
 
 		// Coords des 4 voisins cardinaux
 		Vec2 neighbors[4] = {pos, pos, pos, pos};
@@ -126,23 +126,20 @@ int megaSolver3000(Map* map)
 
 		// Find closest neighbor
 		unsigned int dst = INT_MAX;
-		for (int i = 0; i < 4; i++)
-		{
+		for (int i = 0; i < 4; i++) {
 			int newDst = ManDist(neighbors[i], map->exit);
 
 			if (!isWalkable(map, neighbors[i]) || countNeighbors(map, neighbors[i], path) == 0 || isInStack(blocked, neighbors[i]))
 				continue;
 
-			if (newDst < dst) // Le plus proche de l'arrivée
-			{
+			if (newDst < dst) {
 				dst = newDst;
 				if (i == 0) dir = DIR_UP;
 				else if (i == 1) dir = DIR_RIGHT;
 				else if (i == 2) dir = DIR_DOWN;
 				else if (i == 3) dir = DIR_LEFT;
 			}
-			else
-			{
+			else {
 				dst = newDst;
 				if (i == 0) dir = DIR_UP;
 				else if (i == 1) dir = DIR_RIGHT;
@@ -152,19 +149,18 @@ int megaSolver3000(Map* map)
 		}
 		
 		// Tant qu'on a pas rencontré un obstacle, on continue de glisser
-		while (canMove(map, pos, dir))
-		{
+		while (canMove(map, pos, dir) && !isEqual(pos, map->exit)) {
 			exec_move(&pos, dir);
+
 			if (!isInStack(path, pos))
 				push(path, pos);
 			oldPos = pos;
 		}
 
-		if (countNeighbors(map, pos, path) == 0)
-		{
+		if (countNeighbors(map, pos, path) == 0 && !isEqual(pos, map->exit)) {
 			if (!isInStack(blocked, pos))
 				push(blocked, pos);
-			pull(path, &pos);
+			//pull(path, &pos);
 			oldPos = pos;
 		}
 
@@ -176,12 +172,21 @@ int megaSolver3000(Map* map)
 		//}
 	}
 
+	Vec2 tmp;
+	peek(path, &tmp);
+	if (isEqual(tmp, map->exit)) {
+		printf("\n[+] Path found !\n");
+	}
+	else {
+		printf("\n[+] Unable to find a path.\n");
+	}
+
 	// On crée le chemin
-	while (!isStackEmpty(path))
-	{
-		Vec2 tmp;
+	while (!isStackEmpty(path)) {
 		pull(path, &tmp);
 		map->data[tmp.x][tmp.y] = -1;
 	}
 	print_shard(map, &printPath);
+
+	return SUCCESS;
 }

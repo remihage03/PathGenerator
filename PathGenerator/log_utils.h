@@ -10,4 +10,7 @@ typedef enum level
 	none,
 }Level;
 
-void LogConsole(const char* message, )
+void LogConsole(const char* message, Level logLevel)
+{
+
+}

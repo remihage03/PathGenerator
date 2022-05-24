@@ -5,10 +5,10 @@
 #include "solver.h"
 #include "stack.h"
 #include "node.h"
-#include "solver.c"
-#include "stack.c"
-#include "mapgen.c"
-#include "node.c"
+//#include "solver.c"
+//#include "stack.c"
+//#include "mapgen.c"
+//#include "node.c"
 
 
 int main(int argc, char* argv[])

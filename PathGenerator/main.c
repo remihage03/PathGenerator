@@ -36,7 +36,9 @@ int main(int argc, char* argv[])
 	Vec2 entry = map->entry;
 
 	Node* node = NULL;
+	printf("\ncreating graph..");
 	create_node(&node,entry,map);
+	printf("\n graph done ..");
 
 	printf("\nnode 1 : value : %d",node->value);
 

@@ -7,13 +7,9 @@
 
 //#define DEBUG
 
-typedef struct node{
-	int value;
-	struct node* up;
-	struct node* right;
-	struct node* down;
-	struct node* left;
-}Node;
+
+
+
 
 
 

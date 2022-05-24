@@ -13,7 +13,10 @@ typedef struct node{
 
 void create_node(Node** node,Vec2 pos,Map* map)
 {
-    *node = (Node*)malloc(sizeof(Node*));
+    *node = (Node*)malloc(sizeof(Node));
+    if(!(*node)){
+        printf("\nerror in malloc of node pos x = %d, y = %d",pos.x,pos.y);
+    }
 
     if (*node == NULL)
     {

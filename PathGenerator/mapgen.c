@@ -7,15 +7,12 @@
 #include "mapgen.h"
 
 
-
 int getValFromPos(Map* map, Vec2 pos)
 {
 	if (!isValid(map, pos)) return -1;
 
 	return map->data[pos.x][pos.y];
 }
-
-
 
 int rangedRandWrapped(int range_min,int range_max)
 {
@@ -66,14 +63,6 @@ bool check_move(Map* map,Vec2 pos,Dir dir){
 bool isValid(Map* map, Vec2 pos)
 {
 	return (pos.x >= 0 && pos.x < map->size.x&& pos.y >= 0 && pos.y < map->size.y);
-}
-
-
-int getValFromPos(Map* map, Vec2 pos)
-{
-	if (!isValid(map, pos)) return -1;
-
-	return map->data[pos.x][pos.y];
 }
 
 Map* init_memory(Map* map,Vec2 size,int diff){

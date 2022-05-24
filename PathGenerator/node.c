@@ -1,4 +1,5 @@
 #include "mapgen.h"
+#include <stdlib.h>
 //up,right,down,left sont des cases walkables
 //si 3 sont nulles == position stuck => retour en arrière
 typedef struct node{
@@ -12,7 +13,15 @@ typedef struct node{
 
 void create_node(Node** node,Vec2 pos,Map* map)
 {
-    node = (Node*)malloc(sizeof(Node*));
+    *node = (Node*)malloc(sizeof(Node*));
+
+    if (*node == NULL)
+    {
+        free(*node);
+        *node = NULL;
+        return;
+    }
+
     (*node)->pos = pos;
     (*node)->value = getValFromPos(map,pos);
     (*node)->up = NULL;

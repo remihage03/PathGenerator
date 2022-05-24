@@ -1,3 +1,4 @@
+#pragma once
 #include "mapgen.h"
 #include <stdlib.h>
 //up,right,down,left sont des cases walkables
@@ -13,3 +14,4 @@ typedef struct node {
 
 // Bon node sa mère
 void create_node(Node** node, Vec2 pos, Map* map);
+void slide_move(Map* map, Vec2* pos, Dir dir);

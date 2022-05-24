@@ -72,5 +72,4 @@ void explore_graph(Node* node)
     explore_graph(node->right);
     explore_graph(node->down);
     explore_graph(node->left);
-
 }

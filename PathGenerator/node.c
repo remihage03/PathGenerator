@@ -1,5 +1,6 @@
 #include "mapgen.h"
 
+
 //up,right,down,left sont des cases walkables
 //si 3 sont nulles == position stuck => retour en arrière
 typedef struct node{

@@ -7,17 +7,6 @@
 
 //#define DEBUG
 
-
-
-
-
-int getValFromPos(Map* map, Vec2 pos)
-{
-	if (!isValid(map, pos)) return -1;
-
-	return map->data[pos.x][pos.y];
-}
-
 bool isEqual(Vec2 a, Vec2 b)
 {
 	return (a.x == b.x && a.y == b.y);
@@ -66,12 +55,6 @@ unsigned int ManDist(Vec2 a, Vec2 b)
 //	if (a.x == b.x && a.y == b.y) return 0;
 //	return (unsigned int)(10 * sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2))); // Distance Euclidienne
 //}
-
-bool isValid(Map* map, Vec2 pos)
-{
-	return (pos.x >= 0 && pos.x < map->size.x && pos.y >= 0 && pos.y < map->size.y);
-}
-
 bool isWalkable(Map* map, Vec2 pos)
 {
 	return (isValid(map, pos) && map->data[pos.x][pos.y] != T_WALL && map->data[pos.x][pos.y] != D_ROCK);

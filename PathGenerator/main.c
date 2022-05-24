@@ -3,9 +3,10 @@
 #include <stdlib.h>
 #include "mapgen.h"
 #include "solver.h"
-#include "solver.c"
-#include "stack.c"
-#include "mapgen.c"
+#include "stack.h"
+//#include "solver.c"
+//#include "stack.c"
+//#include "mapgen.c"
 
 int main(int argc, char* argv[])
 {

@@ -11,9 +11,7 @@ typedef struct node{
 	struct node* left;
 }Node;
 
-
-
-Node* create_node(Node** node,Vec2 pos,Map* map)
+void create_node(Node** node,Vec2 pos,Map* map)
 {
     node = (Node*)malloc(sizeof(Node*));
     (*node)->pos = pos;
@@ -22,8 +20,4 @@ Node* create_node(Node** node,Vec2 pos,Map* map)
     (*node)->right = NULL;
     (*node)->down = NULL;
     (*node)->left = NULL;
-
-    // if(check_pos())
-
-    return *node;
 }

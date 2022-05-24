@@ -13,7 +13,10 @@ typedef struct node {
 }Node;
 
 // Bon node sa m�re
-void create_node(Node* node, Vec2 pos, Map* map,Dir master);
+void create_children(Node* node,Map* map,int dir_index);
+
+Node* create_master_node(Node* node,Vec2 pos,Map* map);
+// void create_node(Node* node, Vec2 pos, Map* map,Dir master);
 void slide_move(Map* map, Vec2* pos, Dir dir);
 void explore_graph(Node* node);
 int count_valid_path(Node* node);

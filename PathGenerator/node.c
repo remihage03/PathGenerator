@@ -12,8 +12,7 @@ void slide_move(Map* map, Vec2* pos, Dir dir)
     }
 }
 
-// Bon node sa mère
-void create_node(Node* node,Vec2 pos,Map* map,Dir master)
+Node* create_master_node(Node* node,Vec2 pos,Map* map)
 {
     node = (Node*)malloc(sizeof(Node));
 
@@ -23,7 +22,7 @@ void create_node(Node* node,Vec2 pos,Map* map,Dir master)
         printf("\nerror in malloc of node pos x = %d, y = %d",pos.x,pos.y);
         free(node);
         node = NULL;
-        return;
+        return NULL;
     }
     printf("\npos : x = %d, y = %d",pos.x,pos.y);
     (node)->pos = pos;
@@ -32,27 +31,72 @@ void create_node(Node* node,Vec2 pos,Map* map,Dir master)
     (node)->right = NULL;
     (node)->down = NULL;
     (node)->left = NULL;
+    return node;
+}
 
-    Vec2 _up = pos;
-    slide_move(map, &_up,DIR_UP);
-    Vec2 _right = pos;
-    slide_move(map, &_right,DIR_RIGHT);
-    Vec2 _down = pos;
-    slide_move(map, &_down,DIR_DOWN);
-    Vec2 _left = pos;
-    slide_move(map, &_left,DIR_LEFT);
-
-    if(check_pos(getValFromPos(map,_up)) && !isEqual(_up,pos) && master != DIR_UP) 
-        create_node(node->up,_up,map,node);
-    if(check_pos(getValFromPos(map,_right)) && !isEqual(_right,pos)&& master != DIR_RIGHT) 
-        create_node(node->right,_right,map,node);
-    if(check_pos(getValFromPos(map,_down)) && !isEqual(_down,pos) && master != DIR_DOWN) 
-        create_node(node->down,_down,map,node);
-    if(check_pos(getValFromPos(map,_left)) && !isEqual(_left,pos)&& master != DIR_LEFT) 
-        create_node(node->left,_left,map,node);
-
+void create_children(Node* node,Map* map,int dir_index)
+{
+    Dir directions[4] = {DIR_UP,DIR_RIGHT,DIR_DOWN,DIR_LEFT};
+    Node* child = NULL;
+    Vec2 child_pos = node->pos;
+    slide_move(map, &child_pos,directions[dir_index]);
+    printf("\ncreating children.. pos : %d",dir_index);
+    if(!isEqual(node->pos,child_pos)){
+        child = create_master_node(node,child_pos,map);
+        for(int i = 0;i<4;i++){
+            create_children(child,map,i);
+        }
+    }
+   
+    if(dir_index == DIR_RIGHT) node->right = child;
+    else if(dir_index == DIR_LEFT) node->left = child;
+    else if(dir_index == DIR_UP) node->up = child;
+    else if(dir_index == DIR_DOWN) node->down = child;
+    
 
 }
+
+// Bon node sa mère
+// void create_node(Node* node,Vec2 pos,Map* map,Dir master)
+// {
+//     node = (Node*)malloc(sizeof(Node));
+
+//     // Si malloc échoue
+//     if (node == NULL)
+//     {
+//         printf("\nerror in malloc of node pos x = %d, y = %d",pos.x,pos.y);
+//         free(node);
+//         node = NULL;
+//         return;
+//     }
+//     printf("\npos : x = %d, y = %d",pos.x,pos.y);
+//     (node)->pos = pos;
+//     (node)->value = getValFromPos(map,pos);
+//     (node)->up = NULL;
+//     (node)->right = NULL;
+//     (node)->down = NULL;
+//     (node)->left = NULL;
+
+//     Vec2 _up = pos;
+//     slide_move(map, &_up,DIR_UP);
+//     Vec2 _right = pos;
+//     slide_move(map, &_right,DIR_RIGHT);
+//     Vec2 _down = pos;
+//     slide_move(map, &_down,DIR_DOWN);
+//     Vec2 _left = pos;
+//     slide_move(map, &_left,DIR_LEFT);
+
+//     if(check_pos(getValFromPos(map,_up)) && !isEqual(_up,pos) && master != DIR_UP) 
+//         create_node(node->up,_up,map,node);
+//     if(check_pos(getValFromPos(map,_right)) && !isEqual(_right,pos)&& master != DIR_RIGHT) 
+//         create_node(node->right,_right,map,node);
+//     if(check_pos(getValFromPos(map,_down)) && !isEqual(_down,pos) && master != DIR_DOWN) 
+//         create_node(node->down,_down,map,node);
+//     if(check_pos(getValFromPos(map,_left)) && !isEqual(_left,pos)&& master != DIR_LEFT) 
+//         create_node(node->left,_left,map,node);
+
+
+// }
 
 
 //return count of children directions : si haut/bas/droite dispo => count = 3
@@ -69,10 +113,6 @@ int count_valid_path(Node* node)
 void explore_graph(Node* node) 
 {
     printf("\n node : pos x = %d, y = %d",node->pos.x,node->pos.y);
-    if(node->right){
-    // printf("\n     node right : x = %d, y = %d",node->right->pos.x,node->right->pos.y);
-
-    }
     if(node->right) explore_graph(node->right);
     if(node->up) explore_graph(node->up);
     if(node->down) explore_graph(node->down);

@@ -11,7 +11,6 @@ void slide_move(Map* map, Vec2* pos, Dir dir)
     }
 }
 
-
 void ajouter_fistons(Node* node,Map* map)
 {
     Vec2 pos = node->pos;
@@ -32,7 +31,6 @@ void ajouter_fistons(Node* node,Map* map)
         create_node(&node->down,_down,map);
     if(check_pos(getValFromPos(map,_left)) && !isEqual(_left,pos)) 
         create_node(&node->left,_left,map);
-
 
 }
 

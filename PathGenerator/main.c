@@ -4,9 +4,11 @@
 #include "mapgen.h"
 #include "solver.h"
 #include "stack.h"
-//#include "solver.c"
-//#include "stack.c"
-//#include "mapgen.c"
+#include "solver.c"
+#include "stack.c"
+#include "mapgen.c"
+#include "node.c"
+
 
 int main(int argc, char* argv[])
 {
@@ -31,7 +33,15 @@ int main(int argc, char* argv[])
 	int res = map->size.x * map->size.y;
 	NewStack(&path, res);
 	Vec2 entry = map->entry;
-	megaSolver4000(map,path,entry);
+
+	Node* node = NULL;
+	create_node(&node,entry,map);
+
+	printf("\nnode 1 : value : %d",node->value);
+
+
+
+	// megaSolver4000(map,path,entry);
 	// for (int i = 1; i < map->size.x - 1; i++)
 	// {
 	// 	for (int j = 1; j < map->size.y - 1; j++)

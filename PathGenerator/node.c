@@ -1,6 +1,7 @@
 #include "mapgen.h"
 #include "node.h"
 #include "solver.h"
+#include "log_utils.h"
 #include <stdlib.h>
 
 

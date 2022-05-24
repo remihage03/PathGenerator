@@ -4,13 +4,12 @@
 
 typedef enum level
 {
-	error,
-	warning,
-	info,
-	none,
+	error = 'x',
+	info = '!',
+	none = '+',
 }Level;
 
 void LogConsole(const char* message, Level logLevel)
 {
-
+	printf("\n[%c] %s\n", logLevel, message);
 }

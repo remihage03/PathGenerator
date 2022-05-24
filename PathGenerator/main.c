@@ -38,10 +38,8 @@ int main(int argc, char* argv[])
 	printf("\ncreating graph..");
 	create_node(&node,entry,map);
 	printf("\n graph done ..");
-
-	printf("\nnode 1 : value : %d",node->value);
-
-
+	
+	explore_graph(node);
 
 	// megaSolver4000(map,path,entry);
 	// for (int i = 1; i < map->size.x - 1; i++)

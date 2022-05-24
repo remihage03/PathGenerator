@@ -7,6 +7,9 @@
 
 //#define DEBUG
 
+
+
+
 bool isEqual(Vec2 a, Vec2 b)
 {
 	return (a.x == b.x && a.y == b.y);

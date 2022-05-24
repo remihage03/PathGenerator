@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "stdlib.h": "c",
-        "mapgen.h": "c"
+        "mapgen.h": "c",
+        "math.h": "c"
     }
 }

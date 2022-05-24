@@ -54,6 +54,8 @@ typedef struct map {
 	Difficulty level;
 }Map;
 
+
+int getValFromPos(Map* map, Vec2 pos);
 int rangedRandWrapped(int range_min,int range_max);
 int rangedRand(int range_min, int range_max);
 bool check_pos(int _data);

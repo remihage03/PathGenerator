@@ -37,9 +37,15 @@ int main(int argc, char* argv[])
 	Vec2 entry = map->entry;
 	Node* node = NULL;
 	printf("\ncreating graph..");
-	create_node(node,entry,map,DIR_LEFT);
+	// create_node(node,entry,map,DIR_LEFT);
+	node = create_master_node(node,entry,map);
+	for(int i = 0;i<4;i++){
+		create_children(node,map,i);
+	}
 	printf("\n graph done ..");
 	
+
+
 	explore_graph(node);
 
 	// megaSolver4000(map,path,entry);

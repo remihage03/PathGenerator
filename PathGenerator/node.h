@@ -15,3 +15,5 @@ typedef struct node {
 // Bon node sa mère
 void create_node(Node** node, Vec2 pos, Map* map);
 void slide_move(Map* map, Vec2* pos, Dir dir);
+void explore_graph(Node* node);
+int count_valid_path(Node* node);

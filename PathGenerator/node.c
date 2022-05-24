@@ -6,8 +6,7 @@
 
 void slide_move(Map* map, Vec2* pos, Dir dir)
 {
-    while (canMove(map, *pos, dir))
-    {
+    while (canMove(map, *pos, dir)){
         exec_move(pos, dir);
     }
 }
@@ -62,7 +61,8 @@ void create_node(Node** node,Vec2 pos,Map* map)
 
 
 //return count of children directions : si haut/bas/droite dispo => count = 3
-int count_valid_path(Node* node){
+int count_valid_path(Node* node)
+{
     int count = 0;
     if(node->down) count++;
     if(node->left) count++;
@@ -71,7 +71,7 @@ int count_valid_path(Node* node){
     return count;
 }
 
-void explore_graph(Node* node)
+void explore_graph(Node* node) 
 {
     printf("\n node : pos x = %d, y = %d",node->pos.x,node->pos.y);
     if(node->right){

@@ -11,10 +11,12 @@ typedef struct node{
 	struct node* left;
 }Node;
 
+// Bon node sa mère
 void create_node(Node** node,Vec2 pos,Map* map)
 {
     *node = (Node*)malloc(sizeof(Node*));
 
+    // Si malloc échoue
     if (*node == NULL)
     {
         free(*node);
@@ -38,8 +40,8 @@ void create_node(Node** node,Vec2 pos,Map* map)
     Vec2 _left = pos;
     exec_move(&_left,DIR_LEFT);
 
-    if(check_pos(getValFromPos(map,_up))) create_node(&(*node)->up,_up,map);
-    if(check_pos(getValFromPos(map,_right))) create_node(&(*node)->right,_right,map);
-    if(check_pos(getValFromPos(map,_down))) create_node(&(*node)->down,_down,map);
-    if(check_pos(getValFromPos(map,_left))) create_node(&(*node)->left,_left,map);
+    if (check_pos(getValFromPos(map,_up))) create_node(&(*node)->up,_up,map);
+    if (check_pos(getValFromPos(map,_right))) create_node(&(*node)->right,_right,map);
+    if (check_pos(getValFromPos(map,_down))) create_node(&(*node)->down,_down,map);
+    if (check_pos(getValFromPos(map,_left))) create_node(&(*node)->left,_left,map);
 }

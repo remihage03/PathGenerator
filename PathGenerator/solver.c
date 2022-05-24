@@ -11,13 +11,6 @@
 
 
 
-int getValFromPos(Map* map, Vec2 pos)
-{
-	if (!isValid(map, pos)) return -1;
-
-	return map->data[pos.x][pos.y];
-}
-
 bool isEqual(Vec2 a, Vec2 b)
 {
 	return (a.x == b.x && a.y == b.y);

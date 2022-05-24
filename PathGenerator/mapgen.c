@@ -6,6 +6,17 @@
 #include <math.h>
 #include "mapgen.h"
 
+
+
+int getValFromPos(Map* map, Vec2 pos)
+{
+	if (!isValid(map, pos)) return -1;
+
+	return map->data[pos.x][pos.y];
+}
+
+
+
 int rangedRandWrapped(int range_min,int range_max)
 {
     int u = 0;

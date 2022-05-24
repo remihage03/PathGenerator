@@ -11,16 +11,40 @@ void slide_move(Map* map, Vec2* pos, Dir dir)
     }
 }
 
+
+void ajouter_fistons(Node* node,Map* map)
+{
+    Vec2 pos = node->pos;
+    Vec2 _up = pos;
+    slide_move(map, &_up,DIR_UP);
+    Vec2 _right = pos;
+    slide_move(map, &_right,DIR_RIGHT);
+    Vec2 _down = pos;
+    slide_move(map, &_down,DIR_DOWN);
+    Vec2 _left = pos;
+    slide_move(map, &_left,DIR_LEFT);
+
+    if(check_pos(getValFromPos(map,_up)) && !isEqual(_up,pos)) 
+        create_node(&node->up,_up,map);
+    if(check_pos(getValFromPos(map,_right)) && !isEqual(_right,pos)) 
+        create_node(&node->right,_right,map);
+    if(check_pos(getValFromPos(map,_down)) && !isEqual(_down,pos)) 
+        create_node(&node->down,_down,map);
+    if(check_pos(getValFromPos(map,_left)) && !isEqual(_left,pos)) 
+        create_node(&node->left,_left,map);
+
+
+}
+
 // Bon node sa mère
 void create_node(Node** node,Vec2 pos,Map* map)
 {
     *node = (Node*)malloc(sizeof(Node));
-    if(!(*node)){
-        printf("\nerror in malloc of node pos x = %d, y = %d",pos.x,pos.y);
-    }
 
     // Si malloc échoue
-    if (*node == NULL){
+    if (*node == NULL)
+    {
+        printf("\nerror in malloc of node pos x = %d, y = %d",pos.x,pos.y);
         free(*node);
         *node = NULL;
         return;
@@ -32,21 +56,9 @@ void create_node(Node** node,Vec2 pos,Map* map)
     (*node)->right = NULL;
     (*node)->down = NULL;
     (*node)->left = NULL;
-
-    Vec2 _up = pos;
-    slide_move(map, &_up,DIR_UP);
-    Vec2 _right = pos;
-    slide_move(map, &_right,DIR_RIGHT);
-    Vec2 _down = pos;
-    slide_move(map, &_down,DIR_DOWN);
-    Vec2 _left = pos;
-    slide_move(map, &_left,DIR_LEFT);
-
-    if(check_pos(getValFromPos(map,_up))) create_node(&((*node)->up),_up,map);
-    if(check_pos(getValFromPos(map,_right))) create_node(&((*node)->right),_right,map);
-    if(check_pos(getValFromPos(map,_down))) create_node(&((*node)->down),_down,map);
-    if(check_pos(getValFromPos(map,_left))) create_node(&((*node)->left),_left,map);
+    ajouter_fistons(*node,map);
 }
+
 
 //return count of children directions : si haut/bas/droite dispo => count = 3
 int count_valid_path(Node* node)
@@ -61,14 +73,21 @@ int count_valid_path(Node* node)
 
 void explore_graph(Node* node) 
 {
-    if(count_valid_path(node) < 3){
-        printf("\n[!] error zebi\n");
+    printf("\n node : pos x = %d, y = %d",node->pos.x,node->pos.y);
+    if(node->right){
+    printf("\n     node right : x = %d, y = %d",node->right->pos.x,node->right->pos.y);
+
     }
+    if(node->right) explore_graph(node->right);
+    if(node->up) explore_graph(node->up);
+    if(node->down) explore_graph(node->down);
+    if(node->left) explore_graph(node->left);
+    
+    // if(count_valid_path(node) <3){
+        // printf("error zebi");
+        // return;
+    // }
 
     // Node* tmp = node;
-    printf("\n node : pos x = %d, y = %d",node->pos.x,node->pos.y);
-    explore_graph(node->up);
-    explore_graph(node->right);
-    explore_graph(node->down);
-    explore_graph(node->left);
+    
 }

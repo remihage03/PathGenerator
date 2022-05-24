@@ -5,10 +5,10 @@
 #include "solver.h"
 #include "stack.h"
 #include "node.h"
-//#include "solver.c"
-//#include "stack.c"
-//#include "mapgen.c"
-//#include "node.c"
+#include "solver.c"
+#include "stack.c"
+#include "mapgen.c"
+#include "node.c"
 
 
 int main(int argc, char* argv[])
@@ -25,16 +25,16 @@ int main(int argc, char* argv[])
 	map = genMap(map, size, (Difficulty)atoi(argv[3]));
 	print_shard(map,&printPath);
 	// print_shard(map,&printMapData);
-	export_map(map, argv[4]);
+	// export_map(map, argv[4]);
 
-	Map* map2 = NULL;
-	map2 = import_map(map2, argv[4]);
+	// Map* map2 = NULL;
+	// map2 = import_map(map2, argv[4]);
 	// megaSolver3000(map2);
-	Stack* path;
-	int res = map->size.x * map->size.y;
-	NewStack(&path, res);
-	Vec2 entry = map->entry;
+	// Stack* path;
+	// int res = map->size.x * map->size.y;
+	// NewStack(&path, res);
 
+	Vec2 entry = map->entry;
 	Node* node = NULL;
 	printf("\ncreating graph..");
 	create_node(&node,entry,map);

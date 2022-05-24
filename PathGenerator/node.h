@@ -2,7 +2,7 @@
 #include "mapgen.h"
 #include <stdlib.h>
 //up,right,down,left sont des cases walkables
-//si 3 sont nulles == position stuck => retour en arrière
+//si 3 sont nulles == position stuck => retour en arriï¿½re
 typedef struct node {
     int value;
     Vec2 pos;
@@ -12,8 +12,8 @@ typedef struct node {
     struct node* left;
 }Node;
 
-// Bon node sa mère
-void create_node(Node** node, Vec2 pos, Map* map);
+// Bon node sa mï¿½re
+void create_node(Node* node, Vec2 pos, Map* map,Dir master);
 void slide_move(Map* map, Vec2* pos, Dir dir);
 void explore_graph(Node* node);
 int count_valid_path(Node* node);

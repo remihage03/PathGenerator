@@ -12,10 +12,27 @@ void slide_move(Map* map, Vec2* pos, Dir dir)
     }
 }
 
-
-void ajouter_fistons(Node* node,Map* map)
+// Bon node sa mère
+void create_node(Node* node,Vec2 pos,Map* map,Dir master)
 {
-    Vec2 pos = node->pos;
+    node = (Node*)malloc(sizeof(Node));
+
+    // Si malloc échoue
+    if (node == NULL)
+    {
+        printf("\nerror in malloc of node pos x = %d, y = %d",pos.x,pos.y);
+        free(node);
+        node = NULL;
+        return;
+    }
+    printf("\npos : x = %d, y = %d",pos.x,pos.y);
+    (node)->pos = pos;
+    (node)->value = getValFromPos(map,pos);
+    (node)->up = NULL;
+    (node)->right = NULL;
+    (node)->down = NULL;
+    (node)->left = NULL;
+
     Vec2 _up = pos;
     slide_move(map, &_up,DIR_UP);
     Vec2 _right = pos;
@@ -25,39 +42,16 @@ void ajouter_fistons(Node* node,Map* map)
     Vec2 _left = pos;
     slide_move(map, &_left,DIR_LEFT);
 
-    if(check_pos(getValFromPos(map,_up)) && !isEqual(_up,pos)) 
-        create_node(&node->up,_up,map);
-    if(check_pos(getValFromPos(map,_right)) && !isEqual(_right,pos)) 
-        create_node(&node->right,_right,map);
-    if(check_pos(getValFromPos(map,_down)) && !isEqual(_down,pos)) 
-        create_node(&node->down,_down,map);
-    if(check_pos(getValFromPos(map,_left)) && !isEqual(_left,pos)) 
-        create_node(&node->left,_left,map);
+    if(check_pos(getValFromPos(map,_up)) && !isEqual(_up,pos) && master != DIR_UP) 
+        create_node(node->up,_up,map,node);
+    if(check_pos(getValFromPos(map,_right)) && !isEqual(_right,pos)&& master != DIR_RIGHT) 
+        create_node(node->right,_right,map,node);
+    if(check_pos(getValFromPos(map,_down)) && !isEqual(_down,pos) && master != DIR_DOWN) 
+        create_node(node->down,_down,map,node);
+    if(check_pos(getValFromPos(map,_left)) && !isEqual(_left,pos)&& master != DIR_LEFT) 
+        create_node(node->left,_left,map,node);
 
 
-}
-
-// Bon node sa mère
-void create_node(Node** node,Vec2 pos,Map* map)
-{
-    *node = (Node*)malloc(sizeof(Node));
-
-    // Si malloc échoue
-    if (*node == NULL)
-    {
-        printf("\nerror in malloc of node pos x = %d, y = %d",pos.x,pos.y);
-        free(*node);
-        *node = NULL;
-        return;
-    }
-
-    (*node)->pos = pos;
-    (*node)->value = getValFromPos(map,pos);
-    (*node)->up = NULL;
-    (*node)->right = NULL;
-    (*node)->down = NULL;
-    (*node)->left = NULL;
-    ajouter_fistons(*node,map);
 }
 
 
@@ -76,7 +70,7 @@ void explore_graph(Node* node)
 {
     printf("\n node : pos x = %d, y = %d",node->pos.x,node->pos.y);
     if(node->right){
-    printf("\n     node right : x = %d, y = %d",node->right->pos.x,node->right->pos.y);
+    // printf("\n     node right : x = %d, y = %d",node->right->pos.x,node->right->pos.y);
 
     }
     if(node->right) explore_graph(node->right);

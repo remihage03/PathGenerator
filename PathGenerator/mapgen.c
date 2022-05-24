@@ -44,7 +44,6 @@ void exec_move(Vec2* pos,Dir dir){
     else if(dir == DIR_LEFT) pos->x--;
 }
 
-
 bool check_move(Map* map,Vec2 pos,Dir dir){
     Vec2 _pos = {pos.x,pos.y};
     exec_move(&_pos,dir);

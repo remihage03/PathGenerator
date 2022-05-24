@@ -6,8 +6,7 @@
 
 void slide_move(Map* map, Vec2* pos, Dir dir)
 {
-    while (canMove(map, *pos, dir))
-    {
+    while (canMove(map, *pos, dir)){
         exec_move(pos, dir);
     }
 }
@@ -21,8 +20,7 @@ void create_node(Node** node,Vec2 pos,Map* map)
     }
 
     // Si malloc échoue
-    if (*node == NULL)
-    {
+    if (*node == NULL){
         free(*node);
         *node = NULL;
         return;
@@ -51,7 +49,8 @@ void create_node(Node** node,Vec2 pos,Map* map)
 }
 
 //return count of children directions : si haut/bas/droite dispo => count = 3
-int count_valid_path(Node* node){
+int count_valid_path(Node* node)
+{
     int count = 0;
     if(node->down) count++;
     if(node->left) count++;
@@ -60,9 +59,9 @@ int count_valid_path(Node* node){
     return count;
 }
 
-void explore_graph(Node* node)
+void explore_graph(Node* node) 
 {
-    if(count_valid_path(node) <3){
+    if(count_valid_path(node) < 3){
         printf("error zebi");
     }
 
@@ -72,5 +71,4 @@ void explore_graph(Node* node)
     explore_graph(node->right);
     explore_graph(node->down);
     explore_graph(node->left);
-
 }

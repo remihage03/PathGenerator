@@ -1,16 +1,18 @@
 #include "mapgen.h"
+#include "node.h"
+#include "solver.h"
 #include <stdlib.h>
-//up,right,down,left sont des cases walkables
-//si 3 sont nulles == position stuck => retour en arrière
-typedef struct node{
-	int value;
-    Vec2 pos;
-	struct node* up;
-	struct node* right;
-	struct node* down;
-	struct node* left;
-}Node;
 
+
+void slide_move(Map* map, Vec2* pos, Dir dir)
+{
+    while (canMove(map, *pos, dir))
+    {
+        exec_move(pos, dir);
+    }
+}
+
+// Bon node sa mère
 void create_node(Node** node,Vec2 pos,Map* map)
 {
     *node = (Node*)malloc(sizeof(Node));
@@ -18,6 +20,7 @@ void create_node(Node** node,Vec2 pos,Map* map)
         printf("\nerror in malloc of node pos x = %d, y = %d",pos.x,pos.y);
     }
 
+    // Si malloc échoue
     if (*node == NULL)
     {
         free(*node);

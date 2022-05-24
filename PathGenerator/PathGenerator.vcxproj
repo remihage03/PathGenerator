@@ -147,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mapgen.h" />
+    <ClInclude Include="node.h" />
     <ClInclude Include="solver.h" />
     <ClInclude Include="stack.h" />
   </ItemGroup>

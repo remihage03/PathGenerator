@@ -1,5 +1,3 @@
-#include "mapgen.h"
-#include "stack.h"
 #include "solver.h"
 #include <stdlib.h>
 #include <stdio.h>

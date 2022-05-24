@@ -7,6 +7,16 @@
 
 //#define DEBUG
 
+typedef struct node{
+	int value;
+	struct node* up;
+	struct node* right;
+	struct node* down;
+	struct node* left;
+}Node;
+
+
+
 bool isEqual(Vec2 a, Vec2 b)
 {
 	return (a.x == b.x && a.y == b.y);
@@ -95,7 +105,6 @@ bool canMove(Map* map, Vec2 pos, Dir dir)
 	return isWalkable(map, pos);
 }
 
-
 Vec2 slide_back(Map* map,Stack* path,Vec2 pos,Dir from){
 
 	Vec2 _pos = pos;
@@ -137,7 +146,6 @@ Dir find_counter_dir(Vec2 from,Vec2 target)
 	}
 	
 }
-
 
 //move until rock or exit vec2
 void move_until_rock(Map* map,Stack* path,Vec2* pos,Dir dir,bool simulation)

@@ -62,7 +62,7 @@ int count_valid_path(Node* node)
 void explore_graph(Node* node) 
 {
     if(count_valid_path(node) < 3){
-        printf("error zebi");
+        printf("\n[!] error zebi\n");
     }
 
     // Node* tmp = node;

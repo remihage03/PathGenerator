@@ -9,13 +9,19 @@
 
 typedef struct node{
 	int value;
+	Vec2 pos;
 	struct node* up;
 	struct node* right;
 	struct node* down;
 	struct node* left;
 }Node;
 
+int getValFromPos(Map* map, Vec2 pos)
+{
+	if (!isValid(map, pos)) return -1;
 
+	return map->data[pos.x][pos.y];
+}
 
 bool isEqual(Vec2 a, Vec2 b)
 {
@@ -60,11 +66,11 @@ unsigned int ManDist(Vec2 a, Vec2 b)
 	return (unsigned int)(10 * (abs(b.x - a.x) + abs(b.y - a.y))); // Distance Manhattan
 }
 
-unsigned int EuclDist(Vec2 a, Vec2 b) // Heuristic
-{
-	if (a.x == b.x && a.y == b.y) return 0;
-	return (unsigned int)(10 * sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2))); // Distance Euclidienne
-}
+//unsigned int EuclDist(Vec2 a, Vec2 b) // Heuristic
+//{
+//	if (a.x == b.x && a.y == b.y) return 0;
+//	return (unsigned int)(10 * sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2))); // Distance Euclidienne
+//}
 
 bool isValid(Map* map, Vec2 pos)
 {

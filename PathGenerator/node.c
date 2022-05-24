@@ -36,13 +36,13 @@ void create_node(Node** node,Vec2 pos,Map* map)
     (*node)->left = NULL;
 
     Vec2 _up = pos;
-    exec_move(&_up,DIR_UP);
+    slide_move(map, &_up,DIR_UP);
     Vec2 _right = pos;
-    exec_move(&_right,DIR_RIGHT);
+    slide_move(map, &_right,DIR_RIGHT);
     Vec2 _down = pos;
-    exec_move(&_down,DIR_DOWN);
+    slide_move(map, &_down,DIR_DOWN);
     Vec2 _left = pos;
-    exec_move(&_left,DIR_LEFT);
+    slide_move(map, &_left,DIR_LEFT);
 
     if(check_pos(getValFromPos(map,_up))) create_node(&((*node)->up),_up,map);
     if(check_pos(getValFromPos(map,_right))) create_node(&((*node)->right),_right,map);

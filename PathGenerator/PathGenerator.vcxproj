@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClCompile Include="main.c" />
     <ClCompile Include="mapgen.c" />
+    <ClCompile Include="node.c" />
     <ClCompile Include="solver.c" />
     <ClCompile Include="stack.c" />
   </ItemGroup>

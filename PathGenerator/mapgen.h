@@ -86,6 +86,8 @@ int addCorner(Map* map,Vec2 pivot,Dir from);
 
 int posToMap(int pos);
 int string_to_int(FILE* file,int seek,int seek_from,int readsize,int count);
+int getValFromPos(Map* map, Vec2 pos);
+bool isValid(Map* map, Vec2 pos);
 Map* import_map(Map* map,char* filename);
 
 //unsigned int calcDist(Vec2 a, Vec2 b);

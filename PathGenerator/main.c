@@ -4,11 +4,8 @@
 #include "mapgen.h"
 #include "solver.h"
 #include "stack.h"
-#include "node.h"
-//#include "solver.c"
-//#include "stack.c"
-//#include "mapgen.c"
-//#include "node.c"
+#include "graph.h"
+//#include "node.h"
 
 
 int main(int argc, char* argv[])
@@ -34,32 +31,32 @@ int main(int argc, char* argv[])
 	// int res = map->size.x * map->size.y;
 	// NewStack(&path, res);
 
-	Vec2 entry = map->entry;
-	Node* node = NULL;
-	printf("\ncreating graph..");
-	// create_node(node,entry,map,DIR_LEFT);
-	node = create_master_node(node,entry,map);
-	for(int i = 0;i<4;i++){
-		create_children(node,map,i);
+	//Vec2 entry = map->entry;
+	//Node* node = NULL;
+	//printf("\ncreating graph..");
+	//// create_node(node,entry,map,DIR_LEFT);
+	//node = create_master_node(node,entry,map);
+	//for(int i = 0;i<4;i++){
+	//	create_children(node,map,i);
+	//}
+	//printf("\n graph done ..");
+	//
+	//explore_graph(node);
+
+	int res = (map->size.x - 2) * (map->size.y - 2);
+	graph g = newGraph(res, false);
+
+	for (int i = 1; i < map->size.x - 1; i++)
+	{
+		for (int j = 1; j < map->size.y - 1; j++)
+		{
+			addEdge(g, i, j);
+		}
 	}
-	printf("\n graph done ..");
-	
 
+	printGraph(g);
 
-	explore_graph(node);
-
-	// megaSolver4000(map,path,entry);
-	// for (int i = 1; i < map->size.x - 1; i++)
-	// {
-	// 	for (int j = 1; j < map->size.y - 1; j++)
-	// 	{
-	// 		Vec2 pos = { i, j };
-	// 		int* cell = &map->data[i][j];
-	// 		if (*cell != T_WALL && *cell != D_ROCK)
-	// 			*cell = ManDist(pos, map->exit);
-	// 	}
-	// }
-	// print_shard(map, &printMapData);
+	destroyGraph(g);
 
 	return EXIT_SUCCESS;
 }

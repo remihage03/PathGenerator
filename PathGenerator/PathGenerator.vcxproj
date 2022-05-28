@@ -139,16 +139,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="graph.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="mapgen.c" />
-    <ClCompile Include="node.c" />
     <ClCompile Include="solver.c" />
     <ClCompile Include="stack.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="log_utils.h" />
+    <ClInclude Include="graph.h" />
     <ClInclude Include="mapgen.h" />
-    <ClInclude Include="node.h" />
     <ClInclude Include="solver.h" />
     <ClInclude Include="stack.h" />
   </ItemGroup>

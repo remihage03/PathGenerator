@@ -2,6 +2,8 @@
     "files.associations": {
         "stdlib.h": "c",
         "mapgen.h": "c",
-        "math.h": "c"
+        "math.h": "c",
+        "node.h": "c",
+        "graph_new.h": "c"
     }
 }

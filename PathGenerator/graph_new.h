@@ -13,3 +13,4 @@ void destroy_graph(graph* g);
 void print_graph(graph* g);
 bool add_edge(graph* g, unsigned int from, unsigned int to);
 bool has_edge(graph* g, unsigned int from, unsigned int to);
+create_neighbor_list(graph* g, Map* map, Vec2 pos);

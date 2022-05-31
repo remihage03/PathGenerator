@@ -83,3 +83,43 @@ bool has_edge(graph* g, unsigned int from, unsigned int to)
 
 	return g->edges[from][to];
 }
+
+
+create_neighbor_list(graph* g, Map* map, Vec2 pos)
+{
+	Vec2 neighbors[999];
+	Vec2 _pos = pos;
+	int ctr = 0;
+	while (map->data[_pos.x][pos.x ] != D_ROCK && map->data[_pos.x][pos.x] != T_WALL && isValid(map, _pos))
+	{
+		_pos.x++;
+		neighbors[ctr] = _pos;
+		ctr++;
+	}
+	_pos = pos;
+	while (map->data[_pos.x][pos.x] != D_ROCK && map->data[_pos.x][pos.x] != T_WALL && isValid(map, _pos))
+	{
+		_pos.x--;
+		neighbors[ctr] = _pos;
+		ctr++;
+	}
+
+	while (map->data[_pos.x][pos.x] != D_ROCK && map->data[_pos.x][pos.x] != T_WALL && isValid(map, _pos))
+	{
+		_pos.y++;
+		neighbors[ctr] = _pos;
+		ctr++;
+	}
+	_pos = pos;
+	while (map->data[_pos.x][pos.x] != D_ROCK && map->data[_pos.x][pos.x] != T_WALL && isValid(map, _pos))
+	{
+		_pos.y--;
+		neighbors[ctr] = _pos;
+		ctr++;
+	}
+
+	for (int i = 0; i < ctr; i++)
+	{
+		add_edge(g, (pos.y * map->size.y) + pos.x , (neighbors[i].y * map->size.y) +neighbors[i].x);
+	}
+}

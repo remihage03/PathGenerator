@@ -24,7 +24,9 @@ Node* create_master_node(Node* node,Vec2 pos,Map* map)
         node = NULL;
         return NULL;
     }
+
     printf("\npos : x = %d, y = %d",pos.x,pos.y);
+
     (node)->pos = pos;
     (node)->value = getValFromPos(map,pos);
     (node)->up = NULL;
@@ -41,6 +43,7 @@ void create_children(Node* node,Map* map,int dir_index)
     Vec2 child_pos = node->pos;
     slide_move(map, &child_pos,directions[dir_index]);
     printf("\ncreating children.. pos : %d",dir_index);
+
     if(!isEqual(node->pos,child_pos)){
         child = create_master_node(node,child_pos,map);
         for(int i = 0;i<4;i++){
@@ -52,8 +55,6 @@ void create_children(Node* node,Map* map,int dir_index)
     else if(dir_index == DIR_LEFT) node->left = child;
     else if(dir_index == DIR_UP) node->up = child;
     else if(dir_index == DIR_DOWN) node->down = child;
-    
-
 }
 
 // Bon node sa mère
@@ -103,26 +104,23 @@ void create_children(Node* node,Map* map,int dir_index)
 int count_valid_path(Node* node)
 {
     int count = 0;
-    if(node->down) count++;
-    if(node->left) count++;
-    if(node->right) count++;
-    if(node->up) count++;
+    if (node->down) count++;
+    if (node->left) count++;
+    if (node->right) count++;
+    if (node->up) count++;
     return count;
 }
 
 void explore_graph(Node* node) 
 {
     printf("\n node : pos x = %d, y = %d",node->pos.x,node->pos.y);
-    if(node->right) explore_graph(node->right);
-    if(node->up) explore_graph(node->up);
-    if(node->down) explore_graph(node->down);
-    if(node->left) explore_graph(node->left);
-    
+    if (node->right) explore_graph(node->right);
+    if (node->up) explore_graph(node->up);
+    if (node->down) explore_graph(node->down);
+    if (node->left) explore_graph(node->left);
     // if(count_valid_path(node) <3){
         // printf("error zebi");
         // return;
     // }
-
-    // Node* tmp = node;
-    
+    // Node* tmp = node;  
 }

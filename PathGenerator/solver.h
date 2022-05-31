@@ -10,3 +10,4 @@ bool isWalkable(Map* map, Vec2 pos);
 bool canMove(Map* map, Vec2 pos, Dir dir);
 bool isEqual(Vec2 a, Vec2 b);
 unsigned int ManDist(Vec2 a, Vec2 b); // Distance de manhattan
+//int countNeighbors(Map* map, Vec2 pos, Stack* stack);

@@ -52,6 +52,7 @@ typedef struct map {
 	Vec2 entry, exit, size;
 	int** data;
 	Difficulty level;
+	int tournant;
 }Map;
 
 

@@ -125,8 +125,9 @@ Map* init_path(Map* map){
         if(check_move(map,current_pos,newDir)){
             exec_move(&current_pos,newDir);
             if(newDir != lastDir)
-                if(addCorner(map,last_pos,lastDir) == ERROR)
-                    printf("\ncan't add corner at pos ..");
+                if(addCorner(map,last_pos,lastDir) != ERROR)
+                    // printf("\ncan't add corner at pos ..");
+					map->tournant++;
             map->data[current_pos.x][current_pos.y] = PATH;
             lastDir = newDir;
         }

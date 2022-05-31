@@ -27,7 +27,7 @@
     <ClCompile Include="stack.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="graph.c">
+    <ClCompile Include="graph_new.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,7 +41,7 @@
     <ClInclude Include="stack.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="graph.h">
+    <ClInclude Include="graph_new.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>

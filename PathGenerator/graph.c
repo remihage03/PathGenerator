@@ -125,3 +125,26 @@ void destroyGraph(graph g)
 	// free graph
 	free(g);
 }
+
+int addCellToGraph(graph g, Map* map, Vec2 pos)
+{
+	if (!map) return ERROR;
+
+	int cell = map->data[pos.x][pos.y];
+
+	if (cell == T_WALL || cell == D_ROCK) return ERROR;
+
+	if (map->data[pos.x - 1][pos.y] != T_WALL && map->data[pos.x - 1][pos.y] != D_ROCK)
+		addEdge(g, pos.x, pos.x - 1);
+
+	if (map->data[pos.x + 1][pos.y] != T_WALL && map->data[pos.x + 1][pos.y] != D_ROCK)
+		addEdge(g, pos.x, pos.x + 1);
+
+	if (map->data[pos.x][pos.y - 1] != T_WALL && map->data[pos.x][pos.y - 1] != D_ROCK)
+		addEdge(g, pos.x, pos.y - 1);
+
+	if (map->data[pos.x][pos.y + 1] != T_WALL && map->data[pos.x][pos.y + 1] != D_ROCK)
+		addEdge(g, pos.x, pos.y + 1);
+
+	return SUCCESS;
+}

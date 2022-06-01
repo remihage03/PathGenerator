@@ -51,11 +51,6 @@ unsigned int ManDist(Vec2 a, Vec2 b)
 	return (unsigned int)(10 * (abs(b.x - a.x) + abs(b.y - a.y))); // Distance Manhattan
 }
 
-//unsigned int EuclDist(Vec2 a, Vec2 b) // Heuristic
-//{
-//	if (a.x == b.x && a.y == b.y) return 0;
-//	return (unsigned int)(10 * sqrt(pow(b.x - a.x, 2) + pow(b.y - a.y, 2))); // Distance Euclidienne
-//}
 bool isWalkable(Map* map, Vec2 pos)
 {
 	return (isValid(map, pos) && map->data[pos.x][pos.y] != T_WALL && map->data[pos.x][pos.y] != D_ROCK);

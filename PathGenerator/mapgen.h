@@ -49,10 +49,13 @@ typedef struct vec2 {
 }Vec2;
 
 typedef struct map {
-	Vec2 entry, exit, size;
+	Vec2 entry, exit, size;	
 	int** data;
 	Difficulty level;
 	int tournant;
+	Vec2* path;
+	int path_count;
+
 }Map;
 
 

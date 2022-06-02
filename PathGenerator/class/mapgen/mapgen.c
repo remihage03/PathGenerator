@@ -276,69 +276,6 @@ FILE* open_file(FILE* file,char* filename,char* mode){
 //     return SUCCESS;
 // }
 
-/*int export_map(Map* map, char* fichier)
-{
-	if (!map || !fichier) return ERROR;
-	printf("\n[*] Exporting");
-	FILE* fichier_data = NULL;
-    fichier_data = open_file(fichier_data,fichier,"w+");
-	
-	const char* header = "{\n\t\"header\": {\n\t\"width\": %d,\n\t\"height\" : %d,\n\t \"diff\" : %2d\n\t},\n\t";
-	
-    char* header_buff = (char*)calloc(strlen(header),sizeof(char));
-	sprintf(header_buff,header,map->size.x,map->size.y,map->level);
-	fprintf(fichier_data,"%s",header_buff);
-	free(header_buff);
-
-	const char* footer = "\"start\":{\"x\":%2d,\"y\":%2d},\"end\":{\"x\":%2d,\"y\":%2d}";
-	char* footer_buff = (char*)calloc(strlen(footer),sizeof(char));
-	sprintf(footer_buff,footer,map->entry.x,map->entry.y,map->exit.x,map->exit.y);
-
-	int _data_size = 6*map->size.x*map->size.y+1;
-	
-	char* data_buffer = (char*)calloc(_data_size,sizeof(char));
-	int last_mazeblock_index = map->size.y * map->size.x;
-	char* default_parsing_string = "%3s,";
-	char* _default_parsing_string;
-
-	for (int i = 0; i < map->size.y; i++)
-	{
-		for (int j = 0; j < map->size.x; j++)
-		{
-			char c_buffer[6];
-			_default_parsing_string = default_parsing_string;
-
-			if ((i+1)*(+1+j) == last_mazeblock_index) {
-				_default_parsing_string = "%3s";
-			}
-
-			if(0 > sprintf_s(c_buffer,5, _default_parsing_string, renderPos(map->data[j][i]))){
-				printf("\nerror in sprintf");
-			}
-			if(strcat_s(data_buffer,_data_size,c_buffer) != 0){
-				printf("\nerror");
-			}
-		}
-	}
-
-	char* body = "\"body\":{\n\t\t%s,\"texture\":[%s],\"data\":[%s]}}";
-	int body_size = strlen(body)+2*strlen(data_buffer)+strlen(footer_buff);
-	char* body_buff = (char*)calloc(body_size,sizeof(char));
-
-	if( 0 > sprintf_s(body_buff,body_size,body,footer_buff,data_buffer,data_buffer)){
-		printf("error in sprintf_s");
-	}
-	free(data_buffer);
-	fprintf(fichier_data,"%s",body_buff);
-	free(body_buff);
-	free(footer_buff);
-
-	// fprintf(fichier_data,"%s",footer_buff);
-
-	printf("\n[*] Done Writing in %s and in x sec!\n",fichier);
-	fclose(fichier_data);
-	return SUCCESS;
-}*/
 
 char* int_to_char(int value)
 {
@@ -349,7 +286,7 @@ char* int_to_char(int value)
     return buffer;
 }
 
-int export_map(Map* map, const char* fileName)
+int export_map(Map* map, char* fileName)
 {
     clock_t start, end;
     start = clock();
@@ -424,7 +361,7 @@ int posToMap(int pos){
 	int buffer;
     if(pos == T_WALL) return T_WALL;
     // else if(pos == T_ICE) return 0;
-    else if(pos == T_ROCK) return D_ROCK;
+    else if(pos == 7) return D_ROCK;
     // else if(pos == T_GRD) return 0;
     else return 0;
 }
@@ -443,21 +380,21 @@ Map* import_map(Map* map,char* filename){
 	FILE* fichier_data = NULL;
     fichier_data = open_file(fichier_data,filename,"r+");
    
-    int width = string_to_int(fichier_data,27,0,2,1);
-    int height = string_to_int(fichier_data,44,0,2,1);
-    int diff = string_to_int(fichier_data,60,0,1,1);
+    int width = string_to_int(fichier_data,14,0,2,1);
+    int height = string_to_int(fichier_data,30,0,2,1);
+    int diff = string_to_int(fichier_data,46,0,1,1);
     Vec2 size = {width,height};
     map = init_memory(map,size,diff);
 
-    // printf("\n%d %d",width,height);
-	int _x = string_to_int(fichier_data,117,0,2,1);
-    int _y = string_to_int(fichier_data,124,0,2,1);
+    printf("\n%d %d",width,height);
+	int _x = string_to_int(fichier_data,89,0,2,1);
+    int _y = string_to_int(fichier_data,96,0,2,1);
     Vec2 exit = {_x,_y};
 	map->exit = exit;
 
 	int* textures = NULL; int* map_data = NULL;
 	// texture // data
-	fseek(fichier_data,138,0);
+	fseek(fichier_data,107,0);
 	int pos;
     
 	for(int i = 0;i<height;i++){

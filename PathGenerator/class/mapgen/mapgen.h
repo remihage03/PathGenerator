@@ -78,7 +78,7 @@ void print_shard(Map* map,void (*fct)(Map*,int,int));
 
 char* renderPos(int posValue);
 FILE* open_file(FILE* file,char* filename,char* mode);
-int export_map(Map* map, char* fichier);
+int export_map(Map* map, char* fileName);
 Vec2 cornerPos(Vec2 pivot,Dir from);
 int addCorner(Map* map,Vec2 pivot,Dir from);
 

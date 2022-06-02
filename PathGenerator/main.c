@@ -38,6 +38,7 @@ int main(int argc, char* argv[])
 
 	printf("\n[*] Generated map path :");
 	print_shard(map,&printPath);
+	print_shard(map,&printMapData);
 	export_map(map,export_location);
 	
 	Map* map_to_solve = NULL;
@@ -46,6 +47,8 @@ int main(int argc, char* argv[])
 	map_to_solve->path_count = 0;
 	map_to_solve->path = (Vec2*)malloc(sizeof(Vec2)*50);
 
+	printf("\n here");
+	print_shard(map_to_solve,&printMapData);
 	if(Solve(map_to_solve,1,1,osef))
 		printf("\nSolution found !");
 

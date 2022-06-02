@@ -6,6 +6,8 @@
 #include <math.h>
 #include "mapgen.h"
 
+// #include "class/Vec2/Vec2.h"
+
 
 int getValFromPos(Map* map, Vec2 pos)
 {
@@ -277,7 +279,7 @@ FILE* open_file(FILE* file,char* filename,char* mode){
 int export_map(Map* map, char* fichier)
 {
 	if (!map || !fichier) return ERROR;
-
+	printf("\n[*] Exporting");
 	FILE* fichier_data = NULL;
     fichier_data = open_file(fichier_data,fichier,"w+");
 	
@@ -333,7 +335,7 @@ int export_map(Map* map, char* fichier)
 
 	// fprintf(fichier_data,"%s",footer_buff);
 
-	printf("Done Writing in %s and in x sec!\n",fichier);
+	printf("\n[*] Done Writing in %s and in x sec!\n",fichier);
 	fclose(fichier_data);
 	return SUCCESS;
 }
@@ -357,7 +359,7 @@ int string_to_int(FILE* file,int seek,int seek_from,int readsize,int count){
 
 Map* import_map(Map* map,char* filename){
 	if (!filename) return NULL;
-
+	printf("\n[*] Importing map..");
 	FILE* fichier_data = NULL;
     fichier_data = open_file(fichier_data,filename,"r+");
    
@@ -390,6 +392,6 @@ Map* import_map(Map* map,char* filename){
 	fclose(fichier_data);
 	// print_shard(map,&printPath);
 	// print_shard(map,&printMapData);
-	printf("\nParsing successful.");
+	printf("\n[*] Import Done");
 	return map;
 }

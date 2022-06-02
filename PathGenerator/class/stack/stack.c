@@ -1,5 +1,5 @@
-#include "stack.h"
 #include <stdbool.h>
+#include "stack.h"
 
 #define STACKOVERFLOW -1
 

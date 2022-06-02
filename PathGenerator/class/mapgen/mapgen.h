@@ -1,6 +1,7 @@
 #pragma once
 #include <stdbool.h>
 #include <stdio.h>
+// #include "../Vec2/Vec2.h"
 
 #define ERROR -1
 #define SUCCESS 0
@@ -44,10 +45,6 @@ typedef enum DIR
 	DIR_RIGHT = RIGHT
 }Dir;
 
-typedef struct vec2 {
-	int x, y;
-}Vec2;
-
 typedef struct map {
 	Vec2 entry, exit, size;	
 	int** data;
@@ -55,7 +52,6 @@ typedef struct map {
 	int tournant;
 	Vec2* path;
 	int path_count;
-
 }Map;
 
 
@@ -82,9 +78,7 @@ void print_shard(Map* map,void (*fct)(Map*,int,int));
 
 char* renderPos(int posValue);
 FILE* open_file(FILE* file,char* filename,char* mode);
-
-
-int export_map(Map* map, char* fichier);
+int export_map(Map* map, char* fileName);
 Vec2 cornerPos(Vec2 pivot,Dir from);
 int addCorner(Map* map,Vec2 pivot,Dir from);
 
@@ -92,6 +86,3 @@ int posToMap(int pos);
 int string_to_int(FILE* file,int seek,int seek_from,int readsize,int count);
 bool isValid(Map* map, Vec2 pos);
 Map* import_map(Map* map,char* filename);
-
-//unsigned int calcDist(Vec2 a, Vec2 b);
-//Vec2* solver(Vec2* soluce, char* json);

@@ -5,6 +5,10 @@
         "math.h": "c",
         "node.h": "c",
         "graph_new.h": "c",
-        "graph_sacha.h": "c"
+        "graph_sacha.h": "c",
+        "vec2.h": "c",
+        "solver.h": "c",
+        "stack.h": "c",
+        "stdbool.h": "c"
     }
 }

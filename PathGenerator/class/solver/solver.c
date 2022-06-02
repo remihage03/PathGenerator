@@ -1,20 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "graph_sacha.h"
-
-// #include "mapgen.h"
-// #include "mapgen.c"
+#include "solver.h"
 
 // Define the maximum number of vertices in the graph
 #define N 6
  
 #define explored 9
 
-void swap_vec2(Vec2* va,Vec2* vb){
-    Vec2 temp = *va;
-    *va = *vb;
-    *vb = temp;
-}
 
 void swap_int(int* xp, int* yp)
 {
@@ -110,7 +102,7 @@ void draw_path(Map* map){
 
 bool Solve(Map* map,int X, int Y,Vec2 _from_pos)
 {
-    printf("\n %d %d => %d %d",map->exit.x,map->exit.y,X,Y);
+    // printf("\n %d %d => %d %d",map->exit.x,map->exit.y,X,Y);
 
     Vec2 pos = {X,Y};
 
@@ -169,7 +161,6 @@ bool Solve(Map* map,int X, int Y,Vec2 _from_pos)
     
     map->data[X][Y] = 0;
     remove_path_pos(map,pos);
-
     return false;
 }
 

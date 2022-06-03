@@ -49,8 +49,8 @@ int main(int argc, char* argv[])
 
 	printf("\n here");
 	print_shard(map_to_solve,&printMapData);
-	if(Solve(map_to_solve,1,1,osef))
-		printf("\nSolution found !");
+	//if(Solve(map_to_solve,1,1,osef))
+	//	printf("\nSolution found !");
 
 	// print_shard(map_to_solve,&printPath);
 	draw_path(map_to_solve);

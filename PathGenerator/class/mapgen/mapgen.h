@@ -13,7 +13,7 @@
 #define RIGHT 2
 #define LEFT -2
 
-#define PATH 1
+#define PATH 10
 #define D_ROCK 7
 //T_NAME <=> texture
 #define T_ROCK 0

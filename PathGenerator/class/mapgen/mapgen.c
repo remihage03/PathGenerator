@@ -284,7 +284,6 @@ FILE* open_file(FILE* file,char* filename,char* mode){
 //     return SUCCESS;
 // }
 
-
 char* int_to_char(int value)
 {
     char* buffer = (char*)calloc(5, sizeof(char));

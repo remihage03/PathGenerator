@@ -30,8 +30,6 @@
 #define RATE_MID 0.11
 #define RATE_HARD 0.13
 
-
-
 typedef enum DIFFICULTY
 {
 	DIFF_EASY = 1,

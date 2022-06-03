@@ -288,6 +288,10 @@ FILE* open_file(FILE* file,char* filename,char* mode){
 char* int_to_char(int value)
 {
     char* buffer = (char*)calloc(5, sizeof(char));
+    if (!buffer) {
+        free(buffer);
+        return NULL;
+    }
 
     sprintf(buffer, "%d", value);
 
@@ -333,7 +337,7 @@ int export_map(Map* map, char* fileName)
                 _default_parsing_string = "%3s";
             }
 
-            if (0 > sprintf(c_buffer, _default_parsing_string, renderPos(map->data[x][y])))
+            if (0 > sprintf(c_buffer, _default_parsing_string, int_to_char(map->data[x][y])))
             {
                 printf("\nerror in sprintf");
             }

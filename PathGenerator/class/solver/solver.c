@@ -105,8 +105,6 @@ void draw_path(Map* map){
             }   
         }
     }
-
-    
 }
 
 
@@ -134,7 +132,8 @@ bool Solve(Map* map,int X, int Y,Vec2 _from_pos)
     int dir_count = 0;
 
     // getting tmp pos
-    for(int n = 0;n<4;n++){
+    for(int n = 0;n<4;n++)
+    {
         bool moved = false;
         while(check_player_move(map,tmp_pos[n],directions[n]) && !isEqual(map->exit,tmp_pos[n])){
             exec_move(&tmp_pos[n],directions[n]);

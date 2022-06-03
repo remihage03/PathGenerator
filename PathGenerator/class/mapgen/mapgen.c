@@ -97,7 +97,7 @@ Map* init_memory(Map* map,Vec2 size,int diff){
     }
     return map;
 }
-Map* init_wall(Map* map){
+Map* init_wall(Map* map){ // Inutile murs générés sur le jeu
     if(!map) return NULL;
     if(!map->data) return NULL;
     for (int y = 0; y < map->size.x; y++)
@@ -208,7 +208,7 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
     if(!map) free(map);
 
     map = init_memory(map,size,diff);
-    //map = init_wall(map);
+    //map = init_wall(map); // Inutile murs générés sur le jeu
     map = init_path(map);
     map = init_fake(map);
 	return map;
@@ -254,10 +254,10 @@ char* renderPos(int posValue){
 		sprintf_s(buffer, buff_sz,"%d",T_ICE);
 		break;
 	case 0:
-		sprintf_s(buffer, buff_sz,"%d",T_GRD);
+		sprintf_s(buffer, buff_sz,"%d",T_ICE);
 		break;
 	case D_ROCK:
-		sprintf_s(buffer, buff_sz,"%d",D_ROCK);
+		sprintf_s(buffer, buff_sz,"%d",0);
 		break;
 	default:
 		break;
@@ -333,7 +333,7 @@ int export_map(Map* map, char* fileName)
                 _default_parsing_string = "%3s";
             }
 
-            if (0 > sprintf(c_buffer, _default_parsing_string, int_to_char(map->data[x][y])))
+            if (0 > sprintf(c_buffer, _default_parsing_string, renderPos(map->data[x][y])))
             {
                 printf("\nerror in sprintf");
             }
@@ -397,10 +397,11 @@ Map* import_map(Map* map,char* filename){
     int _y = string_to_int(fichier_data,96,0,2,1);
     Vec2 exit = {_x,_y};
 	map->exit = exit;
+    printf("\nexit: (%d, %d)", map->exit.x, map->exit.y);
 
 	int* textures = NULL; int* map_data = NULL;
 	// texture // data
-	fseek(fichier_data,107,0);
+	fseek(fichier_data,107,0); //68
 	int pos;
     
 	for(int i = 0;i<height;i++){

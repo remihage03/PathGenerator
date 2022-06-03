@@ -2,17 +2,17 @@
 #include <time.h>
 #include <stdlib.h>
 
- #include "class/Vec2/Vec2.h"
-//#include "class/Vec2/Vec2.c"
+//  #include "class/Vec2/Vec2.h"
+#include "class/Vec2/Vec2.c"
 
- #include "class/mapgen/mapgen.h"
-//#include "class/mapgen/mapgen.c"
+//  #include "class/mapgen/mapgen.h"
+#include "class/mapgen/mapgen.c"
 
- #include "class/solver/solver.h"
-//#include "class/solver/solver.c"
+//  #include "class/solver/solver.h"
+#include "class/solver/solver.c"
 
- #include "class/stack/stack.h"
-//#include "class/stack/stack.c"
+//  #include "class/stack/stack.h"
+#include "class/stack/stack.c"
 
 #define MAXCHAR 10
 
@@ -43,14 +43,14 @@ int main(int argc, char* argv[])
 	
 	Map* map_to_solve = NULL;
 	map_to_solve = import_map(map_to_solve,export_location);
-	Vec2 osef = {0,0};
+	Vec2 osef = {-1,-1};
 	map_to_solve->path_count = 0;
 	map_to_solve->path = (Vec2*)malloc(sizeof(Vec2)*50);
 
 	printf("\n here");
 	print_shard(map_to_solve,&printMapData);
-	//if(Solve(map_to_solve,1,1,osef))
-	//	printf("\nSolution found !");
+	if(Solve(map_to_solve,0,0,osef))
+		printf("\nSolution found !");
 
 	// print_shard(map_to_solve,&printPath);
 	draw_path(map_to_solve);

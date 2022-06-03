@@ -4,8 +4,7 @@
 #include <time.h>
 #include <locale.h>
 #include <stdbool.h>
-
-// #include "../Vec2/Vec2.h"
+#include "../Vec2/Vec2.h"
 // #include "mapgen.h"
 // #include "solver.h"
 

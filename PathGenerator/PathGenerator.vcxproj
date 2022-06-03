@@ -139,17 +139,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="graph_new.c" />
+    <ClCompile Include="class\mapgen\mapgen.c" />
+    <ClCompile Include="class\solver\solver.c" />
+    <ClCompile Include="class\stack\stack.c" />
+    <ClCompile Include="class\Vec2\Vec2.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="mapgen.c" />
-    <ClCompile Include="solver.c" />
-    <ClCompile Include="stack.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="graph_new.h" />
-    <ClInclude Include="mapgen.h" />
-    <ClInclude Include="solver.h" />
-    <ClInclude Include="stack.h" />
+    <ClInclude Include="class\mapgen\mapgen.h" />
+    <ClInclude Include="class\solver\solver.h" />
+    <ClInclude Include="class\stack\stack.h" />
+    <ClInclude Include="class\Vec2\Vec2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

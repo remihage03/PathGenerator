@@ -5,6 +5,8 @@
 #include <time.h>
 #include <math.h>
 #include "mapgen.h"
+#include "../Vec2/Vec2.h"
+
 
 // #include "class/Vec2/Vec2.h"
 
@@ -39,10 +41,10 @@ bool check_pos(int _data){
 
 int count_cardinals(Map* map,Vec2 pos){
     int count = 0;
-    if(!check_pos(map->data[pos.x][pos.y-1])) count++; //up
-    if(!check_pos(map->data[pos.x+1][pos.y])) count++; //right
-    if(!check_pos(map->data[pos.x][pos.y+1])) count++; //down
-    if(!check_pos(map->data[pos.x-1][pos.y])) count++; //left
+    if(isValid(map, (Vec2){pos.x, pos.y-1}) && !check_pos(map->data[pos.x][pos.y - 1])) count++; //up
+    if(isValid(map, (Vec2) { pos.x+1, pos.y}) && !check_pos(map->data[pos.x+1][pos.y])) count++; //right
+    if(isValid(map, (Vec2) { pos.x, pos.y+1 }) && !check_pos(map->data[pos.x][pos.y+1])) count++; //down
+    if(isValid(map, (Vec2) { pos.x-1, pos.y }) && !check_pos(map->data[pos.x-1][pos.y])) count++; //left
     return count;
 }
 
@@ -57,14 +59,14 @@ void exec_move(Vec2* pos,Dir dir){
 bool check_move(Map* map,Vec2 pos,Dir dir){
     Vec2 _pos = {pos.x,pos.y};
     exec_move(&_pos,dir);
-    if(!check_pos(map->data[_pos.x][_pos.y])) return false;
-    if(count_cardinals(map,_pos)==4) return false;
+    if (!isValid(map, _pos)) return false;
+    if(!check_pos(map->data[_pos.x][_pos.y]) || count_cardinals(map, _pos) == 4) return false;
     return true;
 }
 
 bool isValid(Map* map, Vec2 pos)
 {
-	return (pos.x >= 0 && pos.x < map->size.x&& pos.y >= 0 && pos.y < map->size.y);
+	return (pos.x >= 0 && pos.x < map->size.x && pos.y >= 0 && pos.y < map->size.y);
 }
 
 Map* init_memory(Map* map,Vec2 size,int diff){
@@ -171,7 +173,7 @@ void printMapInfo(Map* map) {
 }
 
 void printMapData(Map* map, int x, int y) {
-	printf("%3d ", map->data[x][y]);
+	printf("%2d ", map->data[x][y]);
 }
 
 void printPath(Map* map, int x, int y) {
@@ -206,7 +208,7 @@ Map* genMap(Map* map, Vec2 size, Difficulty diff)
     if(!map) free(map);
 
     map = init_memory(map,size,diff);
-    map = init_wall(map);
+    //map = init_wall(map);
     map = init_path(map);
     map = init_fake(map);
 	return map;
@@ -225,6 +227,7 @@ Vec2 cornerPos(Vec2 pivot, Dir from) {
 
 int addCorner(Map* map, Vec2 pivot, Dir from) {
 	Vec2 corner = cornerPos(pivot, from);
+    if (!isValid(map, corner)) return ERROR;
 	int c = map->data[corner.x][corner.y];
 	if (c != T_WALL && c != PATH) {
 		map->data[corner.x][corner.y] = D_ROCK;
@@ -236,6 +239,11 @@ int addCorner(Map* map, Vec2 pivot, Dir from) {
 // Import export
 char* renderPos(int posValue){
 	char* buffer = (char*)calloc(4, sizeof(char));
+    if (!buffer) {
+        free(buffer);
+        return;
+    }
+
 	int buff_sz = 3;
 	switch (posValue)
 	{
@@ -249,7 +257,7 @@ char* renderPos(int posValue){
 		sprintf_s(buffer, buff_sz,"%d",T_GRD);
 		break;
 	case D_ROCK:
-		sprintf_s(buffer, buff_sz,"%d",T_ROCK);
+		sprintf_s(buffer, buff_sz,"%d",D_ROCK);
 		break;
 	default:
 		break;
@@ -353,17 +361,17 @@ int export_map(Map* map, char* fileName)
     fclose(file_data);
     end = clock();
     double time_taken = (double)(end - start) / (double)CLOCKS_PER_SEC;
-    printf("Done Writing in %s in %lfs!\n", fileName, time_taken);
+    time_taken *= 1000; // Conversion en ms
+    printf("Done Writing in %s in %lfms!\n", fileName, time_taken);
     return 1;
 }
 
 int posToMap(int pos){
 	int buffer;
+
     if(pos == T_WALL) return T_WALL;
-    // else if(pos == T_ICE) return 0;
     else if(pos == 7) return D_ROCK;
-    // else if(pos == T_GRD) return 0;
-    else return 0;
+    return 0;
 }
 
 int string_to_int(FILE* file,int seek,int seek_from,int readsize,int count){
@@ -399,16 +407,11 @@ Map* import_map(Map* map,char* filename){
     
 	for(int i = 0;i<height;i++){
 		for(int j = 0;j<width;j++){
-
             pos = posToMap(string_to_int(fichier_data,2,SEEK_CUR,2,1));
 			map->data[j][i] = pos;
 		}
 	}
-	// print_shard(map,&printPath);
-
 	fclose(fichier_data);
-	// print_shard(map,&printPath);
-	// print_shard(map,&printMapData);
 	printf("\n[*] Import Done");
 	return map;
 }

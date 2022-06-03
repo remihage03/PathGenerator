@@ -78,7 +78,7 @@ Map* init_memory(Map* map,Vec2 size,int diff){
 	}
     map->size = size;
 	map->level = diff;
-    Vec2 entry = {1,1};
+    Vec2 entry = {0,0};
     map->entry = entry;
 	map->data = (int**)calloc(size.x, sizeof(int*)); // Malloc des x
     if (!map->data)
@@ -137,7 +137,7 @@ Map* init_path(Map* map){
         }
         last_pos = current_pos;
 
-        if(current_pos.y == map->size.y-2) {
+        if(current_pos.y == map->size.y-1) {
             Vec2 exit = {current_pos.x,current_pos.y};
             map->exit = exit;
             break;
@@ -156,8 +156,8 @@ Map* init_fake(Map* map){
     int nbObs = floor(map->size.x*map->size.y* rate);
     while(nbObs>0)
     {
-        int _x = rangedRand(2,map->size.x-1);
-        int _y = rangedRand(2,map->size.y-1);
+        int _x = rangedRand(0,map->size.x);
+        int _y = rangedRand(0,map->size.y);
         if(check_pos(map->data[_x][_y])){
             map->data[_x][_y] = D_ROCK;
             nbObs--;
@@ -241,7 +241,7 @@ char* renderPos(int posValue){
 	char* buffer = (char*)calloc(4, sizeof(char));
     if (!buffer) {
         free(buffer);
-        return;
+        return NULL;
     }
 
 	int buff_sz = 3;
@@ -412,6 +412,7 @@ Map* import_map(Map* map,char* filename){
 		}
 	}
 	fclose(fichier_data);
-	printf("\n[*] Import Done");
+    print_shard(map,&printMapData);
+    printf("\n[*] Import Done");
 	return map;
 }

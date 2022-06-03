@@ -122,7 +122,6 @@ bool Solve(Map* map,int X, int Y,Vec2 _from_pos)
 
 
     Dir directions[4] = {DIR_UP,DIR_RIGHT,DIR_DOWN,DIR_LEFT};
-
     Vec2 tmp_pos[4] = {pos,pos,pos,pos};
     Vec2 new_pos[4] = {pos,pos,pos,pos};
     int new_pos_dist[4];

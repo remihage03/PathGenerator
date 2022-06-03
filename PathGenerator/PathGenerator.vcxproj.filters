@@ -13,36 +13,48 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\mapgen">
+      <UniqueIdentifier>{02585615-83f5-45b3-8cce-858771816828}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\solver">
+      <UniqueIdentifier>{e1a9adf0-5e35-4268-a3f1-ca5748adec31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\vec2">
+      <UniqueIdentifier>{03c57e0a-0c5e-4342-830d-12cbcfe719f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\stack">
+      <UniqueIdentifier>{364bc082-b8b7-4bb9-a01f-1593a6e5673e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="mapgen.c">
-      <Filter>Fichiers sources</Filter>
+    <ClCompile Include="class\mapgen\mapgen.c">
+      <Filter>Fichiers d%27en-tête\mapgen</Filter>
     </ClCompile>
-    <ClCompile Include="solver.c">
-      <Filter>Fichiers sources</Filter>
+    <ClCompile Include="class\solver\solver.c">
+      <Filter>Fichiers d%27en-tête\solver</Filter>
     </ClCompile>
-    <ClCompile Include="stack.c">
-      <Filter>Fichiers sources</Filter>
+    <ClCompile Include="class\Vec2\Vec2.c">
+      <Filter>Fichiers d%27en-tête\vec2</Filter>
     </ClCompile>
-    <ClCompile Include="graph_new.c">
-      <Filter>Fichiers sources</Filter>
+    <ClCompile Include="class\stack\stack.c">
+      <Filter>Fichiers d%27en-tête\stack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="mapgen.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+    <ClInclude Include="class\mapgen\mapgen.h">
+      <Filter>Fichiers d%27en-tête\mapgen</Filter>
     </ClInclude>
-    <ClInclude Include="solver.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+    <ClInclude Include="class\solver\solver.h">
+      <Filter>Fichiers d%27en-tête\solver</Filter>
     </ClInclude>
-    <ClInclude Include="stack.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+    <ClInclude Include="class\Vec2\Vec2.h">
+      <Filter>Fichiers d%27en-tête\vec2</Filter>
     </ClInclude>
-    <ClInclude Include="graph_new.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+    <ClInclude Include="class\stack\stack.h">
+      <Filter>Fichiers d%27en-tête\stack</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -2,17 +2,17 @@
 #include <time.h>
 #include <stdlib.h>
 
-// #include "class/Vec2/Vec2.h"
-#include "class/Vec2/Vec2.c"
+ #include "class/Vec2/Vec2.h"
+//#include "class/Vec2/Vec2.c"
 
-// #include "class/mapgen/mapgen.h"
-#include "class/mapgen/mapgen.c"
+ #include "class/mapgen/mapgen.h"
+//#include "class/mapgen/mapgen.c"
 
-// #include "class/solver/solver.h"
-#include "class/solver/solver.c"
+ #include "class/solver/solver.h"
+//#include "class/solver/solver.c"
 
-// #include "class/stack/stack.h"
-#include "class/stack/stack.c"
+ #include "class/stack/stack.h"
+//#include "class/stack/stack.c"
 
 #define MAXCHAR 10
 

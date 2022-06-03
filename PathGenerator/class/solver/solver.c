@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "solver.h"
+#include "../Vec2/Vec2.h"
+#include "../mapgen/mapgen.h"
+
 
 // Define the maximum number of vertices in the graph
 #define N 6
@@ -20,22 +23,25 @@ void bubbleSort(int arr[], int n)
 {
     int i, j;
     for (i = 0; i < n - 1; i++)
-        // Last i elements are already in place
-        for (j = 0; j < n - i - 1; j++)
+        for (j = 0; j < n - i - 1; j++) // Last i elements are already in place
             if (arr[j] > arr[j + 1])
                 swap_int(&arr[j], &arr[j + 1]);
 }
 
-void sort_by_dist(Vec2* positions,int* pos_dist,int n){
+void sort_by_dist(Vec2* positions,int* pos_dist,int n) 
+{
     int i, j;
     for (i = 0; i < n - 1; i++)
-        // Last i elements are already in place
-        for (j = 0; j < n - i - 1; j++)
-            if (pos_dist[j] > pos_dist[j + 1]){
+    {
+        for (j = 0; j < n - i - 1; j++) // Last i elements are already in place
+        {
+            if (pos_dist[j] > pos_dist[j + 1]) {
                 // printf("\n j = %d ; j+1 = %d",pos_dist[j],pos_dist[j + 1]);
                 swap_int(&pos_dist[j], &pos_dist[j + 1]);
-                swap_vec2(&positions[j],&positions[j + 1]);
+                swap_vec2(&positions[j], &positions[j + 1]);
             }
+        }
+    }
 }
 
 bool check_player_pos(int _data){
@@ -44,9 +50,9 @@ bool check_player_pos(int _data){
 
 bool check_player_move(Map* map,Vec2 pos,Dir dir){
     Vec2 _pos = {pos.x,pos.y};
-    exec_move(&_pos,dir);
-    if(!check_player_pos(map->data[_pos.x][_pos.y])) return false;
-    if(count_cardinals(map,_pos)==4) return false;
+    exec_move(&_pos, dir);
+    if (!isValid(map, _pos)) return false;
+    if(!check_player_pos(map->data[_pos.x][_pos.y]) || count_cardinals(map,_pos)==4) return false;
     return true;
 }
 
@@ -139,18 +145,7 @@ bool Solve(Map* map,int X, int Y,Vec2 _from_pos)
     map->data[X][Y] = PATH;
 
     add_path_pos(map,pos);
-
-    
-    // printf("\nNOT SORTED : ");
-    // for(int i = 0;i<dir_count;i++){
-    //     printf("\ni : %d - x = %d ; y = %d",i,new_pos[i].x,new_pos[i].y);
-    // }
-
     sort_by_dist(new_pos,new_pos_dist,dir_count);
-    // printf("\n SORTED :");
-    // for(int i = 0;i<dir_count;i++){
-    //     printf("\ni : %d - x = %d ; y = %d - dist : %d",i,new_pos[i].x,new_pos[i].y,ManDist(new_pos[i],map->exit));
-    // }
 
     for(int i = 0;i<dir_count;i++){
         //i petit est la meilleure direction possible

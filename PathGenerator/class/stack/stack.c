@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include "stack.h"
+#include "../Vec2/Vec2.h"
 
 #define STACKOVERFLOW -1
 

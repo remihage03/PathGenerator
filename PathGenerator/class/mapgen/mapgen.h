@@ -1,7 +1,7 @@
 #pragma once
 #include <stdbool.h>
 #include <stdio.h>
-// #include "../Vec2/Vec2.h"
+ #include "../Vec2/Vec2.h"
 
 #define ERROR -1
 #define SUCCESS 0
@@ -20,6 +20,8 @@
 #define T_ICE -1
 #define T_GRD -3
 #define T_WALL -2
+#define T_PUDDLE 5
+#define T_WATER 6
 
 #define X_MAX 999
 #define Y_MAX 999

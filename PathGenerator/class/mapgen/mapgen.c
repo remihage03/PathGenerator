@@ -366,12 +366,11 @@ int export_map(Map* map, char* fileName)
     end = clock();
     double time_taken = (double)(end - start) / (double)CLOCKS_PER_SEC;
     time_taken *= 1000; // Conversion en ms
-    printf("Done Writing in %s in %lfms!\n", fileName, time_taken);
+    printf("\nDone Writing in %s in %lfms!\n", fileName, time_taken);
     return 1;
 }
 
 int posToMap(int pos){
-
     if(pos == T_WALL) return T_WALL;
     else if(pos == 7) return D_ROCK;
     return 0;
@@ -416,7 +415,7 @@ Map* import_map(Map* map,char* filename){
 		}
 	}
 	fclose(fichier_data);
-    print_shard(map,&printMapData);
+    // print_shard(map,&printMapData);
     printf("\n[*] Import Done");
 	return map;
 }

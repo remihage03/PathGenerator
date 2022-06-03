@@ -76,8 +76,12 @@ void remove_path_pos(Map*map, Vec2 pos){
 }
 
 void draw_path(Map* map){
-    for (int i = 1; i<map->path_count; i++) {
-        Vec2 _from = map->path[i - 1];
+    for(int i = 0;i<map->path_count;i++){
+        print_vec2(map->path[i]);
+    }
+
+    for(int i =1;i<map->path_count;i++){
+        Vec2 _from = map->path[i-1];
         Vec2 _to = map->path[i];
 
         if(_from.x != _to.x){

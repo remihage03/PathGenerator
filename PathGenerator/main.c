@@ -36,9 +36,9 @@ int main(int argc, char* argv[])
 
 	map = genMap(map, size, (Difficulty)atoi(argv[3]));
 
-	printf("\n[*] Generated map path :");
-	print_shard(map,&printPath);
-	print_shard(map,&printMapData);
+	// printf("\n[*] Generated map path :");
+	// print_shard(map,&printPath);
+	// print_shard(map,&printMapData);
 	export_map(map,export_location);
 	
 	Map* map_to_solve = NULL;

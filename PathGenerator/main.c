@@ -36,19 +36,21 @@ int main(int argc, char* argv[])
 
 	map = genMap(map, size, (Difficulty)atoi(argv[3]));
 
-	// printf("\n[*] Generated map path :");
-	// print_shard(map,&printPath);
-	// print_shard(map,&printMapData);
+	printf("\n[*] Generated map path :");
+	print_shard(map,&printPath);
+	print_shard(map,&printMapData);
 	export_map(map,export_location);
 	
 	Map* map_to_solve = NULL;
 	map_to_solve = import_map(map_to_solve,export_location);
-	Vec2 osef = {-1,-1};
+	Vec2 osef = {0,0};
 	map_to_solve->path_count = 0;
 	map_to_solve->path = (Vec2*)malloc(sizeof(Vec2)*50);
 
-	printf("\n here");
+	printf("\n map to solve :");
+	print_shard(map_to_solve,&printPath);
 	print_shard(map_to_solve,&printMapData);
+
 	if(Solve(map_to_solve,0,0,osef))
 		printf("\nSolution found !");
 

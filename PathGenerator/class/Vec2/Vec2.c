@@ -20,3 +20,7 @@ void swap_vec2(Vec2* va,Vec2* vb){
     *va = *vb;
     *vb = temp;
 }
+
+void print_vec2(Vec2 vector){
+    printf("\n Vector : X = %d ; Y = %d",vector.x,vector.y);
+}

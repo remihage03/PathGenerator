@@ -45,7 +45,7 @@ void sort_by_dist(Vec2* positions,int* pos_dist,int n)
 }
 
 bool check_player_pos(int _data){
-    return (!(_data == T_WALL || _data == D_ROCK));
+    return (!(_data == D_ROCK));
 }
 
 bool check_player_move(Map* map,Vec2 pos,Dir dir){
@@ -77,7 +77,7 @@ void remove_path_pos(Map*map, Vec2 pos){
 
 void draw_path(Map* map){
     for(int i = 0;i<map->path_count;i++){
-        print_vec2(map->path[i]);
+        // print_vec2(map->path[i]);
     }
 
     for(int i =1;i<map->path_count;i++){
@@ -87,21 +87,21 @@ void draw_path(Map* map){
         if(_from.x != _to.x){
             if(_from.x > _to.x){
                 for(int n = _to.x;n<_from.x;n++)
-                    map->data[n][_from.y] = 1;
+                    map->data[n][_from.y] = PATH;
             }
             else{
                 for(int n = _from.x;n<_to.x;n++)
-                    map->data[n][_from.y] = 1;
+                    map->data[n][_from.y] = PATH;
             }
         }
         if(_from.y != _to.y){
             if(_from.y > _to.y){
                 for(int n = _to.y;n<_from.y;n++)
-                    map->data[_from.x][n] = 1;
+                    map->data[_from.x][n] = PATH;
             }
             else{
                 for(int n = _from.y;n<_to.y;n++)
-                    map->data[_from.x][n] = 1;
+                    map->data[_from.x][n] = PATH;
             }   
         }
     }
@@ -116,14 +116,11 @@ bool Solve(Map* map,int X, int Y,Vec2 _from_pos)
 
     // print_shard(map,&printPath);
 
-
     if (isEqual(map->exit,pos))
     {
-        // push(path,map->exit);
         add_path_pos(map,pos);
         return true;
     }
-
 
     Dir directions[4] = {DIR_UP,DIR_RIGHT,DIR_DOWN,DIR_LEFT};
     Vec2 tmp_pos[4] = {pos,pos,pos,pos};
@@ -139,7 +136,7 @@ bool Solve(Map* map,int X, int Y,Vec2 _from_pos)
             exec_move(&tmp_pos[n],directions[n]);
             moved = true;
         }
-        if(moved){
+        if(moved  && !isEqual(_from_pos,tmp_pos[n])){
             new_pos[dir_count] = tmp_pos[n];
             new_pos_dist[dir_count] = ManDist(tmp_pos[n],map->exit);
             dir_count+=1;
@@ -152,11 +149,14 @@ bool Solve(Map* map,int X, int Y,Vec2 _from_pos)
 
     for(int i = 0;i<dir_count;i++){
         //i petit est la meilleure direction possible
-        if(getValFromPos(map,new_pos[i])!=1 && Solve(map,new_pos[i].x,new_pos[i].y,pos))
+        // printf("\nteststt");
+
+        int ret_val = getValFromPos(map,new_pos[i]);
+        if(ret_val != -1 && Solve(map,new_pos[i].x,new_pos[i].y,pos))
             return true;
     }
     
-    map->data[X][Y] = 0;
+    map->data[X][Y] = T_ICE;
     remove_path_pos(map,pos);
     return false;
 }

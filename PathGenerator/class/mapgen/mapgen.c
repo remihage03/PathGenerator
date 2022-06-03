@@ -181,7 +181,7 @@ void printPath(Map* map, int x, int y) {
 	if (map->entry.x == y && map->entry.y == x) chr = 'E';
 	else if (map->exit.x == x && map->exit.y == y) chr = 'S';
 	else if (map->data[x][y] == T_WALL) chr = 'W';
-	else if (map->data[x][y] == 1) chr = '@';
+	else if (map->data[x][y] == PATH) chr = '@';
 	else if (map->data[x][y] == -1) chr = '*';
 	else if (map->data[x][y] == D_ROCK) chr = 'X';
 	else chr = ' ';
@@ -221,7 +221,7 @@ Vec2 cornerPos(Vec2 pivot, Dir from) {
 	else if (from == DIR_RIGHT) x++;
 	else if (from == DIR_DOWN)y++;
 	else if (from == DIR_LEFT) x--;
-	Vec2 corner = { x,y };
+	Vec2 corner = {x,y};
 	return corner;
 }
 
@@ -229,7 +229,7 @@ int addCorner(Map* map, Vec2 pivot, Dir from) {
 	Vec2 corner = cornerPos(pivot, from);
     if (!isValid(map, corner)) return ERROR;
 	int c = map->data[corner.x][corner.y];
-	if (c != T_WALL && c != PATH) {
+	if (c != PATH) {
 		map->data[corner.x][corner.y] = D_ROCK;
 		return SUCCESS;
 	}

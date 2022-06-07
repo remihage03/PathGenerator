@@ -16,7 +16,7 @@
 #define PATH 10
 #define D_ROCK 7
 //T_NAME <=> texture
-#define T_ROCK 0
+//#define T_ROCK 0
 #define T_ICE -1
 #define T_GRD -3
 #define T_WALL -2

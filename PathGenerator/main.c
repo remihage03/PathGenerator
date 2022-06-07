@@ -39,7 +39,9 @@ int main(int argc, char* argv[])
 	if (strcmp(argv[1], "solve") == 0)
 	{
 		Map* map_to_solve = NULL;
-		map_to_solve = import_map(map_to_solve, argv[5]);
+		char export_location[9 + MAXCHAR] = "exported/";
+		strcat_s(export_location, sizeof(export_location), argv[5]);
+		map_to_solve = import_map(map_to_solve, export_location);
 		Vec2 osef = { 0,0 };
 		map_to_solve->path_count = 0;
 		map_to_solve->path = (Vec2*)malloc(sizeof(Vec2) * 50);

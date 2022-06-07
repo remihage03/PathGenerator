@@ -95,6 +95,7 @@ Map* init_memory(Map* map,Vec2 size,int diff){
             return NULL;
         }
     }
+
     return map;
 }
 Map* init_wall(Map* map){ // Inutile murs générés sur le jeu
@@ -178,8 +179,9 @@ void printMapData(Map* map, int x, int y) {
 
 void printPath(Map* map, int x, int y) {
 	char chr = 'a';
-	if (map->entry.x == y && map->entry.y == x) chr = 'E';
-	else if (map->exit.x == x && map->exit.y == y) chr = 'S';
+    Vec2 pos = { x, y };
+	if (isEqual(map->entry, pos)) chr = 'E';
+	else if (isEqual(map->entry, pos)) chr = 'S';
 	// else if (map->data[x][y] == T_WALL) chr = 'W';
 	else if (map->data[x][y] == PATH) chr = '@';
 	else if (map->data[x][y] == D_ROCK) chr = 'X';
@@ -252,11 +254,11 @@ char* renderPos(int posValue){
 	case PATH:
 		sprintf_s(buffer, buff_sz,"%d",T_ICE);
 		break;
-	case 0:
-		sprintf_s(buffer, buff_sz,"%d",T_ICE);
-		break;
+	//case 0:
+	//	sprintf_s(buffer, buff_sz,"%d",T_ICE);
+	//	break;
 	case D_ROCK:
-		sprintf_s(buffer, buff_sz,"%d",0);
+		sprintf_s(buffer, buff_sz,"%d",D_ROCK);
 		break;
 	default:
 		break;

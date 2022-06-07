@@ -45,7 +45,7 @@ void sort_by_dist(Vec2* positions,int* pos_dist,int n)
 }
 
 bool check_player_pos(int _data){
-    return (!(_data == D_ROCK));
+    return (_data != D_ROCK);
 }
 
 bool check_player_move(Map* map,Vec2 pos,Dir dir){
@@ -75,10 +75,11 @@ void remove_path_pos(Map*map, Vec2 pos){
     
 }
 
+// Draw path from turns
 void draw_path(Map* map){
-    for(int i = 0;i<map->path_count;i++){
-        // print_vec2(map->path[i]);
-    }
+    //for(int i = 0;i<map->path_count;i++){
+    //    print_vec2(map->path[i]);
+    //}
 
     for(int i =1;i<map->path_count;i++){
         Vec2 _from = map->path[i-1];

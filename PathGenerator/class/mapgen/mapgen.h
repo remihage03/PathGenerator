@@ -16,21 +16,19 @@
 #define PATH 10
 #define D_ROCK 7
 //T_NAME <=> texture
-#define T_ROCK 0
+//#define T_ROCK 0
 #define T_ICE -1
 #define T_GRD -3
 #define T_WALL -2
 #define T_PUDDLE 5
 #define T_WATER 6
 
-#define X_MAX 999
-#define Y_MAX 999
+#define X_MAX 100
+#define Y_MAX 100
 
 #define RATE_EASY 0.09
 #define RATE_MID 0.11
 #define RATE_HARD 0.13
-
-
 
 typedef enum DIFFICULTY
 {

@@ -23,8 +23,8 @@
 #define T_PUDDLE 5
 #define T_WATER 6
 
-#define X_MAX 999
-#define Y_MAX 999
+#define X_MAX 100
+#define Y_MAX 100
 
 #define RATE_EASY 0.09
 #define RATE_MID 0.11

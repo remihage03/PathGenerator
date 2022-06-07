@@ -4,4 +4,4 @@
  #include "../Vec2/Vec2.h"
 
 
-bool Solve(Map* map,int i, int j,Vec2 _from_pos);
+bool Solve(Map* map,int i, int j,Vec2 _from_pos,int count);

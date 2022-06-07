@@ -50,14 +50,14 @@ int main(int argc, char* argv[])
 	printf("\n map to solve :");
 	print_shard(map_to_solve,&printPath);
 	print_shard(map_to_solve,&printMapData);
+	stack_move(map,osef);
 
-	if(Solve(map_to_solve,0,0,osef))
+	if(Solve(map_to_solve,0,0,osef,0))
 		printf("\nSolution found !");
 
-	// print_shard(map_to_solve,&printPath);
+	print_shard(map_to_solve,&printPath);
 	draw_path(map_to_solve);
 	print_shard(map_to_solve,&printPath);
-
 	return EXIT_SUCCESS;
 
 }

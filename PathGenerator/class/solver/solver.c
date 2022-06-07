@@ -113,24 +113,74 @@ void draw_path(Map* map){
     }
 }
 
+Vec2 slide(Map* map,Vec2 init_pos,Dir dir){
+    Vec2 pos = {init_pos.x,init_pos.y};
+    while(check_player_move(map,pos,dir) && !isEqual(map->exit,pos)){
+        exec_move(&pos,dir);
+    }
+    // printf("\n init pos : %d %d => to pos : %d %d",init_pos.x,init_pos.y,pos.x,pos.y);
+    return pos;
+}
 
-bool Solve(Map* map,int X, int Y,Vec2 _from_pos)
+void stack_move(Map* map,Vec2 pos)
 {
-    // printf("\n %d %d => %d %d",map->exit.x,map->exit.y,X,Y);
 
+    // for(int d = 0;d<deep;d++){
+
+    // }
+    int deep = 5;
+    
+    Dir directions[4] = {DIR_UP,DIR_RIGHT,DIR_DOWN,DIR_LEFT};
+
+    Vec2** new_pos = NULL;
+    new_pos = (Vec2**)calloc(deep, sizeof(Vec2*)); // Malloc des x
+    for(int i = 0;i<deep;i++){
+        new_pos[i] = (Vec2*)calloc(4, sizeof(Vec2));
+    }
+   
+    for(int i = 0;i<4;i++){
+        new_pos[0][i] = pos;
+    }
+
+    for(int deep_c = 1;deep_c<deep;deep_c++){
+        for(int d = 0;d<4;d++){
+            Vec2 buffer = slide(map,new_pos[deep_c-1][d],directions[d]);
+            if(!isEqual(buffer,new_pos[deep_c-1][d])){
+                new_pos[deep_c][d] = buffer;
+                printf("\n deep : %d - x = %d ; y = %d",deep_c,new_pos[deep_c][d].x,new_pos[deep_c][d].y);
+            }
+        }
+    }
+
+
+
+    // for(int dir = 0;dir<4*deep;dir++){
+    //     int tmp_deep = (deep_c <1) ? 0:deep_c-1;
+    //     nouvelles_pos[dir+4*deep_c] = slide(map,nouvelles_pos[dir+4*tmp_deep],directions[dir]);
+    //     stacked_dist[dir+4*deep_c] = ManDist(nouvelles_pos[dir+4*deep_c],map->exit);
+    // }
+    // for(int i = deep-4-1;i<4*deep;i++){
+    //     printf("\n deep = 3 ; imod4 = %d, x= %d, y=%d",i%4,nouvelles_pos[i].x,nouvelles_pos[i].y);
+    // }
+
+}
+
+
+
+bool Solve(Map* map,int X, int Y,Vec2 _from_pos,int count)
+{
     Vec2 pos = {X,Y};
-
-    // print_shard(map,&printPath);
-
     if (isEqual(map->exit,pos))
     {
         add_path_pos(map,pos);
+        printf("\nSolved in %d move",count);
         return true;
     }
 
     Dir directions[4] = {DIR_UP,DIR_RIGHT,DIR_DOWN,DIR_LEFT};
     Vec2 tmp_pos[4] = {pos,pos,pos,pos};
     Vec2 new_pos[4] = {pos,pos,pos,pos};
+
     int new_pos_dist[4];
     int dir_count = 0;
 
@@ -142,6 +192,7 @@ bool Solve(Map* map,int X, int Y,Vec2 _from_pos)
             exec_move(&tmp_pos[n],directions[n]);
             moved = true;
         }
+
         if(moved  && !isEqual(_from_pos,tmp_pos[n]) && getValFromPos(map,tmp_pos[n]) != 1){
             new_pos[dir_count] = tmp_pos[n];
             new_pos_dist[dir_count] = ManDist(tmp_pos[n],map->exit);
@@ -158,12 +209,19 @@ bool Solve(Map* map,int X, int Y,Vec2 _from_pos)
         // printf("\nteststt");
 
         // int ret_val = getValFromPos(map,new_pos[i]);
-        if(Solve(map,new_pos[i].x,new_pos[i].y,pos))
+        if(Solve(map,new_pos[i].x,new_pos[i].y,pos,count+1))
             return true;
     }
     
     map->data[X][Y] = T_ICE;
+    printf("\nfalse x = %d, y = %d",X,Y);
     remove_path_pos(map,pos,_from_pos);
     return false;
+}
+
+
+
+int _2d_to_1d(Map* map,int x,int y){
+    return (map->size.x*x+y);
 }
 

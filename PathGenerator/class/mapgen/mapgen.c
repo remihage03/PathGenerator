@@ -13,7 +13,7 @@
 
 int getValFromPos(Map* map, Vec2 pos)
 {
-	if (!isValid(map, pos)) return -1;
+	if (!isValid(map, pos)) return 1;
 
 	return map->data[pos.x][pos.y];
 }
@@ -180,9 +180,8 @@ void printPath(Map* map, int x, int y) {
 	char chr = 'a';
 	if (map->entry.x == y && map->entry.y == x) chr = 'E';
 	else if (map->exit.x == x && map->exit.y == y) chr = 'S';
-	else if (map->data[x][y] == T_WALL) chr = 'W';
+	// else if (map->data[x][y] == T_WALL) chr = 'W';
 	else if (map->data[x][y] == PATH) chr = '@';
-	else if (map->data[x][y] == -1) chr = '*';
 	else if (map->data[x][y] == D_ROCK) chr = 'X';
 	else chr = ' ';
 	printf("%c ", chr);

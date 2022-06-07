@@ -120,7 +120,7 @@ bool Solve(Map* map,int X, int Y,Vec2 _from_pos)
 
     Vec2 pos = {X,Y};
 
-    print_shard(map,&printPath);
+    // print_shard(map,&printPath);
 
     if (isEqual(map->exit,pos))
     {

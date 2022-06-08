@@ -5,6 +5,7 @@
 #include <time.h>
 #include <math.h>
 #include "mapgen.h"
+#include "../mersenne twister/mers_twister.h"
 #include "../Vec2/Vec2.h"
 
 
@@ -32,6 +33,12 @@ int rangedRandWrapped(int range_min,int range_max)
 int rangedRand(int range_min, int range_max)
 {
     int u = (int)((double)rand() / ((double)RAND_MAX + 1) * ((double)range_max - (double)range_min)) + range_min;
+    return(u);
+}
+
+long ranged_twister(int range_min, int range_max)
+{
+    long u = (long)((double)twister_wrapped(clock()) / ((double)(unsigned long)pow(2, 64 - 1) + 1) * ((double)range_max - (double)range_min)) + range_min;
     return(u);
 }
 
@@ -122,7 +129,7 @@ Map* init_path(Map* map){
 
 	for (int i = 0; i < resolution; i++)
 	{
-        if(rand()%10 == 0)
+        if(twister_wrapped(i) % 10 == 0)
             newDir = lastDir;
         else{
             newDir = rangedRandWrapped(-2,3);
@@ -157,8 +164,8 @@ Map* init_fake(Map* map){
     int nbObs = floor(map->size.x*map->size.y* rate);
     while(nbObs>0)
     {
-        int _x = rangedRand(0,map->size.x);
-        int _y = rangedRand(0,map->size.y);
+        int _x = twister_wrapped(clock()) % map->size.x;//rangedRand(0,map->size.x);
+        int _y = twister_wrapped(clock()) % map->size.y;//rangedRand(0,map->size.y);
         if(check_pos(map->data[_x][_y])){
             map->data[_x][_y] = D_ROCK;
             nbObs--;

@@ -25,6 +25,9 @@
     <Filter Include="Fichiers d%27en-tête\stack">
       <UniqueIdentifier>{364bc082-b8b7-4bb9-a01f-1593a6e5673e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\mersenne twister">
+      <UniqueIdentifier>{5c1de167-9639-4248-a022-b7aa69fdc369}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -42,6 +45,9 @@
     <ClCompile Include="class\stack\stack.c">
       <Filter>Fichiers d%27en-tête\stack</Filter>
     </ClCompile>
+    <ClCompile Include="class\mersenne twister\mers_twister.c">
+      <Filter>Fichiers d%27en-tête\mersenne twister</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="class\mapgen\mapgen.h">
@@ -55,6 +61,9 @@
     </ClInclude>
     <ClInclude Include="class\stack\stack.h">
       <Filter>Fichiers d%27en-tête\stack</Filter>
+    </ClInclude>
+    <ClInclude Include="class\mersenne twister\mers_twister.h">
+      <Filter>Fichiers d%27en-tête\mersenne twister</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

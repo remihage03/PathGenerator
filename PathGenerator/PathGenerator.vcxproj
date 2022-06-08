@@ -140,6 +140,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="class\mapgen\mapgen.c" />
+    <ClCompile Include="class\mersenne twister\mers_twister.c" />
     <ClCompile Include="class\solver\solver.c" />
     <ClCompile Include="class\stack\stack.c" />
     <ClCompile Include="class\Vec2\Vec2.c" />
@@ -147,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="class\mapgen\mapgen.h" />
+    <ClInclude Include="class\mersenne twister\mers_twister.h" />
     <ClInclude Include="class\solver\solver.h" />
     <ClInclude Include="class\stack\stack.h" />
     <ClInclude Include="class\Vec2\Vec2.h" />

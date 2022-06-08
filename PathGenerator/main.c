@@ -3,17 +3,23 @@
 #include <stdlib.h>
 #include <string.h>
 
-  #include "class/Vec2/Vec2.h"
+#include "class/Vec2/Vec2.h"
 //#include "class/Vec2/Vec2.c"
 
-  #include "class/mapgen/mapgen.h"
+#include "class/mapgen/mapgen.h"
 //#include "class/mapgen/mapgen.c"
 
-  #include "class/solver/solver.h"
+#include "class/solver/solver.h"
 //#include "class/solver/solver.c"
 
-  #include "class/stack/stack.h"
+#include "class/stack/stack.h"
 //#include "class/stack/stack.c"
+
+#include "class/mersenne twister/mers_twister.h"
+//#include "class/mersenne twister/mers_twister.c"
+
+//#include "class/sha256/sha256.h"
+//#include "class/sha256/sha256.c"
 
 #define MAXCHAR 10
 
@@ -69,7 +75,7 @@ int main(int argc, char* argv[])
 
 		map = genMap(map, size, (Difficulty)atoi(argv[4]));
 
-		printf("\n[*] Generated map path :");
+		printf("\n[+] Generated map path :");
 		print_shard(map, &printPath);
 		print_shard(map, &printMapData);
 		export_map(map, export_location);

@@ -28,6 +28,7 @@ int main(int argc, char* argv[])
 	init_twister();
 	seed_mt(time(NULL));
 	srand(extract_number());
+
 	if (argc != 6)
 	{
 		printf("\n[+] Usage: {mode} {height} {width} {difficulty} {filename}\n");
@@ -63,6 +64,8 @@ int main(int argc, char* argv[])
 		// print_shard(map_to_solve,&printPath);
 		draw_path(map_to_solve);
 		print_shard(map_to_solve, &printPath);
+		print_shard(map_to_solve, &printMapData);
+		export_map(map_to_solve, export_location);
 	}
 	else
 	{

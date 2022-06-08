@@ -129,7 +129,7 @@ Map* init_path(Map* map){
 
 	for (int i = 0; i < resolution; i++)
 	{
-        if(twister_wrapped(i) % 10 == 0)
+        if(rand() % 10 == 0)
             newDir = lastDir;
         else{
             newDir = rangedRandWrapped(-2,3);
@@ -164,8 +164,8 @@ Map* init_fake(Map* map){
     int nbObs = floor(map->size.x*map->size.y* rate);
     while(nbObs>0)
     {
-        int _x = twister_wrapped(clock()) % map->size.x;//rangedRand(0,map->size.x);
-        int _y = twister_wrapped(clock()) % map->size.y;//rangedRand(0,map->size.y);
+        int _x = rangedRand(0,map->size.x);
+        int _y = rangedRand(0,map->size.y);
         if(check_pos(map->data[_x][_y])){
             map->data[_x][_y] = D_ROCK;
             nbObs--;

@@ -25,8 +25,9 @@
 
 int main(int argc, char* argv[])
 {
-	srand(time(NULL));
-
+	init_twister();
+	seed_mt(time(NULL));
+	srand(extract_number());
 	if (argc != 6)
 	{
 		printf("\n[+] Usage: {mode} {height} {width} {difficulty} {filename}\n");

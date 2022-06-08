@@ -94,8 +94,8 @@ void twist()
 // Create a length n array to store the state of the generator
 void init_twister()
 {
-    lower_mask = (1 << r) - 1; //0x7FFFFFFF;  // That is, the binary number of r 1's
-    upper_mask = !lower_mask & 0xffffffff; // 0x80000000; //lowest w bits of(not lower_mask);
+    lower_mask = 0x7FFFFFFF; // (1 << r) - 1; // // That is, the binary number of r 1's
+    upper_mask = 0x80000000; // !lower_mask & 0xffffffff; // //lowest w bits of(not lower_mask);
 }
 
 

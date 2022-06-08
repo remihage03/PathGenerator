@@ -97,16 +97,18 @@ void draw_path(Map* map){
             int n = (_from.x > _to.x) ? _to.x : _from.x;
             int cmp = (_from.x > _to.x) ? _from.x : _to.x;
 
-            for (n; n < cmp; n++)
+            for (n; n < cmp; n++) {
                 map->data[n][_from.y] = PATH;
+            }
         }
         else if (_from.y != _to.y)
         {
             int n = (_from.y > _to.y) ? _to.y : _from.y;
             int cmp = (_from.y > _to.y) ? _from.y : _to.y;
 
-            for (n; n < cmp; n++)
+            for (n; n < cmp; n++) {
                 map->data[_from.x][n] = PATH;
+            }
         }
 
         // Ancien code r�mi

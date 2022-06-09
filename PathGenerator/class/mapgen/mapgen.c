@@ -44,7 +44,7 @@ int rangedRand(int range_min, int range_max)
 // }
 
 bool check_pos(int _data){
-    return (_data != D_ROCK && _data != PATH); //(!(_data == T_WALL || _data == PATH || _data == D_ROCK));
+    return (_data != D_ROCK && _data != PATH && _data != T_WATER); //(!(_data == T_WALL || _data == PATH || _data == D_ROCK));
 }
 
 int count_cardinals(Map* map,Vec2 pos){
@@ -207,7 +207,7 @@ Map* init_fake(Map* map){
         int _x = rangedRand(0,map->size.x);
         int _y = rangedRand(0,map->size.y);
         if(check_pos(map->data[_x][_y])){
-            map->data[_x][_y] = (rand() % 10 == 0) ? T_PUDDLE : D_ROCK;
+            map->data[_x][_y] = (rand() % 10 == 0) ? T_WATER : D_ROCK;
             nbObs--;
         }
     }
@@ -233,7 +233,7 @@ void printPath(Map* map, int x, int y) {
     // else if (map->data[x][y] == T_WALL) chr = 'W';
     else if (cell == PATH) chr = '@';
     else if (cell == D_ROCK) chr = 'X';
-    else if (cell == T_PUDDLE) chr = 'O';
+    else if (cell == T_WATER) chr = 'O';
 	else chr = ' ';
 	printf("%c ", chr);
 }
@@ -303,6 +303,9 @@ char* renderPos(int posValue){
 	case PATH:
 		sprintf_s(buffer, buff_sz,"%d",T_ICE);
 		break;
+    case T_WATER:
+        sprintf_s(buffer, buff_sz, "%d", T_WATER);
+        break;
 	//case 0:
 	//	sprintf_s(buffer, buff_sz,"%d",T_ICE);
 	//	break;
@@ -421,6 +424,7 @@ int export_map(Map* map, char* fileName)
 int posToMap(int pos){
     if (pos == T_GRD) return T_GRD;
     else if (pos == T_ICE) return T_ICE;
+    else if (pos == T_WATER) return T_WATER;
     else if(pos == D_ROCK) return D_ROCK;
 }
 

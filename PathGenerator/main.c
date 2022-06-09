@@ -3,23 +3,26 @@
 #include <stdlib.h>
 #include <string.h>
 
-//   #include "class/Vec2/Vec2.h"
+#define remi
+//#define sacha
+
+#ifdef remi
+#include "class/Vec2/Vec2.h"
+#include "class/mapgen/mapgen.h"
+#include "class/solver/solver.h"
+#include "class/stack/stack.h"
+#endif
+
+#ifdef sacha
 #include "class/Vec2/Vec2.c"
-
-//   #include "class/mapgen/mapgen.h"
 #include "class/mapgen/mapgen.c"
-
-//   #include "class/solver/solver.h"
 #include "class/solver/solver.c"
-
-//   #include "class/stack/stack.h"
 #include "class/stack/stack.c"
+#endif
 
-// #include "class/mersenne twister/mers_twister.h"
+
+ //#include "class/mersenne twister/mers_twister.h"
 // #include "class/mersenne twister/mers_twister.c"
-
-//#include "class/sha256/sha256.h"
-// #include "class/sha256/sha256.c"
 
 #define MAXCHAR 10
 

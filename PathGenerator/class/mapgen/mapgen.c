@@ -207,7 +207,7 @@ Map* init_fake(Map* map){
         int _x = rangedRand(0,map->size.x);
         int _y = rangedRand(0,map->size.y);
         if(check_pos(map->data[_x][_y])){
-            map->data[_x][_y] = D_ROCK;
+            map->data[_x][_y] = (rand() % 10 == 0) ? T_PUDDLE : D_ROCK;
             nbObs--;
         }
     }
@@ -227,11 +227,13 @@ void printMapData(Map* map, int x, int y) {
 void printPath(Map* map, int x, int y) {
 	char chr = 'a';
     Vec2 pos = { x, y };
-	if (isEqual(map->entry, pos)) chr = 'E';
-	else if (isEqual(map->entry, pos)) chr = 'S';
-	// else if (map->data[x][y] == T_WALL) chr = 'W';
-	else if (map->data[x][y] == PATH) chr = '@';
-	else if (map->data[x][y] == D_ROCK) chr = 'X';
+    int cell = map->data[pos.x][pos.y];
+    if (isEqual(map->entry, pos)) chr = 'E';
+    else if (isEqual(map->entry, pos)) chr = 'S';
+    // else if (map->data[x][y] == T_WALL) chr = 'W';
+    else if (cell == PATH) chr = '@';
+    else if (cell == D_ROCK) chr = 'X';
+    else if (cell == T_PUDDLE) chr = 'O';
 	else chr = ' ';
 	printf("%c ", chr);
 }

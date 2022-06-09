@@ -152,6 +152,7 @@ void draw_path(Map* map){
         //    }   
         //}
     }
+    map->data[map->exit.x][map->exit.y] = PATH;
 }
 
 Vec2 slide(Map* map,Vec2 init_pos,Dir dir){

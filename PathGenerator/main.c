@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define remi
-//#define sacha
+// #define remi
+#define sacha
 
 #ifdef remi
 #include "class/Vec2/Vec2.h"

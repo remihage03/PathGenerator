@@ -68,7 +68,6 @@ int main(int argc, char* argv[])
 		char export_location[7 + MAXCHAR] = "solved/";
 		strcat_s(export_location, sizeof(export_location), argv[5]);
 		export_solution(map_to_solve, export_location);
-
 	}
 	else
 	{

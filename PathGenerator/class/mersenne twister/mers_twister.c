@@ -35,7 +35,7 @@ int upper_mask;
 
 // Initialize the generator from a seed
 void seed_mt(int seed) {
-    int index = n;
+    index = n;
     MT[0] = seed;
     for (int i = 1; i < n; i++) { // loop over each element
         int temp = f * (MT[i - 1] ^ (MT[i - 1] >> (w - 2))) + i;

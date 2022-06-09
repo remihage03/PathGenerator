@@ -44,7 +44,7 @@ long ranged_twister(int range_min, int range_max)
 }
 
 bool check_pos(int _data){
-	return (!(_data == T_WALL || _data == PATH || _data == D_ROCK));
+    return (_data != D_ROCK && _data != PATH); //(!(_data == T_WALL || _data == PATH || _data == D_ROCK));
 }
 
 int count_cardinals(Map* map,Vec2 pos){
@@ -104,21 +104,30 @@ Map* init_memory(Map* map,Vec2 size,int diff){
         }
     }
 
+    // Textures
+    for (int i = 0; i < map->size.x; i++)
+    {
+        for (int j = 0; j < map->size.y; j++)
+        {
+            map->data[i][j] = (rand() % 6 == 0) ? T_ICE : T_GRD;
+        }
+    }
+
     return map;
 }
-Map* init_wall(Map* map){ // Inutile murs générés sur le jeu
-    if(!map) return NULL;
-    if(!map->data) return NULL;
-    for (int y = 0; y < map->size.x; y++)
-	{
-		for (int x = 0; x < map->size.x; x++)
-		{
-			if (x == 0 || y == 0 || x == map->size.x - 1 || y == map->size.y - 1)
-				map->data[x][y] = T_WALL;
-		}
-	}
-    return map;
-}
+//Map* init_wall(Map* map){ // Inutile murs générés sur le jeu
+//    if(!map) return NULL;
+//    if(!map->data) return NULL;
+//    for (int y = 0; y < map->size.x; y++)
+//	{
+//		for (int x = 0; x < map->size.x; x++)
+//		{
+//			if (x == 0 || y == 0 || x == map->size.x - 1 || y == map->size.y - 1)
+//				map->data[x][y] = T_WALL;
+//		}
+//	}
+//    return map;
+//}
 
 Map* init_path(Map* map){
     if(!(map && map->data)) return NULL;
@@ -256,9 +265,9 @@ char* renderPos(int posValue){
 	int buff_sz = 3;
 	switch (posValue)
 	{
-	case T_WALL:
-		sprintf_s(buffer, buff_sz,"%d",T_WALL);
-		break;
+	//case T_WALL:
+	//	sprintf_s(buffer, buff_sz,"%d",T_WALL);
+	//	break;
 	case PATH:
 		sprintf_s(buffer, buff_sz,"%d",T_ICE);
 		break;
@@ -300,8 +309,7 @@ char* int_to_char(int value)
         free(buffer);
         return NULL;
     }
-
-    sprintf(buffer, "%d", value);
+    sprintf(buffer, "%d", (value == PATH) ? T_ICE : value);
 
     return buffer;
 }
@@ -379,9 +387,9 @@ int export_map(Map* map, char* fileName)
 }
 
 int posToMap(int pos){
-    if(pos == T_WALL) return T_WALL;
-    else if(pos == 7) return D_ROCK;
-    return 0;
+    if (pos == T_GRD) return T_GRD;
+    else if (pos == T_ICE) return T_ICE;
+    else if(pos == D_ROCK) return D_ROCK;
 }
 
 int string_to_int(FILE* file,int seek,int seek_from,int readsize,int count){
@@ -394,7 +402,7 @@ int string_to_int(FILE* file,int seek,int seek_from,int readsize,int count){
 
 Map* import_map(Map* map,char* filename){
 	if (!filename) return NULL;
-	printf("\n[*] Importing map..");
+	printf("\n[+] Importing map..");
 	FILE* fichier_data = NULL;
     fichier_data = open_file(fichier_data,filename,"r+");
    
@@ -409,7 +417,7 @@ Map* import_map(Map* map,char* filename){
     int _y = string_to_int(fichier_data,96,0,2,1);
     Vec2 exit = {_x,_y};
 	map->exit = exit;
-    printf("\nexit: (%d, %d)", map->exit.x, map->exit.y);
+    //printf("\nexit: (%d, %d)", map->exit.x, map->exit.y);
 
 	int* textures = NULL; int* map_data = NULL;
 	// texture // data
@@ -451,13 +459,13 @@ int export_solution(Map* map, char* filename)
     FILE* file_data = NULL;
     file_data = open_file(file_data, filename, "w");
 
-    fprintf(file_data, "\"{ path: ");
+    fprintf(file_data, "{ \"path\": [ ");
 
     for (int i = 0; i < idx - 1; i++)
     {
         fprintf(file_data, "%d, ", _2d_to_1d(map, map->path[i].x, map->path[i].y));
     }
-    fprintf(file_data, "%d }\"", _2d_to_1d(map, map->path[idx - 1].x, map->path[idx - 1].y));
+    fprintf(file_data, "%d ] }", _2d_to_1d(map, map->path[idx - 1].x, map->path[idx - 1].y));
 
     fclose(file_data);
     end = clock();

@@ -15,19 +15,20 @@
 //   #include "class/stack/stack.h"
 #include "class/stack/stack.c"
 
-#include "class/mersenne twister/mers_twister.h"
-//#include "class/mersenne twister/mers_twister.c"
+// #include "class/mersenne twister/mers_twister.h"
+// #include "class/mersenne twister/mers_twister.c"
 
 //#include "class/sha256/sha256.h"
-//#include "class/sha256/sha256.c"
+// #include "class/sha256/sha256.c"
 
 #define MAXCHAR 10
 
 int main(int argc, char* argv[])
 {
-	init_twister();
-	seed_mt(time(NULL));
-	srand(extract_number());
+	// init_twister();
+	// seed_mt(time(NULL));
+	// srand(extract_number());
+	srand(time(NULL));
 
 	if (argc != 6)
 	{

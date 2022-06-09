@@ -6,7 +6,7 @@
 #include <math.h>
 #include "mapgen.h"
 #include "../solver/solver.h"
-#include "../mersenne twister/mers_twister.h"
+// #include "../mersenne twister/mers_twister.h"
 #include "../Vec2/Vec2.h"
 
 
@@ -37,11 +37,11 @@ int rangedRand(int range_min, int range_max)
     return(u);
 }
 
-long ranged_twister(int range_min, int range_max)
-{
-    long u = (long)((double)twister_wrapped(clock()) / ((double)(unsigned long)pow(2, 64 - 1) + 1) * ((double)range_max - (double)range_min)) + range_min;
-    return(u);
-}
+// long ranged_twister(int range_min, int range_max)
+// {
+//     long u = (long)((double)twister_wrapped(clock()) / ((double)(unsigned long)pow(2, 64 - 1) + 1) * ((double)range_max - (double)range_min)) + range_min;
+//     return(u);
+// }
 
 bool check_pos(int _data){
     return (_data != D_ROCK && _data != PATH); //(!(_data == T_WALL || _data == PATH || _data == D_ROCK));

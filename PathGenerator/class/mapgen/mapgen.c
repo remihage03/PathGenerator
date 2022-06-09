@@ -5,6 +5,8 @@
 #include <time.h>
 #include <math.h>
 #include "mapgen.h"
+#include "../solver/solver.h"
+#include "../mersenne twister/mers_twister.h"
 #include "../Vec2/Vec2.h"
 
 
@@ -32,6 +34,12 @@ int rangedRandWrapped(int range_min,int range_max)
 int rangedRand(int range_min, int range_max)
 {
     int u = (int)((double)rand() / ((double)RAND_MAX + 1) * ((double)range_max - (double)range_min)) + range_min;
+    return(u);
+}
+
+long ranged_twister(int range_min, int range_max)
+{
+    long u = (long)((double)twister_wrapped(clock()) / ((double)(unsigned long)pow(2, 64 - 1) + 1) * ((double)range_max - (double)range_min)) + range_min;
     return(u);
 }
 
@@ -122,7 +130,7 @@ Map* init_path(Map* map){
 
 	for (int i = 0; i < resolution; i++)
 	{
-        if(rand()%10 == 0)
+        if(rand() % 10 == 0)
             newDir = lastDir;
         else{
             newDir = rangedRandWrapped(-2,3);
@@ -418,4 +426,43 @@ Map* import_map(Map* map,char* filename){
     // print_shard(map,&printMapData);
     printf("\n[*] Import Done");
 	return map;
+}
+
+int export_solution(Map* map, char* filename)
+{
+    // On recrée le chemin et on stocke toutes ses coordonnées
+    int idx = 0;
+    for (int i = 0; i < map->size.x; i++) {
+        for (int j = 0; j < map->size.y; j++) {
+            Vec2 pos = { i, j };
+            if (map->data[i][j] == PATH) {
+                map->path[idx] = pos;
+                idx++;
+            }
+            if (isEqual(map->exit, pos)) break;
+        }
+    }
+
+    clock_t start, end;
+    start = clock();
+    if (map == NULL || filename == NULL)
+        return ERROR;
+
+    FILE* file_data = NULL;
+    file_data = open_file(file_data, filename, "w");
+
+    fprintf(file_data, "\"{ path: ");
+
+    for (int i = 0; i < idx - 1; i++)
+    {
+        fprintf(file_data, "%d, ", _2d_to_1d(map, map->path[i].x, map->path[i].y));
+    }
+    fprintf(file_data, "%d }\"", _2d_to_1d(map, map->path[idx - 1].x, map->path[idx - 1].y));
+
+    fclose(file_data);
+    end = clock();
+    double time_taken = (double)(end - start) / (double)CLOCKS_PER_SEC;
+    time_taken *= 1000; // Conversion en ms
+    printf("\nDone Writing in %s in %lfms!\n", filename, time_taken);
+    return 1;
 }

@@ -21,6 +21,10 @@
 #define T_GRD -3
 #define T_WALL -2
 #define T_PUDDLE 5
+#define T_ARROW_UP 1
+#define T_ARROW_RIGHT 2
+#define T_ARROW_DOWN 3
+#define T_ARROW_LEFT 4
 #define T_WATER 6
 
 #define X_MAX 100

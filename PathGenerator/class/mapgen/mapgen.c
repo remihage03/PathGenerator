@@ -109,7 +109,37 @@ Map* init_memory(Map* map,Vec2 size,int diff){
     {
         for (int j = 0; j < map->size.y; j++)
         {
-            map->data[i][j] = (rand() % 6 == 0) ? T_ICE : T_GRD;
+            int texture = T_ICE;
+            switch (rand() % 7)
+            {
+            case 0:
+                texture = T_ICE;
+                break;
+            case 1:
+                texture = T_GRD;
+                break;
+            case 2:
+                texture = T_PUDDLE;
+                break;
+            case 3:
+                if (rand() % 20 == 0)
+                    texture = T_ARROW_UP;
+                break;
+            case 4:
+                if (rand() % 20 == 0)
+                    texture = T_ARROW_RIGHT;
+                break;
+            case 5:
+                if (rand() % 20 == 0)
+                    texture = T_ARROW_DOWN;
+                break;
+            case 6:
+                if (rand() % 20 == 0)
+                    texture = T_ARROW_LEFT;
+                break;
+            }
+
+            map->data[i][j] = texture;
         }
     }
 

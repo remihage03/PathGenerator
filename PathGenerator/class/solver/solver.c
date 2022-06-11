@@ -45,7 +45,7 @@ void sort_by_dist(Vec2* positions,int* pos_dist,int n)
 }
 
 bool check_player_pos(int _data){
-    return (_data != D_ROCK);
+    return (_data != D_ROCK && _data != T_WATER);
 }
 
 bool check_player_move(Map* map,Vec2 pos,Dir dir){
